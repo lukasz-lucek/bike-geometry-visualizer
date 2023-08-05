@@ -1,25 +1,34 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import ToolSelection from './components/ToolSelection.js'; // Import the ToolSelection component
+import ToolOptionsArea from './components/ToolOptionsArea.js'; // Import the ToolOptionsArea component
+import Workspace from './components/Workspace.js'; // Import the Workspace component
+import { CanvasProvider } from './contexts/CanvasContext.js'; // Update the import path
 
-function App() {
+
+
+const App = () => {
+  const [selectedTool, setSelectedTool] = useState('');
+
+  const handleToolSelect = (toolName) => {
+    setSelectedTool(toolName);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <CanvasProvider>
+      <div className="app-container">
+        <div className="tool-selection-area">
+          <ToolSelection selectedTool={selectedTool} handleToolSelect={handleToolSelect} />
+        </div>
+        <div className="tool-options-area">
+          <ToolOptionsArea selectedTool={selectedTool} />
+        </div>
+        <div className="workspace">
+          <Workspace />
+        </div>
+      </div>
+    </CanvasProvider>
   );
-}
+};
 
 export default App;
