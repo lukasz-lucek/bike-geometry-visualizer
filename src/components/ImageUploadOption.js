@@ -1,17 +1,19 @@
 // src/components/ImageUploadOption.js
 import React, { useState, useEffect } from 'react';
 import { useCanvasContext } from '../contexts/CanvasContext.js'; // Import the useCanvasContext hook
+import BikeGeometryTable from '../components/BikeGeometryTable.js';
 import '../App.css';
 
 const ImageUploadOption = ({ selectedTool }) => {
-  const [dragOver, setDragOver] = useState(false);
   const {
     addLayer: [addLayerToCanvasFunc, ],
     enablePointPicker: [enablePointPickerFunc, ],
     pointSelected: [, setPointSelected],
   } = useCanvasContext(); // Access the addLayerToCanvas method from context
+  const [dragOver, setDragOver] = useState(false);
   const [wheelbase, setWheelbase] = useState('');
   const [selectedPoint, setSelectedPoint] = useState(null);
+  const [geometryPoints, setGeometryPoints] = useState([]);
 
 
   const handleDrop = (e) => {
@@ -67,6 +69,7 @@ const ImageUploadOption = ({ selectedTool }) => {
   const handleCanvasClick = (x, y) => {
     console.log("ooooooo handleCanvasClick");
     if (selectedPoint) {
+      setGeometryPoints({...geometryPoints,[selectedPoint]: {x: x, y: y}});
       console.log("for selected point", selectedPoint, " x = ", x, " y = ", y);
       //const canvas = canvasRef.current;
       //const rect = canvas.getBoundingClientRect();
@@ -143,6 +146,7 @@ const ImageUploadOption = ({ selectedTool }) => {
         >
           Seat Tube Top
         </button>
+        <BikeGeometryTable points={geometryPoints} wheelbase={wheelbase}/>
       </div>
     </div>
   );
