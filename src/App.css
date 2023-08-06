@@ -84,8 +84,26 @@ img:hover {
   grid-gap: 10px; /* Gap between grid items */
 }
 
+.rear-wheel-center:hover {
+  background-color: #6BA4C0;
+  color: #fff;
+  /* Add other styles as needed to indicate selection */
+}
+
 .selected-rear-wheel-center {
   background-color: #6BA4C0;
+  color: #fff;
+  /* Add other styles as needed to indicate selection */
+}
+
+.front-wheel-center:hover {
+  background-color: #A877C2;
+  color: #fff;
+  /* Add other styles as needed to indicate selection */
+}
+
+.front-wheel-center:hover {
+  background-color: #A877C2;
   color: #fff;
   /* Add other styles as needed to indicate selection */
 }
@@ -96,8 +114,20 @@ img:hover {
   /* Add other styles as needed to indicate selection */
 }
 
+.bottom-bracket-center:hover {
+  background-color: #E687AB;
+  color: #fff;
+  /* Add other styles as needed to indicate selection */
+}
+
 .selected-bottom-bracket-center {
   background-color: #E687AB;
+  color: #fff;
+  /* Add other styles as needed to indicate selection */
+}
+
+.head-tube-top:hover {
+  background-color: #63B6A8;
   color: #fff;
   /* Add other styles as needed to indicate selection */
 }
@@ -108,8 +138,20 @@ img:hover {
   /* Add other styles as needed to indicate selection */
 }
 
+.head-tube-bottom:hover {
+  background-color: #F9D87E;
+  color: #fff;
+  /* Add other styles as needed to indicate selection */
+}
+
 .selected-head-tube-bottom {
   background-color: #F9D87E;
+  color: #fff;
+  /* Add other styles as needed to indicate selection */
+}
+
+.seat-tube-top:hover {
+  background-color: #FF8C87;
   color: #fff;
   /* Add other styles as needed to indicate selection */
 }

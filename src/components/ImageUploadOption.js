@@ -52,9 +52,16 @@ const ImageUploadOption = ({ selectedTool }) => {
     setDragOver(false);
   };
 
-  const handleAddPoint = (pointType) => {
+  const handleAddPoint = (pointType, style, backupStyle) => {
+    let button = document.querySelector(style, 'hover');
+    if (button == null) {
+      button = document.querySelector(backupStyle);
+    }
+    const computedStyle = getComputedStyle(button);
+    const color = computedStyle.getPropertyValue("background-color");
+    console.log(color);
     setSelectedPoint(pointType);
-    enablePointPickerFunc(true, "#FFFFFF");
+    enablePointPickerFunc(true, color);
   };
 
   const handleCanvasClick = (x, y) => {
@@ -101,38 +108,38 @@ const ImageUploadOption = ({ selectedTool }) => {
       />
       <div className="point-buttons">
       <button
-          className={selectedPoint === 'rearWheelCenter' ? 'selected-rear-wheel-center' : ''}
-          onClick={() => handleAddPoint('rearWheelCenter')}
+          className={selectedPoint === 'rearWheelCenter' ? 'selected-rear-wheel-center' : 'rear-wheel-center'}
+          onClick={() => handleAddPoint('rearWheelCenter', '.rear-wheel-center', '.selected-rear-wheel-center')}
         >
           Rear Wheel Center
         </button>
         <button
-          className={selectedPoint === 'frontWheelCenter' ? 'selected-front-wheel-center' : ''}
-          onClick={() => handleAddPoint('frontWheelCenter')}
+          className={selectedPoint === 'frontWheelCenter' ? 'selected-front-wheel-center' : 'front-wheel-center'}
+          onClick={() => handleAddPoint('frontWheelCenter', '.front-wheel-center', '.selected-front-wheel-center')}
         >
           Front Wheel Center
         </button>
         <button
-          className={selectedPoint === 'bottomBracketCenter' ? 'selected-bottom-bracket-center' : ''}
-          onClick={() => handleAddPoint('bottomBracketCenter')}
+          className={selectedPoint === 'bottomBracketCenter' ? 'selected-bottom-bracket-center' : 'bottom-bracket-center'}
+          onClick={() => handleAddPoint('bottomBracketCenter', '.bottom-bracket-center', '.selected-bottom-bracket-center')}
         >
           Bottom Bracket Center
         </button>
         <button
-          className={selectedPoint === 'headTubeTop' ? 'selected-head-tube-top' : ''}
-          onClick={() => handleAddPoint('headTubeTop')}
+          className={selectedPoint === 'headTubeTop' ? 'selected-head-tube-top' : 'head-tube-top'}
+          onClick={() => handleAddPoint('headTubeTop', '.head-tube-top', '.selected-head-tube-top')}
         >
           Head Tube Top
         </button>
         <button
-          className={selectedPoint === 'headTubeBottom' ? 'selected-head-tube-bottom' : ''}
-          onClick={() => handleAddPoint('headTubeBottom')}
+          className={selectedPoint === 'headTubeBottom' ? 'selected-head-tube-bottom' : 'head-tube-bottom'}
+          onClick={() => handleAddPoint('headTubeBottom', '.head-tube-bottom', '.selected-head-tube-bottom')}
         >
           Head Tube Bottom
         </button>
         <button
-          className={selectedPoint === 'seatTubeTop' ? 'selected-seat-tube-top' : ''}
-          onClick={() => handleAddPoint('seatTubeTop')}
+          className={selectedPoint === 'seatTubeTop' ? 'selected-seat-tube-top' : 'seat-tube-top'}
+          onClick={() => handleAddPoint('seatTubeTop', '.seat-tube-top', '.selected-seat-tube-top')}
         >
           Seat Tube Top
         </button>
