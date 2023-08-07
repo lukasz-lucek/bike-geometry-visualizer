@@ -13,6 +13,7 @@ const BikeGeometryTable = ({ points, wheelbase }) => {
   let seatAngle=0;
   let headTube=0;
   let chainstay=0;
+  let bbDrop=0;
 
   const rearWheelCenter = points["rearWheelCenter"];
   const frontWheelCenter = points["frontWheelCenter"];
@@ -50,6 +51,7 @@ const BikeGeometryTable = ({ points, wheelbase }) => {
 
     if (bottomBracketCenter && rearWheelCenter) {
         chainstay = Math.sqrt(Math.pow(bottomBracketCenter.x - rearWheelCenter.x, 2) + Math.pow(bottomBracketCenter.y - rearWheelCenter.y, 2)) / pxPerMm;
+        bbDrop = Math.abs(bottomBracketCenter.y - rearWheelCenter.y) / pxPerMm;
     }
   }
 
@@ -111,6 +113,10 @@ const BikeGeometryTable = ({ points, wheelbase }) => {
           <tr>
             <td>Wheelbase</td>
             <td>{finalWheelbase.toFixed(0)}</td>
+          </tr>
+          <tr>
+            <td>BB Drop</td>
+            <td>{bbDrop.toFixed(0)}</td>
           </tr>
         </tbody>
       </table>
