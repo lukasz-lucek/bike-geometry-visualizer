@@ -6,40 +6,39 @@ import { useCanvasContext } from '../contexts/CanvasContext.js';
 const Workspace = ( ) => {
   const canvasRef = useRef(null);
   const canvas = useRef(null);
-  const [innerState, setInnerState] = useState({
+  const [state, setState] = useState({
     layers: [],
     pickerEnabled: false,
     pickerColor: "#FFFFFF",
-    knownPoints: {}
+    overlayShapes: {}
   });
 
   const {
     addLayer: [, setAddLayerToCanvas],
     enablePointPicker: [, setEnablePointPicker],
-    pointSelected: [pointSelectedFunc, ]
+    pointSelected: [pointSelectedFunc, ],
+    addShapeVisualization: [, setAddShapeVisualization]
   } = useCanvasContext();
 
   const addNewLayer = (layer) => {
-    const newLayers = innerState.layers.concat(layer);
-    console.log("layers: ", newLayers);
-    setInnerState( {...innerState,["layers"]: newLayers});
+    const newLayers = state.layers.concat(layer);
+    setState( {...state,["layers"]: newLayers});
   }
 
   const enablePointPicker = (enabled, color)  => {
-    console.log("enablePointPicker: ", enabled);
-    setInnerState ( {...innerState,["pickerEnabled"]: enabled,["pickerColor"]:color});
+    setState ( {...state,["pickerEnabled"]: enabled,["pickerColor"]:color});
   };
 
-  const addNewKnownPoint = (key, x, y) => {
-    const curKnown = innerState.knownPoints;
+  const addShapeVisualizationFunc = (key, shape, color) => {
+    const curKnown = state.overlayShapes;
     if (curKnown[key] == null) {
-      curKnown[key] = {x: x, y: y};
+      curKnown[key] = {shape: shape, color: color};
     } else {
-      curKnown[key].x = x;
-      curKnown[key].y = y;
+      curKnown[key].shape = shape;
+      curKnown[key].color = color;
     }
-    setInnerState( {...innerState,["knownPoints"]: curKnown});
-  };
+    setState( {...state,["overlayShapes"]: curKnown});
+  }
 
   const addLayerToCanvas = (layer) => {
     if (layer.type === 'image') {
@@ -82,22 +81,26 @@ const Workspace = ( ) => {
     })
 
     // Load initial layers to the canvas
-    innerState.layers.forEach((layer) => addLayerToCanvas(layer));
+    state.layers.forEach((layer) => addLayerToCanvas(layer));
 
-    for (const [colorKey, knownPoint] of Object.entries(innerState.knownPoints)) {
-      const circle = new fabric.Circle({
-        radius: 13,
-        fill: 'transparent', // Set the fill to transparent
-        stroke: colorKey, // Set the stroke color
-        strokeWidth: 3, // Set the stroke width
-        left: knownPoint.x - 13,
-        top: knownPoint.y - 13,
-      });
-      canvas.current.insertAt(circle, 1);
-      canvas.current.renderAll();
+    for (const [, {shape: shape, color: color}] of Object.entries(state.overlayShapes)) {
+      if (shape.type == 'point') {
+        const circle = new fabric.Circle({
+          radius: 13,
+          fill: 'transparent', // Set the fill to transparent
+          stroke: color, // Set the stroke color
+          strokeWidth: 3, // Set the stroke width
+          left: shape.x - 13,
+          top: shape.y - 13,
+        });
+
+        canvas.current.insertAt(circle, 1);
+      }
+      
     }
+    canvas.current.renderAll();
 
-    if (innerState.pickerEnabled) {
+    if (state.pickerEnabled) {
 
       const radius = 10;
       const littleRadius = 1;
@@ -106,7 +109,7 @@ const Workspace = ( ) => {
       const circle = new fabric.Circle({
         radius: radius,
         fill: 'transparent', // Set the fill to transparent
-        stroke: innerState.pickerColor, // Set the stroke color
+        stroke: state.pickerColor, // Set the stroke color
         strokeWidth: strokeWidth, // Set the stroke width
         left: canvas.current.width / 2 - radius,
         top: canvas.current.height / 2 - radius,
@@ -114,7 +117,7 @@ const Workspace = ( ) => {
   
       const point = new fabric.Circle({
         radius: littleRadius,
-        fill: innerState.pickerColor,
+        fill: state.pickerColor,
         left: canvas.current.width / 2 - littleRadius,
         top: canvas.current.height / 2 - littleRadius,
       });
@@ -130,7 +133,6 @@ const Workspace = ( ) => {
         const zoom = canvas.current.getZoom();
         const zoomedRadius = radius / zoom;
         const littleZoomedRadius = littleRadius / zoom;
-        console.log(coordinates.x, coordinates.y);
         circle.left = (coordinates.x - zoomedRadius);
         circle.top = (coordinates.y - zoomedRadius);
         point.left = coordinates.x - littleZoomedRadius;
@@ -142,31 +144,26 @@ const Workspace = ( ) => {
 
       canvas.current.on("mouse:up", function (e) {
         if (e.isClick && e.target != null) {
-          console.log("x = ", e.transform.offsetX, " y = ", e.transform.offsetY);
           if (pointSelectedFunc != null) {
             pointSelectedFunc(e.transform.offsetX, e.transform.offsetY);
-            addNewKnownPoint(innerState.pickerColor, e.transform.offsetX, e.transform.offsetY);
-          } else {
-            console.log("point selected func is null");
           }
         }
       });
-      console.log("enabling pointer");
       canvas.current.hoverCursor = 'pointer';
     } else {
-      console.log("disabling pointer");
       canvas.current.hoverCursor = 'move';
     }
 
     setAddLayerToCanvas(() => addNewLayer);
     setEnablePointPicker(() => enablePointPicker);
+    setAddShapeVisualization(() => addShapeVisualizationFunc);
 
     // Clean up event listeners when the component unmounts
     return () => {
       canvas.current.dispose();
       canvas.current = null;
     };
-  }, [pointSelectedFunc, innerState.layers, innerState.pickerColor, innerState.pickerEnabled]);
+  }, [pointSelectedFunc, state.layers, state.pickerColor, state.pickerEnabled, state.overlayShapes]);
   
   return (
     <div className="workspace">

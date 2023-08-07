@@ -7,7 +7,7 @@ const ToolOptionsArea = ({ selectedTool }) => {
   const renderToolOptions = () => {
     switch (selectedTool) {
       case 'imageUpload':
-        return <ImageUploadOption selectedTool={selectedTool}  />;
+        return <ImageUploadOption />;
       case 'frameGeometry':
         return <FrameGeometryInput />;
       // Add more cases for other tools and their options components here

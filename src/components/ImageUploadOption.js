@@ -2,23 +2,39 @@
 import React, { useState, useEffect } from 'react';
 import { useCanvasContext } from '../contexts/CanvasContext.js'; // Import the useCanvasContext hook
 import BikeGeometryTable from '../components/BikeGeometryTable.js';
+import DropdownActions from '../components/DropdownActions.js';
 import '../App.css';
 
-const ImageUploadOption = ({ selectedTool }) => {
+const ImageUploadOption = () => {
   const {
     addLayer: [addLayerToCanvasFunc, ],
     enablePointPicker: [enablePointPickerFunc, ],
     pointSelected: [, setPointSelected],
+    addShapeVisualization: [addShapeVisualizationFunc, ]
   } = useCanvasContext(); // Access the addLayerToCanvas method from context
-  const [dragOver, setDragOver] = useState(false);
-  const [wheelbase, setWheelbase] = useState('');
-  const [selectedPoint, setSelectedPoint] = useState(null);
-  const [geometryPoints, setGeometryPoints] = useState([]);
 
+  const knownGeometriesKey = 'knownGeometries'
+  const defaultState = {
+    dragOver: false,
+    wheelbase: '',
+    selectedPoint: null,
+    geometryPoints: {},
+    selectionColor: "#FF0000",
+    selectedFile: null,
+    bikeDataName: '',
+    bikesList: Object.keys(JSON.parse(localStorage.getItem(knownGeometriesKey))),
+  }
+
+  const [state, setState] = useState(defaultState);
+
+  const updateState = (newPartialState) => {
+    const newState = {...state, ...newPartialState};
+    setState( newState );
+  }
 
   const handleDrop = (e) => {
     e.preventDefault();
-    setDragOver(false);
+    updateState({dragOver: false});
     const file = e.dataTransfer.files[0];
     if (file) {
       handleImageSelection(file);
@@ -28,12 +44,7 @@ const ImageUploadOption = ({ selectedTool }) => {
   const handleImageSelection = (file) => {
     const reader = new FileReader();
     reader.onloadend = () => {
-      const newLayer = {
-        type: 'image',
-        src: reader.result,
-      };
-      addLayerToCanvasFunc(newLayer); // Add the new layer to the canvas
-      //onImageAdd(reader.result);
+      updateState({selectedFile:reader.result});
     };
     reader.readAsDataURL(file);
   };
@@ -47,11 +58,11 @@ const ImageUploadOption = ({ selectedTool }) => {
 
   const handleDragOver = (e) => {
     e.preventDefault();
-    setDragOver(true);
+    updateState({dragOver: true});
   };
 
   const handleDragLeave = () => {
-    setDragOver(false);
+    updateState({dragOver: false});
   };
 
   const handleAddPoint = (pointType, style, backupStyle) => {
@@ -61,93 +72,171 @@ const ImageUploadOption = ({ selectedTool }) => {
     }
     const computedStyle = getComputedStyle(button);
     const color = computedStyle.getPropertyValue("background-color");
-    console.log(color);
-    setSelectedPoint(pointType);
     enablePointPickerFunc(true, color);
+    updateState({selectedPoint: pointType, selectionColor: color});
+
   };
 
   const handleCanvasClick = (x, y) => {
-    console.log("ooooooo handleCanvasClick");
-    if (selectedPoint) {
-      setGeometryPoints({...geometryPoints,[selectedPoint]: {x: x, y: y}});
-      console.log("for selected point", selectedPoint, " x = ", x, " y = ", y);
-      //const canvas = canvasRef.current;
-      //const rect = canvas.getBoundingClientRect();
-      //const x = event.clientX - rect.left;
-      //const y = event.clientY - rect.top;
-
-      // Add logic to place a marker or handle the selected point
-      // ...
-
-      setSelectedPoint(null); // Reset selected point after placing
-      enablePointPickerFunc(false, "#FFFFFF");
+    if (state.selectedPoint) {
+      const stateChange = {
+        geometryPoints: {...state.geometryPoints,[state.selectedPoint]: {x: x, y: y, color: state.selectionColor}}, 
+        selectedPoint: null
+      };
+      updateState(stateChange);
+      enablePointPickerFunc(false, state.selectionColor);
     }
   };
 
+  const saveGeometry = () => {
+    if (state.bikeDataName != '') {
+      let knownGeometries = JSON.parse(localStorage.getItem('knownGeometries'));
+      if (knownGeometries == null) {
+        knownGeometries = {};
+      }
+      knownGeometries[state.bikeDataName] = {
+        selectedFile : state.selectedFile,
+        geometryPoints : state.geometryPoints,
+        wheelbase: state.wheelbase
+      };
+      localStorage.setItem('knownGeometries', JSON.stringify(knownGeometries));
+      updateState({bikesList: Object.keys(knownGeometries)});
+    }
+  }
+
+  const loadBikeGeometry = (item) => {
+    let knownGeometries = JSON.parse(localStorage.getItem('knownGeometries'));
+    if (knownGeometries == null) {
+      console.error("no data in local storage - unable to load");
+      return;
+    }
+    const geometryData = knownGeometries[item];
+    if (geometryData == null || geometryData.selectedFile == null || geometryData.geometryPoints == null) {
+      console.error("Broken data in local storage - cannot load");
+      return;
+    }
+    updateState({
+      selectedFile: geometryData.selectedFile,
+      geometryPoints: geometryData.geometryPoints,
+      bikeDataName: item,
+      wheelbase: geometryData.wheelbase
+    });
+  }
+
+  const removeBikeGeometry = (item) => {
+    let knownGeometries = JSON.parse(localStorage.getItem('knownGeometries'));
+    if (knownGeometries == null) {
+      knownGeometries = {};
+    }
+    delete knownGeometries[item];
+    localStorage.setItem('knownGeometries', JSON.stringify(knownGeometries));
+    updateState({bikesList: Object.keys(knownGeometries)});
+  }
+
   useEffect(() => {
-    console.log("selected tool: ", selectedTool);
     setPointSelected(() => handleCanvasClick);
+
+    for (const [geometryPointKey, {x: x, y: y, color: color}] of Object.entries(state.geometryPoints)) {
+      addShapeVisualizationFunc(geometryPointKey, {type:"point", x: x, y: y}, color);
+    }
+
+    if (state.selectedFile != null) {
+      const newLayer = {
+        type: 'image',
+        src: state.selectedFile,
+      };
+      addLayerToCanvasFunc(newLayer); // Add the new layer to the canvas
+    }
 
     // Clean up event listeners when the component unmounts
     return () => {
-      console.log("cleaning up");
       setPointSelected(() => null);
     };
-  }, [selectedTool, selectedPoint]);
-
-  //setPointSelected(() => handleCanvasClick);
+  }, [state.selectedPoint, state.geometryPoints, state.selectionColor, state.selectedFile, state.bikeDataName], state.bikesList);
 
   return (
     <div className="image-upload-option" onDrop={handleDrop} onDragOver={handleDragOver} onDragLeave={handleDragLeave}>
-      {dragOver ? 
+      {state.dragOver ? 
         <div className="drop-indicator">Drop it - I'm ready</div> : 
         <div className="drop-indicator">You can drop images here</div>}
       <input type="file" onChange={handleFileInputChange} />
       <input
         type="text"
         placeholder="Wheelbase (mm)"
-        value={wheelbase}
-        onChange={(e) => setWheelbase(e.target.value)}
+        value={state.wheelbase}
+        onChange={(e) => updateState({wheelbase: e.target.value})}
       />
       <div className="point-buttons">
-      <button
-          className={selectedPoint === 'rearWheelCenter' ? 'selected-rear-wheel-center' : 'rear-wheel-center'}
+        <button
+          className={state.selectedPoint === 'rearWheelCenter' ? 'selected-rear-wheel-center' : 'rear-wheel-center'}
           onClick={() => handleAddPoint('rearWheelCenter', '.rear-wheel-center', '.selected-rear-wheel-center')}
         >
-          Rear Wheel Center
+          Rear Wheel Center 
+          (
+            {state.geometryPoints['rearWheelCenter'] ? state.geometryPoints['rearWheelCenter'].x.toFixed(1) : '____'},
+            {state.geometryPoints['rearWheelCenter'] ? state.geometryPoints['rearWheelCenter'].y.toFixed(1) : '____'}
+          )
         </button>
         <button
-          className={selectedPoint === 'frontWheelCenter' ? 'selected-front-wheel-center' : 'front-wheel-center'}
+          className={state.selectedPoint === 'frontWheelCenter' ? 'selected-front-wheel-center' : 'front-wheel-center'}
           onClick={() => handleAddPoint('frontWheelCenter', '.front-wheel-center', '.selected-front-wheel-center')}
         >
           Front Wheel Center
+          (
+            {state.geometryPoints['frontWheelCenter'] ? state.geometryPoints['frontWheelCenter'].x.toFixed(1) : '____'},
+            {state.geometryPoints['frontWheelCenter'] ? state.geometryPoints['frontWheelCenter'].y.toFixed(1) : '____'}
+          )
         </button>
         <button
-          className={selectedPoint === 'bottomBracketCenter' ? 'selected-bottom-bracket-center' : 'bottom-bracket-center'}
+          className={state.selectedPoint === 'bottomBracketCenter' ? 'selected-bottom-bracket-center' : 'bottom-bracket-center'}
           onClick={() => handleAddPoint('bottomBracketCenter', '.bottom-bracket-center', '.selected-bottom-bracket-center')}
         >
           Bottom Bracket Center
+          (
+            {state.geometryPoints['bottomBracketCenter'] ? state.geometryPoints['bottomBracketCenter'].x.toFixed(1) : '____'},
+            {state.geometryPoints['bottomBracketCenter'] ? state.geometryPoints['bottomBracketCenter'].y.toFixed(1) : '____'}
+          )
         </button>
         <button
-          className={selectedPoint === 'headTubeTop' ? 'selected-head-tube-top' : 'head-tube-top'}
+          className={state.selectedPoint === 'headTubeTop' ? 'selected-head-tube-top' : 'head-tube-top'}
           onClick={() => handleAddPoint('headTubeTop', '.head-tube-top', '.selected-head-tube-top')}
         >
           Head Tube Top
+          (
+            {state.geometryPoints['headTubeTop'] ? state.geometryPoints['headTubeTop'].x.toFixed(1) : '____'},
+            {state.geometryPoints['headTubeTop'] ? state.geometryPoints['headTubeTop'].y.toFixed(1) : '____'}
+          )
         </button>
         <button
-          className={selectedPoint === 'headTubeBottom' ? 'selected-head-tube-bottom' : 'head-tube-bottom'}
+          className={state.selectedPoint === 'headTubeBottom' ? 'selected-head-tube-bottom' : 'head-tube-bottom'}
           onClick={() => handleAddPoint('headTubeBottom', '.head-tube-bottom', '.selected-head-tube-bottom')}
         >
           Head Tube Bottom
+          (
+            {state.geometryPoints['headTubeBottom'] ? state.geometryPoints['headTubeBottom'].x.toFixed(1) : '____'},
+            {state.geometryPoints['headTubeBottom'] ? state.geometryPoints['headTubeBottom'].y.toFixed(1) : '____'}
+          )
         </button>
         <button
-          className={selectedPoint === 'seatTubeTop' ? 'selected-seat-tube-top' : 'seat-tube-top'}
+          className={state.selectedPoint === 'seatTubeTop' ? 'selected-seat-tube-top' : 'seat-tube-top'}
           onClick={() => handleAddPoint('seatTubeTop', '.seat-tube-top', '.selected-seat-tube-top')}
         >
           Seat Tube Top
+          (
+            {state.geometryPoints['seatTubeTop'] ? state.geometryPoints['seatTubeTop'].x.toFixed(1) : '____'},
+            {state.geometryPoints['seatTubeTop'] ? state.geometryPoints['seatTubeTop'].y.toFixed(1) : '____'}
+          )
         </button>
-        <BikeGeometryTable points={geometryPoints} wheelbase={wheelbase}/>
       </div>
+      <BikeGeometryTable points={state.geometryPoints} wheelbase={state.wheelbase}/>
+      <input
+        type="text"
+        placeholder="enter name to save"
+        value={state.bikeDataName}
+        onChange={(e) => updateState({bikeDataName: e.target.value})}
+      />
+      <button disabled={state.bikeDataName == ''} onClick={() => saveGeometry()}>Save</button>
+      <DropdownActions items={state.bikesList} onLoad={loadBikeGeometry} onRemove={removeBikeGeometry}/>
     </div>
   );
 };
