@@ -4,15 +4,6 @@ import { fabric } from 'fabric';
 import { useCanvasContext } from '../contexts/CanvasContext.js';
 
 const Workspace = ( ) => {
-  const canvasRef = useRef(null);
-  const canvas = useRef(null);
-  const [state, setState] = useState({
-    layers: [],
-    pickerEnabled: false,
-    pickerColor: "#FFFFFF",
-    overlayShapes: {}
-  });
-
   const {
     addLayer: [, setAddLayerToCanvas],
     enablePointPicker: [, setEnablePointPicker],
@@ -20,13 +11,34 @@ const Workspace = ( ) => {
     addShapeVisualization: [, setAddShapeVisualization]
   } = useCanvasContext();
 
+  const canvasRef = useRef(null);
+  const canvas = useRef(null);
+
+  const defaultState = {
+    layers: [],
+    pickerEnabled: false,
+    pickerColor: "#FFFFFF",
+    overlayShapes: {}
+  }
+
+  const [state, setState] = useState(defaultState);
+
+  const updateState = (newPartialState) => {
+    const newState = {...state, ...newPartialState};
+    setState( newState );
+  }
+
   const addNewLayer = (layer) => {
-    const newLayers = state.layers.concat(layer);
-    setState( {...state,["layers"]: newLayers});
+    updateState( {
+      "layers": [layer]
+    });
   }
 
   const enablePointPicker = (enabled, color)  => {
-    setState ( {...state,["pickerEnabled"]: enabled,["pickerColor"]:color});
+    updateState ( {
+      pickerEnabled : enabled,
+      pickerColor :color
+    });
   };
 
   const addShapeVisualizationFunc = (key, shape, color) => {
@@ -37,22 +49,20 @@ const Workspace = ( ) => {
       curKnown[key].shape = shape;
       curKnown[key].color = color;
     }
-    setState( {...state,["overlayShapes"]: curKnown});
+    updateState( {overlayShapes: curKnown});
   }
 
   const addLayerToCanvas = (layer) => {
     if (layer.type === 'image') {
+      
       fabric.Image.fromURL(layer.src, (img) => {
         canvas.current.setZoom(Math.min(canvas.current.width / img.width, canvas.current.height / img.height));
-        //img.lockMovementX = true;
-        //img.lockMovementY = true;
         canvas.current.insertAt(img, 0);
         canvas.current.renderAll();
         canvas.current.selection = false;
         canvas.current.interactive = false;
       });
     }
-    // Add more layer types (e.g., text, shapes) here if needed
   };
 
   useEffect(() => {
@@ -163,7 +173,7 @@ const Workspace = ( ) => {
       canvas.current.dispose();
       canvas.current = null;
     };
-  }, [pointSelectedFunc, state.layers, state.pickerColor, state.pickerEnabled, state.overlayShapes]);
+  }, [state.layers, state.pickerColor, state.pickerEnabled, state.overlayShapes]);
   
   return (
     <div className="workspace">
