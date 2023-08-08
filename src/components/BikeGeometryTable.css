@@ -1,0 +1,11 @@
+/* src/components/BikeGeometryTable.css */
+.bike-geometry-table {
+}
+
+.bike-geometry-table table {
+}
+
+.bike-geometry-table tr:hover {
+
+text-shadow:0px 0px 1px black;
+}

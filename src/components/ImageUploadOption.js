@@ -152,7 +152,7 @@ const ImageUploadOption = () => {
     return () => {
       setPointSelected(() => null);
     };
-  }, [state.selectedPoint, state.geometryPoints, state.selectionColor, state.selectedFile, state.bikeDataName], state.bikesList);
+  }, [addLayerToCanvasFunc, enablePointPickerFunc, addShapeVisualizationFunc, state.selectedPoint, state.geometryPoints, state.selectionColor, state.selectedFile, state.bikeDataName, state.bikesList]);
 
   return (
     <div className="image-upload-option" onDrop={handleDrop} onDragOver={handleDragOver} onDragLeave={handleDragLeave}>

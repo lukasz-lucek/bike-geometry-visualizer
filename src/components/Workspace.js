@@ -42,12 +42,12 @@ const Workspace = ( ) => {
   };
 
   const addShapeVisualizationFunc = (key, shape, color) => {
+    console.log("addShapeVisualizationFunc - trying to visualize: ", key, shape);
     const curKnown = state.overlayShapes;
-    if (curKnown[key] == null) {
-      curKnown[key] = {shape: shape, color: color};
+    if (shape == null) {
+      delete curKnown[key];
     } else {
-      curKnown[key].shape = shape;
-      curKnown[key].color = color;
+      curKnown[key] = {shape: shape, color: color};
     }
     updateState( {overlayShapes: curKnown});
   }
@@ -105,6 +105,16 @@ const Workspace = ( ) => {
         });
 
         canvas.current.insertAt(circle, 1);
+      } else if (shape.type == 'line') {
+        console.log("drwaing a line ", shape)
+        const line = new fabric.Line(
+          [shape.x1, shape.y1, shape.x2, shape.y2],
+          {
+          stroke: color, // Set the stroke color
+          strokeWidth: 1, // Set the stroke width
+        });
+
+        canvas.current.insertAt(line, 2);
       }
       
     }
@@ -173,7 +183,7 @@ const Workspace = ( ) => {
       canvas.current.dispose();
       canvas.current = null;
     };
-  }, [state.layers, state.pickerColor, state.pickerEnabled, state.overlayShapes]);
+  }, [pointSelectedFunc, state.layers, state.pickerColor, state.pickerEnabled, state.overlayShapes]);
   
   return (
     <div className="workspace">

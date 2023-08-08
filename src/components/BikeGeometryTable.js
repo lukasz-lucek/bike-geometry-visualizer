@@ -1,7 +1,27 @@
 // src/components/BikeGeometryTable.js
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import { useCanvasContext } from '../contexts/CanvasContext.js';
+import './BikeGeometryTable.css'; // Import the CSS file
 
 const BikeGeometryTable = ({ points, wheelbase }) => {
+
+  const {
+    addShapeVisualization: [addShapeVisualizationFunc, ]
+  } = useCanvasContext(); 
+
+  const defaultState = {
+    highlightedElement : null
+  }
+
+  const [state, setState] = useState(defaultState);
+
+  const updateState = (newPartialState) => {
+    const newState = {...state, ...newPartialState};
+    setState( newState );
+  }
+
+  const visualizationColor = "red";
+
   // Calculate bike geometry specs based on the provided points and wheelbase
   const finalWheelbase=wheelbase ? Number(wheelbase) : 0;
 
@@ -55,17 +75,35 @@ const BikeGeometryTable = ({ points, wheelbase }) => {
     }
   }
 
-  
-//   const reach = points['reach'] ? points['reach'][0] - points['headTube'][0] : '';
-//   const stack = points['stack'] ? points['stack'][1] - points['headTube'][1] : '';
-//   const topTube = Math.sqrt(reach * reach + stack * stack);
-//   const seatTubeCT = points['seatTube'] ? points['seatTube'][1] : '';
-//   const headAngle = points['headTube'] ? Math.atan(stack / reach) * (180 / Math.PI) : '';
-//   const seatAngle = points['seatTube'] ? Math.atan((points['seatTube'][2] - points['bottomBracket'][2]) / stack) * (180 / Math.PI) : '';
-//   const headTube = points['headTube'] ? Math.sqrt(Math.pow(points['headTube'][0], 2) + Math.pow(points['headTube'][1], 2)) : '';
-//   const chainstay = points['chainstay'] ? points['chainstay'][0] : '';
-//   const calculatedWheelbase = Math.sqrt(Math.pow(chainstay, 2) + Math.pow(points['bottomBracket'][2], 2));
-//   const finalWheelbase = wheelbase || calculatedWheelbase;
+  const hilightWheelbase = () => {
+    console.log("hilightWheelbase");
+    const rearWheelCenter = points["rearWheelCenter"];
+    const frontWheelCenter = points["frontWheelCenter"];
+
+    if (rearWheelCenter && frontWheelCenter) {
+      console.log("hilightWheelbase - both wheels found")
+      addShapeVisualizationFunc("rearWheelLine", {
+        type: 'line',
+        x1: rearWheelCenter.x,
+        y1: rearWheelCenter.y,
+        x2: frontWheelCenter.x,
+        y2: rearWheelCenter.y
+      }, visualizationColor);
+    }
+  }
+
+  const hideWheelbase = () => {
+    console.log("hideWheelbase");
+    addShapeVisualizationFunc("rearWheelLine", null, visualizationColor);
+  }
+
+  useEffect(() => {
+    if (state.highlightedElement == 'wheelbase') {
+      hilightWheelbase();
+    } else {
+      hideWheelbase();
+    }
+  }, [addShapeVisualizationFunc, state.highlightedElement, points, wheelbase]);
 
   return (
     <div className="bike-geometry-table">
@@ -110,7 +148,7 @@ const BikeGeometryTable = ({ points, wheelbase }) => {
             <td>Chainstay</td>
             <td>{chainstay.toFixed(0)}</td>
           </tr>
-          <tr>
+          <tr onMouseEnter={() => {updateState({highlightedElement: "wheelbase"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
             <td>Wheelbase</td>
             <td>{finalWheelbase.toFixed(0)}</td>
           </tr>
