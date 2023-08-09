@@ -9,6 +9,7 @@ export function Canvas({setCanvas, children}) {
     const fabricCanvas = new fabric.Canvas(canvasRef.current, {
       interactive: false, // Disable editing and selection
       selection: false,
+      preserveObjectStacking: true,
     });
     fabricCanvas.selection = false;
     fabricCanvas.on('mouse:wheel', function(opt) {

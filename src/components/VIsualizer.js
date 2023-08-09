@@ -25,49 +25,15 @@ const Visualizer = forwardRef(({canvas}, ref) => {
         });
     },
 
+    disablePointPicker () {
+        updateState ( {
+            pickerEnabled : false,
+        });
+    },
+
     enablePointPicker (color) {
         console.log("starting point selection");
-        return new Promise( (resolve, reject) => {
-            const radius = 10;
-            const littleRadius = 1;
-            const strokeWidth = 2;
-            const littleStrokeWidth = 1;
-            const circle = new fabric.Circle({
-                radius: radius,
-                fill: 'transparent', // Set the fill to transparent
-                stroke: color, // Set the stroke color
-                strokeWidth: strokeWidth, // Set the stroke width
-                left: canvas.width / 2 - radius,
-                top: canvas.height / 2 - radius,
-            });
-        
-            const point = new fabric.Circle({
-                radius: littleRadius,
-                fill: color,
-                left: canvas.width / 2 - littleRadius,
-                top: canvas.height / 2 - littleRadius,
-            });
-    
-            canvas.insertAt(circle, 1);
-            canvas.insertAt(point, 1);
-            
-            canvas.renderAll();
-            
-    
-            canvas.on("mouse:move", function (e) {
-                const coordinates = canvas.getPointer(e);
-                const zoom = canvas.getZoom();
-                const zoomedRadius = radius / zoom;
-                const littleZoomedRadius = littleRadius / zoom;
-                circle.left = (coordinates.x - zoomedRadius);
-                circle.top = (coordinates.y - zoomedRadius);
-                point.left = coordinates.x - littleZoomedRadius;
-                point.top = coordinates.y - littleZoomedRadius;
-                circle.setRadius(zoomedRadius);
-                point.setRadius(littleZoomedRadius);
-                canvas.renderAll();
-            });
-    
+        return new Promise( (resolve, ) => {
             canvas.on("mouse:up", function (e) {
             if (e.isClick && e.target != null) {
                 resolve(
@@ -75,18 +41,16 @@ const Visualizer = forwardRef(({canvas}, ref) => {
                      y: e.transform.offsetY
                     }
                 );
-                // if (pointSelectedFunc != null) {
-                //   pointSelectedFunc(e.transform.offsetX, e.transform.offsetY);
-                // }
+                updateState ( {
+                    pickerEnabled : false,
+                });
             }
             });
-            canvas.hoverCursor = 'pointer';
-        });
-    },
-
-    disablePointPicker () {
-        updateState ( {
-            pickerEnabled : false,
+            updateState( {
+                pickerColor: color,
+                pickerEnabled: true
+            })
+            
         });
     },
 
@@ -106,6 +70,8 @@ const Visualizer = forwardRef(({canvas}, ref) => {
     if (layer.type === 'image') {
       
       fabric.Image.fromURL(layer.src, (img) => {
+        img.lockMovementX = true;
+        img.lockMovementY = true;
         canvas.setZoom(Math.min(canvas.width / img.width, canvas.height / img.height));
         canvas.insertAt(img, 0);
         canvas.renderAll();
@@ -130,6 +96,8 @@ const Visualizer = forwardRef(({canvas}, ref) => {
           fill: 'transparent', // Set the fill to transparent
           stroke: color, // Set the stroke color
           strokeWidth: 3, // Set the stroke width
+          selectable: false,
+          evented: false,
           left: shape.x - 13,
           top: shape.y - 13,
         });
@@ -141,12 +109,69 @@ const Visualizer = forwardRef(({canvas}, ref) => {
           {
           stroke: color, // Set the stroke color
           strokeWidth: 3, // Set the stroke width
+          selectable: false,
+          evented: false,
+
         });
 
         canvas.insertAt(line, 2);
       }
       
     }
+    if (state.pickerEnabled) {
+        const radius = 10;
+        const littleRadius = 1;
+        const strokeWidth = 2;
+        const littleStrokeWidth = 1;
+        const circle = new fabric.Circle({
+            radius: radius,
+            fill: 'transparent', // Set the fill to transparent
+            stroke: state.pickerColor, // Set the stroke color
+            strokeWidth: strokeWidth, // Set the stroke width
+            selectable: false,
+            evented: false,
+            left: canvas.width / 2 - radius,
+            top: canvas.height / 2 - radius,
+        });
+    
+        const point = new fabric.Circle({
+            radius: littleRadius,
+            fill: state.pickerColor,
+            strokeWidth: littleStrokeWidth,
+            selectable: false,
+            evented: false,
+            stroke: state.pickerColor,
+            left: canvas.width / 2 - littleRadius,
+            top: canvas.height / 2 - littleRadius,
+        });
+
+        canvas.insertAt(circle, 2);
+        canvas.insertAt(point, 3);
+
+        canvas.on("mouse:move", function (e) {
+            const coordinates = canvas.getPointer(e);
+            const zoom = canvas.getZoom();
+            const zoomedRadius = radius / zoom;
+            const littleZoomedRadius = littleRadius / zoom;
+            circle.left = (coordinates.x - zoomedRadius);
+            circle.top = (coordinates.y - zoomedRadius);
+            point.left = coordinates.x - littleZoomedRadius;
+            point.top = coordinates.y - littleZoomedRadius;
+            circle.setRadius(zoomedRadius);
+            point.setRadius(littleZoomedRadius);
+            canvas.renderAll();
+        });
+        canvas.hoverCursor = 'pointer';
+    } else {
+        canvas.hoverCursor = 'default';
+        for (var prop in canvas.__eventListeners) {
+            if (canvas.__eventListeners.hasOwnProperty(prop) && prop === 'mouse:up') {
+                console.log("removing mouse up handler");
+                delete canvas.__eventListeners[prop]
+            }
+        }
+    }
+
     canvas.renderAll();
   }, [state, canvas]);
   

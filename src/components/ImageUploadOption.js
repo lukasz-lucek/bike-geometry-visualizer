@@ -144,7 +144,7 @@ const ImageUploadOption = () => {
     return () => {
       //setPointSelected(() => null);
     };
-  }, [contextState, state]);
+  }, [contextState, state.geometryPoints, state.selectedFile]);
 
   return (
     <div className="image-upload-option" onDrop={handleDrop} onDragOver={handleDragOver} onDragLeave={handleDragLeave}>
