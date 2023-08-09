@@ -7,10 +7,7 @@ import '../App.css';
 
 const ImageUploadOption = () => {
   const {
-    addLayer: [addLayerToCanvasFunc, ],
-    enablePointPicker: [enablePointPickerFunc, ],
-    pointSelected: [, setPointSelected],
-    addShapeVisualization: [addShapeVisualizationFunc, ]
+    state: [contextState, ],
   } = useCanvasContext(); // Access the addLayerToCanvas method from context
 
   const knownGeometriesKey = 'knownGeometries'
@@ -19,7 +16,6 @@ const ImageUploadOption = () => {
     wheelbase: '',
     selectedPoint: null,
     geometryPoints: {},
-    selectionColor: "#FF0000",
     selectedFile: null,
     bikeDataName: '',
     bikesList: Object.keys(JSON.parse(localStorage.getItem(knownGeometriesKey))),
@@ -72,20 +68,16 @@ const ImageUploadOption = () => {
     }
     const computedStyle = getComputedStyle(button);
     const color = computedStyle.getPropertyValue("background-color");
-    enablePointPickerFunc(true, color);
-    updateState({selectedPoint: pointType, selectionColor: color});
-
-  };
-
-  const handleCanvasClick = (x, y) => {
-    if (state.selectedPoint) {
+    const promise = contextState.enablePointPickerFunc(color);
+    promise.then((point) => {
       const stateChange = {
-        geometryPoints: {...state.geometryPoints,[state.selectedPoint]: {x: x, y: y, color: state.selectionColor}}, 
+        geometryPoints: {...state.geometryPoints,[pointType]: {x: point.x, y: point.y, color: color}}, 
         selectedPoint: null
       };
       updateState(stateChange);
-      enablePointPickerFunc(false, state.selectionColor);
-    }
+    });
+    updateState({selectedPoint: pointType});
+
   };
 
   const saveGeometry = () => {
@@ -134,10 +126,10 @@ const ImageUploadOption = () => {
   }
 
   useEffect(() => {
-    setPointSelected(() => handleCanvasClick);
+    //setPointSelected(() => handleCanvasClick);
 
     for (const [geometryPointKey, {x: x, y: y, color: color}] of Object.entries(state.geometryPoints)) {
-      addShapeVisualizationFunc(geometryPointKey, {type:"point", x: x, y: y}, color);
+      contextState.addShapeVisualizationFunc(geometryPointKey, {type:"point", x: x, y: y}, color);
     }
 
     if (state.selectedFile != null) {
@@ -145,14 +137,14 @@ const ImageUploadOption = () => {
         type: 'image',
         src: state.selectedFile,
       };
-      addLayerToCanvasFunc(newLayer); // Add the new layer to the canvas
+      contextState.addLayerToCanvasFunc(newLayer); // Add the new layer to the canvas
     }
 
     // Clean up event listeners when the component unmounts
     return () => {
-      setPointSelected(() => null);
+      //setPointSelected(() => null);
     };
-  }, [addLayerToCanvasFunc, enablePointPickerFunc, addShapeVisualizationFunc, state.selectedPoint, state.geometryPoints, state.selectionColor, state.selectedFile, state.bikeDataName, state.bikesList]);
+  }, [contextState, state]);
 
   return (
     <div className="image-upload-option" onDrop={handleDrop} onDragOver={handleDragOver} onDragLeave={handleDragLeave}>

@@ -6,7 +6,7 @@ import './BikeGeometryTable.css'; // Import the CSS file
 const BikeGeometryTable = ({ points, wheelbase }) => {
 
   const {
-    addShapeVisualization: [addShapeVisualizationFunc, ]
+    state: [contextState, ],
   } = useCanvasContext(); 
 
   const defaultState = {
@@ -76,25 +76,69 @@ const BikeGeometryTable = ({ points, wheelbase }) => {
   }
 
   const hilightWheelbase = () => {
-    console.log("hilightWheelbase");
     const rearWheelCenter = points["rearWheelCenter"];
     const frontWheelCenter = points["frontWheelCenter"];
 
     if (rearWheelCenter && frontWheelCenter) {
-      console.log("hilightWheelbase - both wheels found")
-      addShapeVisualizationFunc("rearWheelLine", {
+      contextState.addShapeVisualizationFunc("rearWheelLine", {
         type: 'line',
         x1: rearWheelCenter.x,
         y1: rearWheelCenter.y,
         x2: frontWheelCenter.x,
         y2: rearWheelCenter.y
       }, visualizationColor);
+
+      contextState.addShapeVisualizationFunc("frontWheelLine", {
+        type: 'line',
+        x1: frontWheelCenter.x,
+        y1: frontWheelCenter.y,
+        x2: rearWheelCenter.x,
+        y2: frontWheelCenter.y
+      }, visualizationColor);
     }
   }
 
   const hideWheelbase = () => {
-    console.log("hideWheelbase");
-    addShapeVisualizationFunc("rearWheelLine", null, visualizationColor);
+    contextState.addShapeVisualizationFunc("rearWheelLine", null, visualizationColor);
+    contextState.addShapeVisualizationFunc("frontWheelLine", null, visualizationColor);
+  }
+
+  const hilightChainstay = () => {
+    const rearWheelCenter = points["rearWheelCenter"];
+    const bottomBracketCenter = points["bottomBracketCenter"];
+
+    if (rearWheelCenter && bottomBracketCenter) {
+      contextState.addShapeVisualizationFunc("chainstayLine", {
+        type: 'line',
+        x1: rearWheelCenter.x,
+        y1: rearWheelCenter.y,
+        x2: bottomBracketCenter.x,
+        y2: bottomBracketCenter.y
+      }, visualizationColor);
+    }
+  }
+
+  const hideChainstay = () => {
+    contextState.addShapeVisualizationFunc("chainstayLine", null, visualizationColor);
+  }
+
+  const hilightHeadTube = () => {
+    const headTubeTop = points["headTubeTop"];
+    const headTubeBottom = points["headTubeBottom"];
+
+    if (headTubeTop && headTubeBottom) {
+      contextState.addShapeVisualizationFunc("headTubeLine", {
+        type: 'line',
+        x1: headTubeTop.x,
+        y1: headTubeTop.y,
+        x2: headTubeBottom.x,
+        y2: headTubeBottom.y
+      }, visualizationColor);
+    }
+  }
+
+  const hideHeadTube = () => {
+    contextState.addShapeVisualizationFunc("headTubeLine", null, visualizationColor);
   }
 
   useEffect(() => {
@@ -103,7 +147,19 @@ const BikeGeometryTable = ({ points, wheelbase }) => {
     } else {
       hideWheelbase();
     }
-  }, [addShapeVisualizationFunc, state.highlightedElement, points, wheelbase]);
+
+    if (state.highlightedElement == 'chainstay') {
+      hilightChainstay();
+    } else {
+      hideChainstay();
+    }
+
+    if (state.highlightedElement == 'headTube') {
+      hilightHeadTube();
+    } else {
+      hideHeadTube();
+    }
+  }, [contextState.addShapeVisualizationFunc, state, points, wheelbase]);
 
   return (
     <div className="bike-geometry-table">
@@ -140,11 +196,11 @@ const BikeGeometryTable = ({ points, wheelbase }) => {
             <td>Seat Angle</td>
             <td>{seatAngle.toFixed(0)}</td>
           </tr>
-          <tr>
+          <tr onMouseEnter={() => {updateState({highlightedElement: "headTube"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
             <td>Head Tube</td>
             <td>{headTube.toFixed(0)}</td>
           </tr>
-          <tr>
+          <tr  onMouseEnter={() => {updateState({highlightedElement: "chainstay"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
             <td>Chainstay</td>
             <td>{chainstay.toFixed(0)}</td>
           </tr>

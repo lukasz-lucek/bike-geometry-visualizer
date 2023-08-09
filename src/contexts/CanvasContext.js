@@ -7,17 +7,25 @@ export const useCanvasContext = () => {
   return useContext(CanvasContext);
 };
 
+
+
 export const CanvasProvider = ({ children }) => {
-  const [addLayerToCanvasFunc, setAddLayerToCanvas] = useState((layer) => {});
-  const [enablePointPickerFunc, setEnablePointPicker] = useState((enabled, color) => {});
-  const [pointSelectedFunc, setPointSelected] = useState(null);
-  const [addShapeVisualizationFunc, setAddShapeVisualization] = useState((shape) => {});
+  const defaultState = {
+    addLayerToCanvasFunc : (layer) => {},
+    enablePointPickerFunc : (color) => {return new Promise ((resolve , reject) => {reject();})},
+    disablePointPickerFun : () => {},
+    addShapeVisualizationFunc : (shape) => {},
+  };
+
+  const [state, setState] = useState(defaultState);
+
+  const updateState = (newPartialState) => {
+    setState({...state,...newPartialState});
+  }
+
   return (
     <CanvasContext.Provider value={{
-        addLayer: [addLayerToCanvasFunc, setAddLayerToCanvas],
-        enablePointPicker: [enablePointPickerFunc, setEnablePointPicker],
-        pointSelected: [pointSelectedFunc, setPointSelected],
-        addShapeVisualization: [addShapeVisualizationFunc, setAddShapeVisualization],
+        state: [state, updateState],
         }}>
       {children}
     </CanvasContext.Provider>
