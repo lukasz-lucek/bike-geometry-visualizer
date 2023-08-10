@@ -28,7 +28,6 @@ const Workspace = ( ) => {
   }
 
   const addShapeVisualizationFunc = (key, shape, color) => {
-    console.log("workspace: addShapeVisualizationFunc");
     visualizerRef.current.addShapeVisualizationFunc(key, shape, color);
   }
 
