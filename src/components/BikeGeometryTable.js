@@ -34,13 +34,16 @@ const BikeGeometryTable = ({ points, wheelbase }) => {
   let headTube=0;
   let chainstay=0;
   let bbDrop=0;
+  let pxPerMm=0;
+  let strokeWidth=5;
 
   const rearWheelCenter = points["rearWheelCenter"];
   const frontWheelCenter = points["frontWheelCenter"];
 
   if (rearWheelCenter && frontWheelCenter) {
     const wheelbasePx = Math.sqrt(Math.pow(rearWheelCenter.x - frontWheelCenter.x, 2) + Math.pow(rearWheelCenter.y - frontWheelCenter.y, 2));
-    const pxPerMm = wheelbasePx / wheelbase;
+    pxPerMm = wheelbasePx / wheelbase;
+    strokeWidth = strokeWidth*pxPerMm;
 
     const bottomBracketCenter = points["bottomBracketCenter"];
     const headTubeTop = points["headTubeTop"];
@@ -59,7 +62,6 @@ const BikeGeometryTable = ({ points, wheelbase }) => {
         
         if (headTubeTop) {
             const seatAngleRadTo90 = (Math.PI / 2.0) - seatAngleRad;
-            console.log("radians: ", seatAngleRadTo90);
             topTube = reach + Math.tan(seatAngleRadTo90) * stack;
         }
     }
@@ -82,18 +84,11 @@ const BikeGeometryTable = ({ points, wheelbase }) => {
     if (rearWheelCenter && frontWheelCenter) {
       contextState.addShapeVisualizationFunc("rearWheelLine", {
         type: 'line',
+        strokeWidth: strokeWidth,
         x1: rearWheelCenter.x,
         y1: rearWheelCenter.y,
         x2: frontWheelCenter.x,
         y2: rearWheelCenter.y
-      }, visualizationColor);
-
-      contextState.addShapeVisualizationFunc("frontWheelLine", {
-        type: 'line',
-        x1: frontWheelCenter.x,
-        y1: frontWheelCenter.y,
-        x2: rearWheelCenter.x,
-        y2: frontWheelCenter.y
       }, visualizationColor);
     }
   }
@@ -110,6 +105,7 @@ const BikeGeometryTable = ({ points, wheelbase }) => {
     if (rearWheelCenter && bottomBracketCenter) {
       contextState.addShapeVisualizationFunc("chainstayLine", {
         type: 'line',
+        strokeWidth: strokeWidth,
         x1: rearWheelCenter.x,
         y1: rearWheelCenter.y,
         x2: bottomBracketCenter.x,
@@ -129,6 +125,7 @@ const BikeGeometryTable = ({ points, wheelbase }) => {
     if (headTubeTop && headTubeBottom) {
       contextState.addShapeVisualizationFunc("headTubeLine", {
         type: 'line',
+        strokeWidth: strokeWidth,
         x1: headTubeTop.x,
         y1: headTubeTop.y,
         x2: headTubeBottom.x,
@@ -141,7 +138,176 @@ const BikeGeometryTable = ({ points, wheelbase }) => {
     contextState.addShapeVisualizationFunc("headTubeLine", null, visualizationColor);
   }
 
+  const hilightSeatTube = () => {
+    const seatTubeTop = points["seatTubeTop"];
+    const seatTubeBottom = points["bottomBracketCenter"];
+
+    if (seatTubeTop && seatTubeBottom) {
+      contextState.addShapeVisualizationFunc("seatTubeLine", {
+        type: 'line',
+        strokeWidth: strokeWidth,
+        x1: seatTubeTop.x,
+        y1: seatTubeTop.y,
+        x2: seatTubeBottom.x,
+        y2: seatTubeBottom.y
+      }, visualizationColor);
+    }
+  }
+
+  const hideSeatTube = () => {
+    contextState.addShapeVisualizationFunc("seatTubeLine", null, visualizationColor);
+  }
+
+  const hilightTopTubeEffective = () => {
+    const headTubeTop = points["headTubeTop"];
+
+    if (headTubeTop && pxPerMm > 0 && topTube) {
+      contextState.addShapeVisualizationFunc("topTubeEffectiveLine", {
+        type: 'line',
+        strokeWidth: strokeWidth,
+        x1: headTubeTop.x,
+        y1: headTubeTop.y,
+        x2: headTubeTop.x - topTube * pxPerMm,
+        y2: headTubeTop.y
+      }, visualizationColor);
+    }
+  }
+
+  const hideTopTubeEffective = () => {
+    contextState.addShapeVisualizationFunc("topTubeEffectiveLine", null, visualizationColor);
+  }
+
+  const hilightStack = () => {
+    const headTubeTop = points["headTubeTop"];
+    const bottomBracketCenter = points["bottomBracketCenter"];
+
+    if (headTubeTop && bottomBracketCenter) {
+      contextState.addShapeVisualizationFunc("stackLine", {
+        type: 'line',
+        strokeWidth: strokeWidth,
+        x1: bottomBracketCenter.x,
+        y1: bottomBracketCenter.y,
+        x2: bottomBracketCenter.x,
+        y2: headTubeTop.y
+      }, visualizationColor);
+    }
+  }
+
+  const hideStack = () => {
+    contextState.addShapeVisualizationFunc("stackLine", null, visualizationColor);
+  }
+
+  const hilightReach = () => {
+    const headTubeTop = points["headTubeTop"];
+    const bottomBracketCenter = points["bottomBracketCenter"];
+
+    if (headTubeTop && bottomBracketCenter) {
+      contextState.addShapeVisualizationFunc("reachLine", {
+        type: 'line',
+        strokeWidth: strokeWidth,
+        x1: headTubeTop.x,
+        y1: headTubeTop.y,
+        x2: bottomBracketCenter.x,
+        y2: headTubeTop.y
+      }, visualizationColor);
+    }
+  }
+
+  const hideReach = () => {
+    contextState.addShapeVisualizationFunc("reachLine", null, visualizationColor);
+  }
+
+  const hilightBBDrop = () => {
+    const rearWheelCenter = points["rearWheelCenter"];
+    const bottomBracketCenter = points["bottomBracketCenter"];
+
+    if (rearWheelCenter && bottomBracketCenter) {
+      contextState.addShapeVisualizationFunc("bbDropLine", {
+        type: 'line',
+        strokeWidth: strokeWidth,
+        x1: bottomBracketCenter.x,
+        y1: bottomBracketCenter.y,
+        x2: bottomBracketCenter.x,
+        y2: rearWheelCenter.y
+      }, visualizationColor);
+    }
+  }
+
+  const hideBBDrop = () => {
+    contextState.addShapeVisualizationFunc("bbDropLine", null, visualizationColor);
+  }
+
+  const hilightHeadAngle = () => {
+    const frontWheelCenter = points["frontWheelCenter"];
+    const bottomBracketCenter = points["bottomBracketCenter"];
+    const headTubeTop = points["headTubeTop"];
+
+    if (frontWheelCenter && bottomBracketCenter && headTubeTop) {
+      contextState.addShapeVisualizationFunc("headAngle", {
+        type: 'angle',
+        strokeWidth: strokeWidth,
+        x1: bottomBracketCenter.x,
+        y1: frontWheelCenter.y,
+        x2: headTubeTop.x + (frontWheelCenter.y - headTubeTop.y) / Math.tan(headAngle * Math.PI / 180.0),
+        y2: frontWheelCenter.y,
+        x3: headTubeTop.x,
+        y3: headTubeTop.y,
+      }, visualizationColor);
+    }
+  }
+
+  const hideHeadAngle = () => {
+    contextState.addShapeVisualizationFunc("headAngle", null, visualizationColor);
+  }
+
+  const hilightSeatAngle = () => {
+    const rearWheelCenter = points["rearWheelCenter"];
+    const bottomBracketCenter = points["bottomBracketCenter"];
+    const seatTubeTop = points["seatTubeTop"];
+
+    if (rearWheelCenter && bottomBracketCenter && seatTubeTop) {
+      contextState.addShapeVisualizationFunc("seatAngle", {
+        type: 'angle',
+        strokeWidth: strokeWidth,
+        x1: rearWheelCenter.x,
+        y1: bottomBracketCenter.y,
+        x2: bottomBracketCenter.x,
+        y2: bottomBracketCenter.y,
+        x3: seatTubeTop.x,
+        y3: seatTubeTop.y,
+      }, visualizationColor);
+    }
+  }
+
+  const hideSeatAngle = () => {
+    contextState.addShapeVisualizationFunc("seatAngle", null, visualizationColor);
+  }
+
   useEffect(() => {
+    if (state.highlightedElement == 'stack') {
+      hilightStack();
+    } else {
+      hideStack();
+    }
+
+    if (state.highlightedElement == 'reach') {
+      hilightReach();
+    } else {
+      hideReach();
+    }
+
+    if (state.highlightedElement == 'topTubeEffective') {
+      hilightTopTubeEffective();
+    } else {
+      hideTopTubeEffective();
+    }
+
+    if (state.highlightedElement == 'seatTube') {
+      hilightSeatTube();
+    } else {
+      hideSeatTube();
+    }
+
     if (state.highlightedElement == 'wheelbase') {
       hilightWheelbase();
     } else {
@@ -159,6 +325,24 @@ const BikeGeometryTable = ({ points, wheelbase }) => {
     } else {
       hideHeadTube();
     }
+
+    if (state.highlightedElement == 'bbDrop') {
+      hilightBBDrop();
+    } else {
+      hideBBDrop();
+    }
+
+    if (state.highlightedElement == 'headAngle') {
+      hilightHeadAngle();
+    } else {
+      hideHeadAngle();
+    }
+
+    if (state.highlightedElement == 'seatAngle') {
+      hilightSeatAngle();
+    } else {
+      hideSeatAngle();
+    }
   }, [contextState.addShapeVisualizationFunc, state, points, wheelbase]);
 
   return (
@@ -172,27 +356,27 @@ const BikeGeometryTable = ({ points, wheelbase }) => {
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr onMouseEnter={() => {updateState({highlightedElement: "reach"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
             <td>Reach</td>
             <td>{reach.toFixed(0)}</td>
           </tr>
-          <tr>
+          <tr onMouseEnter={() => {updateState({highlightedElement: "stack"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
             <td>Stack</td>
             <td>{stack.toFixed(0)}</td>
           </tr>
-          <tr>
+          <tr onMouseEnter={() => {updateState({highlightedElement: "topTubeEffective"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
             <td>Top Tube (effective)</td>
             <td>{topTube.toFixed(0)}</td>
           </tr>
-          <tr>
+          <tr onMouseEnter={() => {updateState({highlightedElement: "seatTube"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
             <td>Seat Tube C-T</td>
             <td>{seatTubeCT.toFixed(0)}</td>
           </tr>
-          <tr>
+          <tr onMouseEnter={() => {updateState({highlightedElement: "headAngle"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
             <td>Head Angle</td>
             <td>{headAngle.toFixed(0)}</td>
           </tr>
-          <tr>
+          <tr onMouseEnter={() => {updateState({highlightedElement: "seatAngle"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
             <td>Seat Angle</td>
             <td>{seatAngle.toFixed(0)}</td>
           </tr>
@@ -208,7 +392,7 @@ const BikeGeometryTable = ({ points, wheelbase }) => {
             <td>Wheelbase</td>
             <td>{finalWheelbase.toFixed(0)}</td>
           </tr>
-          <tr>
+          <tr onMouseEnter={() => {updateState({highlightedElement: "bbDrop"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
             <td>BB Drop</td>
             <td>{bbDrop.toFixed(0)}</td>
           </tr>

@@ -3,6 +3,7 @@ import React, { forwardRef, useImperativeHandle, useEffect, useState} from 'reac
 import BackgroundImage from "../components/BackgroundImage.js"
 import PointMarker from "../components/PointMarker.js"
 import LineMarker from "../components/LineMarker.js"
+import AngleMarker from "../components/AngleMarker.js"
 import PointPicker from "../components/PointPicker.js"
 
 const Visualizer = forwardRef(({canvas}, ref) => {
@@ -106,6 +107,9 @@ const Visualizer = forwardRef(({canvas}, ref) => {
       )}
       { Object.keys(state.overlayShapes).map((key, i) => 
         state.overlayShapes[key]?.shape?.type == 'line' ?  <LineMarker key={'LineMarker'+i} shape={state.overlayShapes[key]} canvas={canvas}/> : null
+      )}
+      { Object.keys(state.overlayShapes).map((key, i) => 
+        state.overlayShapes[key]?.shape?.type == 'angle' ?  <AngleMarker key={'AngleMarker'+i} shape={state.overlayShapes[key]} canvas={canvas}/> : null
       )}
       {state.pickerEnabled ? <PointPicker canvas={canvas} pickerColor={state.pickerColor}/> : null}
     </div>
