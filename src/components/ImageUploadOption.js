@@ -125,6 +125,21 @@ const ImageUploadOption = () => {
     updateState({bikesList: Object.keys(knownGeometries)});
   }
 
+  const getSuggestedRotationAngle = () => {
+    const x1 = state.geometryPoints['rearWheelCenter'].x;
+    const y1 = state.geometryPoints['rearWheelCenter'].y;
+    const x2 = state.geometryPoints['frontWheelCenter'].x;
+    const y2 = state.geometryPoints['frontWheelCenter'].y;
+    
+    const initialAngle = Math.atan((y1 - y2) / (x2 - x1));
+    const initialAngleDegrees = initialAngle * (180 / Math.PI);
+    return initialAngleDegrees;
+  }
+
+  const fixRoation = () => {
+    contextState.fixRotationFunc(getSuggestedRotationAngle());
+  }
+
   useEffect(() => {
     //setPointSelected(() => handleCanvasClick);
 
@@ -217,6 +232,15 @@ const ImageUploadOption = () => {
           (
             {state.geometryPoints['seatTubeTop'] ? state.geometryPoints['seatTubeTop'].x.toFixed(1) : '____'},
             {state.geometryPoints['seatTubeTop'] ? state.geometryPoints['seatTubeTop'].y.toFixed(1) : '____'}
+          )
+        </button>
+        <button disabled = {true}
+          onClick={() => fixRoation()}>
+          Sugested rotation: to fix wheel level
+          (
+            {state.geometryPoints['frontWheelCenter'] && state.geometryPoints['rearWheelCenter'] ? 
+              getSuggestedRotationAngle().toFixed(2) :
+              '____'}
           )
         </button>
       </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { fabric } from 'fabric';
 
-export function BackgroundImage({canvas, layer}) {
+export function BackgroundImage({canvas, layer, angleOfRotation}) {
   const [fabricObject, setFabricObject] = useState([]);
   const [fabricObjectToRemember, setFabricObjectToRemember] = useState(null);
 
@@ -43,6 +43,13 @@ export function BackgroundImage({canvas, layer}) {
     }
     
   }, [fabricObjectToRemember]);
+
+  useEffect(() => {
+    if (fabricObject && angleOfRotation > 0) {
+      fabricObject.rotate(angleOfRotation);
+      canvas.renderAll();
+    }
+  }, [angleOfRotation]);
 
   return (
     <>

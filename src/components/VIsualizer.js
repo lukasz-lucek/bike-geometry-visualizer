@@ -1,5 +1,5 @@
 // src/components/Visualizer.js
-import React, { forwardRef, useImperativeHandle, useRef, useEffect, useState} from 'react';
+import React, { forwardRef, useImperativeHandle, useEffect, useState} from 'react';
 import BackgroundImage from "../components/BackgroundImage.js"
 import PointMarker from "../components/PointMarker.js"
 import LineMarker from "../components/LineMarker.js"
@@ -11,6 +11,7 @@ const Visualizer = forwardRef(({canvas}, ref) => {
     pickerEnabled: false,
     pickerColor: "#FFFFFF",
     overlayShapes: {},
+    angleOfRotation: 0,
   }
 
   const [state, setState] = useState(defaultState);
@@ -50,37 +51,42 @@ const Visualizer = forwardRef(({canvas}, ref) => {
     
 
     enablePointPicker (color) {
-        console.log("starting point selection");
-        return new Promise( (resolve, ) => {
-            canvas.on("mouse:up", function (e) {
-            if (e.isClick && e.target != null) {
-                resolve(
-                    {x: e.transform.offsetX, 
-                     y: e.transform.offsetY
-                    }
-                );
-                updateState ( {
-                    pickerEnabled : false,
-                });
-            }
-            });
-            updateState( {
-                pickerColor: color,
-                pickerEnabled: true
-            })
-            
-        });
+      console.log("starting point selection");
+      return new Promise( (resolve, ) => {
+          canvas.on("mouse:up", function (e) {
+          if (e.isClick && e.target != null) {
+              resolve(
+                  {x: e.transform.offsetX, 
+                    y: e.transform.offsetY
+                  }
+              );
+              updateState ( {
+                  pickerEnabled : false,
+              });
+          }
+          });
+          updateState( {
+              pickerColor: color,
+              pickerEnabled: true
+          })
+          
+      });
     },
 
     addShapeVisualizationFunc (key, shape, color) {
-        const curKnown = state.overlayShapes;
-        if (shape == null) {
-          delete curKnown[key];
-        } else {
-          curKnown[key] = {shape: shape, color: color};
-        }
-        updateState( {overlayShapes: curKnown});
+      const curKnown = state.overlayShapes;
+      if (shape == null) {
+        delete curKnown[key];
+      } else {
+        curKnown[key] = {shape: shape, color: color};
       }
+      updateState( {overlayShapes: curKnown});
+    },
+
+    fixRotationFunc(angle) {
+      console.log("Fixing rotation");
+      updateState({angleOfRotation: angle});
+    }
   }));
 
   useEffect(() => {
@@ -92,7 +98,9 @@ const Visualizer = forwardRef(({canvas}, ref) => {
   
   return (
     <div className="visualizer">
-      {state.layers.map((layer, i) => layer ? <BackgroundImage key={'BackgroundImage'+i} layer={layer} canvas={canvas}/> : null)},
+      {state.layers.map((layer, i) => layer ? 
+        <BackgroundImage key={'BackgroundImage'+i} layer={layer} canvas={canvas} angleOfRotation={state.angleOfRotation}/> :
+        null)},
       { Object.keys(state.overlayShapes).map((key, i) => 
         state.overlayShapes[key]?.shape?.type == 'point' ?  <PointMarker key={'PointMarker'+i} shape={state.overlayShapes[key]} canvas={canvas}/> : null
       )}

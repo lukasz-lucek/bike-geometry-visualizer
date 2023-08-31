@@ -31,6 +31,10 @@ const Workspace = ( ) => {
     visualizerRef.current.addShapeVisualizationFunc(key, shape, color);
   }
 
+  const fixRotationFunc = (angle) => {
+    return visualizerRef.current.fixRotationFunc(angle);
+  }
+
   useEffect(() => {
 
     updateContextState({
@@ -38,6 +42,7 @@ const Workspace = ( ) => {
       enablePointPickerFunc : enablePointPicker,
       disablePointPickerFun : disablePointPicker,
       addShapeVisualizationFunc : addShapeVisualizationFunc,
+      fixRotationFunc: fixRotationFunc,
     });
 
   }, [canvas]);
