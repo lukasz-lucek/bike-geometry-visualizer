@@ -32,7 +32,7 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
     if (seatTubeTop && bottomBracketCenter) {
         const ratio = Math.sqrt(
             Math.pow(seatTubeTop.x - bottomBracketCenter.x, 2) + Math.pow(seatTubeTop.y - bottomBracketCenter.y, 2)
-            ) / (points.stTtOffset ? points.stTtOffset : defauldStTTOffset);
+            ) / points.stTtOffset;
         console.log("ratio: ", ratio);
         contextState.addShapeVisualizationFunc("StTtOffset", {
             type: 'line',
@@ -57,7 +57,7 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
     if (headTubeTop && headTubeBottom) {
         const ratio = Math.sqrt(
             Math.pow(headTubeTop.x - headTubeBottom.x, 2) + Math.pow(headTubeTop.y - headTubeBottom.y, 2)
-            ) / (points.htTtOffset ? points.htTtOffset : defauldHtTTOffset);
+            ) / points.htTtOffset;
       contextState.addShapeVisualizationFunc("HtTtOffset", {
         type: 'line',
         strokeWidth: strokeWidth,
@@ -74,17 +74,24 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
   }
 
   useEffect(() => {
-      if (state.highlightedElement == 'stTtOffset') {
-        hilightStTtOffset();
-      } else {
-        hideStTtOffset();
-      }
+    if (points.htTtOffset == null) {
+      updatePoints({htTtOffset: defauldHtTTOffset});
+    }
+    if (points.stTtOffset == null) {
+      updatePoints({stTtOffset: defauldStTTOffset});
+    }
 
-      if (state.highlightedElement == 'htTtOffset') {
-        hilightHtTtOffset();
-      } else {
-        hideHtTtOffset();
-      }
+    if (state.highlightedElement == 'stTtOffset') {
+      hilightStTtOffset();
+    } else {
+      hideStTtOffset();
+    }
+
+    if (state.highlightedElement == 'htTtOffset') {
+      hilightHtTtOffset();
+    } else {
+      hideHtTtOffset();
+    }
   }, [contextState.addShapeVisualizationFunc, state, points, pxPerMm, updatePoints]);
 
   return (
@@ -100,16 +107,16 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
         <tbody>
           <tr onMouseEnter={() => {updateState({highlightedElement: "stTtOffset"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
             <td>ST-TT offset</td>
-            <td>{ points.stTtOffset ? points.stTtOffset.toFixed(0) : defauldStTTOffset}</td>
-            <td><button onClick={() => {updatePoints({stTtOffset: (points.stTtOffset ? points.stTtOffset : defauldStTTOffset ) + 5})}}>+</button></td>
-            <td><button onClick={() => {updatePoints({stTtOffset: (points.stTtOffset ? points.stTtOffset : defauldStTTOffset ) - 5})}}>-</button></td>
+            <td>{ points.stTtOffset?.toFixed(0)}</td>
+            <td><button onClick={() => {updatePoints({stTtOffset : points.stTtOffset + 5})}}>+</button></td>
+            <td><button onClick={() => {updatePoints({stTtOffset : points.stTtOffset - 5})}}>-</button></td>
           </tr>
 
           <tr onMouseEnter={() => {updateState({highlightedElement: "htTtOffset"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
             <td>ST-TT offset</td>
-            <td>{ points.htTtOffset ? points.htTtOffset.toFixed(0) : defauldHtTTOffset}</td>
-            <td><button onClick={() => {updatePoints({htTtOffset: (points.htTtOffset ? points.htTtOffset : defauldHtTTOffset ) + 5})}}>+</button></td>
-            <td><button onClick={() => {updatePoints({htTtOffset: (points.htTtOffset ? points.htTtOffset : defauldHtTTOffset ) - 5})}}>-</button></td>
+            <td>{ points.htTtOffset?.toFixed(0)}</td>
+            <td><button onClick={() => {updatePoints({htTtOffset: points.htTtOffset + 5})}}>+</button></td>
+            <td><button onClick={() => {updatePoints({htTtOffset: points.htTtOffset - 5})}}>-</button></td>
           </tr>
           
         </tbody>
