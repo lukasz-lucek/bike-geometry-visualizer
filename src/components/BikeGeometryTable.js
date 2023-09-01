@@ -2,8 +2,9 @@
 import React, {useEffect, useState} from 'react';
 import { useCanvasContext } from '../contexts/CanvasContext.js';
 import './BikeGeometryTable.css'; // Import the CSS file
+import PartsGrabberSpecs from './PartsGrabberSpecs.js';
 
-const BikeGeometryTable = ({ points, wheelbase }) => {
+const BikeGeometryTable = ({ points, wheelbase, updatePoints }) => {
 
   const {
     state: [contextState, ],
@@ -347,6 +348,7 @@ const BikeGeometryTable = ({ points, wheelbase }) => {
 
   return (
     <div className="bike-geometry-table">
+      <div>
       <h3>Bike Geometry Specifications</h3>
       <table>
         <thead>
@@ -398,6 +400,8 @@ const BikeGeometryTable = ({ points, wheelbase }) => {
           </tr>
         </tbody>
       </table>
+      </div>
+      <PartsGrabberSpecs points={points} pxPerMm={pxPerMm} updatePoints={updatePoints}/>
     </div>
   );
 };

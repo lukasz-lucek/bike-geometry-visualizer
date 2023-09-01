@@ -1,5 +1,8 @@
 /* src/components/BikeGeometryTable.css */
 .bike-geometry-table {
+    display:flex;
+    flex-direction:row;
+    gap: 10px;
 }
 
 .bike-geometry-table table {

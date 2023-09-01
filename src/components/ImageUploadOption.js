@@ -140,6 +140,10 @@ const ImageUploadOption = () => {
     contextState.fixRotationFunc(getSuggestedRotationAngle());
   }
 
+  const updatePoints = (newPartialPoints) => {
+    updateState({geometryPoints: {...state.geometryPoints, ...newPartialPoints}});
+  }
+
   useEffect(() => {
     //setPointSelected(() => handleCanvasClick);
 
@@ -244,7 +248,7 @@ const ImageUploadOption = () => {
           )
         </button>
       </div>
-      <BikeGeometryTable points={state.geometryPoints} wheelbase={state.wheelbase}/>
+      <BikeGeometryTable points={state.geometryPoints} wheelbase={state.wheelbase} updatePoints={updatePoints}/>
       <input
         type="text"
         placeholder="enter name to save"
