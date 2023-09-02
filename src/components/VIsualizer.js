@@ -5,6 +5,7 @@ import PointMarker from "../components/PointMarker.js"
 import LineMarker from "../components/LineMarker.js"
 import AngleMarker from "../components/AngleMarker.js"
 import PointPicker from "../components/PointPicker.js"
+import RectangleMarker from "../components/RectangleMarker.js"
 
 const Visualizer = forwardRef(({canvas}, ref) => {
   const defaultState = {
@@ -110,6 +111,9 @@ const Visualizer = forwardRef(({canvas}, ref) => {
       )}
       { Object.keys(state.overlayShapes).map((key, i) => 
         state.overlayShapes[key]?.shape?.type == 'angle' ?  <AngleMarker key={'AngleMarker'+i} shape={state.overlayShapes[key]} canvas={canvas}/> : null
+      )}
+      { Object.keys(state.overlayShapes).map((key, i) => 
+        state.overlayShapes[key]?.shape?.type == 'rectangle' ?  <RectangleMarker key={'RectangleMarker'+i} shape={state.overlayShapes[key]} canvas={canvas}/> : null
       )}
       {state.pickerEnabled ? <PointPicker canvas={canvas} pickerColor={state.pickerColor}/> : null}
     </div>
