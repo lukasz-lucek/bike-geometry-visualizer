@@ -113,7 +113,8 @@ const Visualizer = forwardRef(({canvas}, ref) => {
         state.overlayShapes[key]?.shape?.type == 'angle' ?  <AngleMarker key={'AngleMarker'+i} shape={state.overlayShapes[key]} canvas={canvas}/> : null
       )}
       { Object.keys(state.overlayShapes).map((key, i) => 
-        state.overlayShapes[key]?.shape?.type == 'rectangle' ?  <RectangleMarker key={'RectangleMarker'+i} shape={state.overlayShapes[key]} canvas={canvas}/> : null
+        state.overlayShapes[key]?.shape?.type == 'rectangle' ?  
+          <RectangleMarker key={'RectangleMarker'+i} shape={state.overlayShapes[key]} canvas={canvas} imageSrc={state.layers[0]} /> : null
       )}
       {state.pickerEnabled ? <PointPicker canvas={canvas} pickerColor={state.pickerColor}/> : null}
     </div>
