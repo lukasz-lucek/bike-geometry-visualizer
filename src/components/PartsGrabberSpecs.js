@@ -21,9 +21,14 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
 
   const strokeWidth = 1*pxPerMm;
   const visualizationColor = "red";
-  const defauldStTTOffset = 20;
-  const defauldHtTTOffset = 20;
-  const defaultTTWidth = 20;
+  const defauldStTTOffset = 30;
+  const defauldHtTTOffset = 30;
+  const defauldHbBtOffset = 50;
+  const defaultTTWidth = 40;
+  const defaultBTWidth = 60;
+  const defaultSTWidth = 30;
+  const defaultHTWidth = 40;
+  const defaultForkWidth = 40;
 
   const getTTStartPoint = () => {
     const seatTubeTop = points["seatTubeTop"];
@@ -77,6 +82,22 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
     return null;
   }
 
+  const getBTEndPoint = () => {
+    const headTubeTop = points["headTubeTop"];
+    const headTubeBottom = points["headTubeBottom"];
+
+    if (headTubeTop && headTubeBottom) {
+      const ratio = Math.sqrt(
+        Math.pow(headTubeTop.x - headTubeBottom.x, 2) + Math.pow(headTubeTop.y - headTubeBottom.y, 2)
+        ) / points.hbBtOffset;
+      return {
+        x: headTubeBottom.x - Math.abs(headTubeTop.x - headTubeBottom.x) / ratio,
+        y: headTubeBottom.y - Math.abs(headTubeTop.y - headTubeBottom.y) / ratio,
+      }
+    }
+    return null;
+  }
+
   const hilightHtTtOffset = () => {
     const headTubeTop = points["headTubeTop"];
     const ttEnd = getTTEndPoint();
@@ -118,6 +139,110 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
     contextState.addShapeVisualizationFunc("topTubeGrab", null, visualizationColor);
   }
 
+  const hilightHbBtOffset = () => {
+    const headTubeBottom = points["headTubeBottom"];
+    const btEnd = getBTEndPoint();
+    
+    if (headTubeBottom && btEnd) {
+      contextState.addShapeVisualizationFunc("HbBtOffset", {
+        type: 'line',
+        strokeWidth: strokeWidth,
+        x1: headTubeBottom.x,
+        y1: headTubeBottom.y,
+        x2: btEnd.x,
+        y2: btEnd.y,
+      }, visualizationColor);
+    }
+  }
+
+  const hideHbBtOffset = () => {
+    contextState.addShapeVisualizationFunc("HbBtOffset", null, visualizationColor);
+  }
+
+  const hilightBottomTube = () => {
+    const btStart = points["bottomBracketCenter"];
+    const btEnd = getBTEndPoint();
+
+    if (btStart && btEnd) {
+      contextState.addShapeVisualizationFunc("bottomTubeGrab", {
+        type: 'rectangle',
+        strokeWidth: strokeWidth,
+        x1: btStart.x,
+        y1: btStart.y,
+        x2: btEnd.x,
+        y2: btEnd.y,
+        width: points.btWidth,
+      }, visualizationColor);
+    }
+  }
+
+  const hideBottomTube = () => {
+    contextState.addShapeVisualizationFunc("bottomTubeGrab", null, visualizationColor);
+  }
+
+  const hilightSeatTube = () => {
+    const stStart = points["bottomBracketCenter"];
+    const stEnd = points["seatTubeTop"];
+
+    if (stStart && stEnd) {
+      contextState.addShapeVisualizationFunc("seatTubeGrab", {
+        type: 'rectangle',
+        strokeWidth: strokeWidth,
+        x1: stStart.x,
+        y1: stStart.y,
+        x2: stEnd.x,
+        y2: stEnd.y,
+        width: points.stWidth,
+      }, visualizationColor);
+    }
+  }
+
+  const hideSeatTube = () => {
+    contextState.addShapeVisualizationFunc("seatTubeGrab", null, visualizationColor);
+  }
+
+  const hilightHeadTube = () => {
+    const htStart = points["headTubeTop"];
+    const htEnd = points["headTubeBottom"];
+
+    if (htStart && htEnd) {
+      contextState.addShapeVisualizationFunc("headTubeGrab", {
+        type: 'rectangle',
+        strokeWidth: strokeWidth,
+        x1: htStart.x,
+        y1: htStart.y,
+        x2: htEnd.x,
+        y2: htEnd.y,
+        width: points.htWidth,
+      }, visualizationColor);
+    }
+  }
+
+  const hideHeadTube = () => {
+    contextState.addShapeVisualizationFunc("headTubeGrab", null, visualizationColor);
+  }
+
+  const hilightFork = () => {
+    const forkStart = points["headTubeBottom"];
+    const forkEnd = points["frontWheelCenter"];
+
+    if (forkStart && forkEnd) {
+      contextState.addShapeVisualizationFunc("forkGrab", {
+        type: 'rectangle',
+        strokeWidth: strokeWidth,
+        x1: forkStart.x,
+        y1: forkStart.y,
+        x2: forkEnd.x,
+        y2: forkEnd.y,
+        width: points.forkWidth,
+      }, visualizationColor);
+    }
+  }
+
+  const hideFork = () => {
+    contextState.addShapeVisualizationFunc("forkGrab", null, visualizationColor);
+  }
+
   useEffect(() => {
     if (points.htTtOffset == null) {
       updatePoints({htTtOffset: defauldHtTTOffset});
@@ -128,6 +253,22 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
     if (points.ttWidth == null) {
       updatePoints({ttWidth: defaultTTWidth});
     }
+    if (points.hbBtOffset == null) {
+      updatePoints({hbBtOffset: defauldHbBtOffset});
+    }
+    if (points.btWidth == null) {
+      updatePoints({btWidth: defaultBTWidth});
+    }
+    if (points.stWidth == null) {
+      updatePoints({stWidth: defaultSTWidth});
+    }
+    if (points.htWidth == null) {
+      updatePoints({htWidth: defaultHTWidth});
+    }
+    if (points.forkWidth == null) {
+      updatePoints({forkWidth: defaultForkWidth});
+    }
+    
 
     if (state.highlightedElement == 'stTtOffset') {
       hilightStTtOffset();
@@ -147,6 +288,37 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
       hilightTopTube();
     } else {
       hideTopTube();
+    }
+
+    if (state.highlightedElement == 'hbBtOffset') {
+      hilightHbBtOffset();
+    } else {
+      hideHbBtOffset();
+    }
+
+    if (state.highlightedElement == 'bottomTubeGrab' || 
+        state.highlightedElement == 'hbBtOffset') {
+      hilightBottomTube();
+    } else {
+      hideBottomTube();
+    }
+
+    if (state.highlightedElement == 'seatTubeGrab') {
+      hilightSeatTube();
+    } else {
+      hideSeatTube();
+    }
+
+    if (state.highlightedElement == 'headTubeGrab') {
+      hilightHeadTube();
+    } else {
+      hideHeadTube();
+    }
+
+    if (state.highlightedElement == 'forkGrab') {
+      hilightFork();
+    } else {
+      hideFork();
     }
   }, [contextState.addShapeVisualizationFunc, state, points, pxPerMm, updatePoints]);
 
@@ -180,6 +352,41 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
             <td>{ points.ttWidth?.toFixed(0)}</td>
             <td><button onClick={() => {updatePoints({ttWidth: points.ttWidth + 5})}}>+</button></td>
             <td><button onClick={() => {updatePoints({ttWidth: points.ttWidth - 5})}}>-</button></td>
+          </tr>
+
+          <tr onMouseEnter={() => {updateState({highlightedElement: "hbBtOffset"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
+            <td>HB-BT-Off</td>
+            <td>{ points.hbBtOffset?.toFixed(0)}</td>
+            <td><button onClick={() => {updatePoints({hbBtOffset: points.hbBtOffset + 5})}}>+</button></td>
+            <td><button onClick={() => {updatePoints({hbBtOffset: points.hbBtOffset - 5})}}>-</button></td>
+          </tr>
+
+          <tr onMouseEnter={() => {updateState({highlightedElement: "bottomTubeGrab"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
+            <td>BT-Radius</td>
+            <td>{ points.btWidth?.toFixed(0)}</td>
+            <td><button onClick={() => {updatePoints({btWidth: points.btWidth + 5})}}>+</button></td>
+            <td><button onClick={() => {updatePoints({btWidth: points.btWidth - 5})}}>-</button></td>
+          </tr>
+
+          <tr onMouseEnter={() => {updateState({highlightedElement: "seatTubeGrab"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
+            <td>ST-Radius</td>
+            <td>{ points.stWidth?.toFixed(0)}</td>
+            <td><button onClick={() => {updatePoints({stWidth: points.stWidth + 5})}}>+</button></td>
+            <td><button onClick={() => {updatePoints({stWidth: points.stWidth - 5})}}>-</button></td>
+          </tr>
+
+          <tr onMouseEnter={() => {updateState({highlightedElement: "headTubeGrab"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
+            <td>HT-Radius</td>
+            <td>{ points.htWidth?.toFixed(0)}</td>
+            <td><button onClick={() => {updatePoints({htWidth: points.htWidth + 5})}}>+</button></td>
+            <td><button onClick={() => {updatePoints({htWidth: points.htWidth - 5})}}>-</button></td>
+          </tr>
+
+          <tr onMouseEnter={() => {updateState({highlightedElement: "forkGrab"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
+            <td>fork-Radius</td>
+            <td>{ points.forkWidth?.toFixed(0)}</td>
+            <td><button onClick={() => {updatePoints({forkWidth: points.forkWidth + 5})}}>+</button></td>
+            <td><button onClick={() => {updatePoints({forkWidth: points.forkWidth - 5})}}>-</button></td>
           </tr>
           
         </tbody>
