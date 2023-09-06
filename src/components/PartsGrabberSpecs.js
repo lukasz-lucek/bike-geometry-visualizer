@@ -4,7 +4,7 @@ import { useCanvasContext } from '../contexts/CanvasContext.js';
 
 const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
 
-  const strokeWidth = 1*pxPerMm;
+  const strokeWidth = 3*pxPerMm;
   const visualizationColor = "red";
 
   const {
@@ -31,7 +31,7 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
     if (seatTubeTop && bottomBracketCenter) {
       const ratio = Math.sqrt(
         Math.pow(seatTubeTop.x - bottomBracketCenter.x, 2) + Math.pow(seatTubeTop.y - bottomBracketCenter.y, 2)
-        ) / points.stTtOffset;
+        ) / (points.stTtOffset  * pxPerMm);
       return {
         x: seatTubeTop.x - (seatTubeTop.x - bottomBracketCenter.x) / ratio,
         y: seatTubeTop.y - (seatTubeTop.y - bottomBracketCenter.y) / ratio,
@@ -67,7 +67,7 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
     if (headTubeTop && headTubeBottom) {
       const ratio = Math.sqrt(
         Math.pow(headTubeTop.x - headTubeBottom.x, 2) + Math.pow(headTubeTop.y - headTubeBottom.y, 2)
-        ) / points.htTtOffset;
+        ) / (points.htTtOffset  * pxPerMm);
       return {
         x: headTubeTop.x - (headTubeTop.x - headTubeBottom.x) / ratio,
         y: headTubeTop.y - (headTubeTop.y - headTubeBottom.y) / ratio,
@@ -83,7 +83,7 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
     if (headTubeTop && headTubeBottom) {
       const ratio = Math.sqrt(
         Math.pow(headTubeTop.x - headTubeBottom.x, 2) + Math.pow(headTubeTop.y - headTubeBottom.y, 2)
-        ) / points.hbBtOffset;
+        ) / (points.hbBtOffset * pxPerMm);
       return {
         x: headTubeBottom.x + (headTubeTop.x - headTubeBottom.x) / ratio,
         y: headTubeBottom.y + (headTubeTop.y - headTubeBottom.y) / ratio,
@@ -99,7 +99,7 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
     if (seatTubeTop && bottomBracketCenter) {
       const ratio = Math.sqrt(
         Math.pow(seatTubeTop.x - bottomBracketCenter.x, 2) + Math.pow(seatTubeTop.y - bottomBracketCenter.y, 2)
-        ) / points.bbSeatstayOffset;
+        ) / (points.bbSeatstayOffset  * pxPerMm);
       return {
         x: seatTubeTop.x - (seatTubeTop.x - bottomBracketCenter.x) / ratio,
         y: seatTubeTop.y - (seatTubeTop.y - bottomBracketCenter.y) / ratio,
@@ -140,7 +140,7 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
         y1: ttStart.y,
         x2: ttEnd.x,
         y2: ttEnd.y,
-        width: points.ttWidth,
+        width: points.ttWidth * pxPerMm,
       }, visualizationColor);
     }
   }
@@ -181,7 +181,7 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
         y1: btStart.y,
         x2: btEnd.x,
         y2: btEnd.y,
-        width: points.btWidth,
+        width: points.btWidth * pxPerMm,
       }, visualizationColor);
     }
   }
@@ -202,7 +202,7 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
         y1: stStart.y,
         x2: stEnd.x,
         y2: stEnd.y,
-        width: points.stWidth,
+        width: points.stWidth * pxPerMm,
       }, visualizationColor);
     }
   }
@@ -223,7 +223,7 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
         y1: htStart.y,
         x2: htEnd.x,
         y2: htEnd.y,
-        width: points.htWidth,
+        width: points.htWidth * pxPerMm,
       }, visualizationColor);
     }
   }
@@ -244,7 +244,7 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
         y1: forkStart.y,
         x2: forkEnd.x,
         y2: forkEnd.y,
-        width: points.forkWidth,
+        width: points.forkWidth * pxPerMm,
       }, visualizationColor);
     }
   }
@@ -268,7 +268,7 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
         y1: chainstayStart.y,
         x2: chainstayEnd.x,
         y2: chainstayEnd.y,
-        width: points.chainstayWidth,
+        width: points.chainstayWidth * pxPerMm,
       }, visualizationColor);
     }
   }
@@ -309,7 +309,7 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
         y1: seatstayStart.y,
         x2: seatstayEnd.x,
         y2: seatstayEnd.y,
-        width: points.seatstayWidth,
+        width: points.seatstayWidth * pxPerMm,
       }, visualizationColor);
     }
   }
@@ -328,7 +328,7 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
         strokeWidth: strokeWidth,
         x: rearWheelCenter.x,
         y: rearWheelCenter.y,
-        radius: points.wheelsRadius,
+        radius: points.wheelsRadius * pxPerMm,
       }, visualizationColor);
     }
 
@@ -338,7 +338,7 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
         strokeWidth: strokeWidth,
         x: frontWheelCenter.x,
         y: frontWheelCenter.y,
-        radius: points.wheelsRadius,
+        radius: points.wheelsRadius * pxPerMm,
       }, visualizationColor);
     }
   }

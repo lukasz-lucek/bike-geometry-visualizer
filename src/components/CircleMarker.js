@@ -7,12 +7,12 @@ export function CircleMarker({canvas, shape, imageSrc}) {
   useEffect(() => {
     const sh = shape.shape;
     const circle = new fabric.Circle({
-      left: sh.x - sh.radius, // Adjust left position based on the center and radius
-      top: sh.y - sh.radius, // Adjust top position based on the center and radius
+      left: sh.x - sh.radius,
+      top: sh.y - sh.radius,
       radius: sh.radius,
-      fill: 'transparent', // Circle fill color
-      stroke: 'red', // Circle border color
-      strokeWidth: sh.strokeWidth, // Border width (optional)
+      fill: 'transparent',
+      stroke: 'red',
+      strokeWidth: sh.strokeWidth,
     });
     canvas.insertAt(circle, 2);
 

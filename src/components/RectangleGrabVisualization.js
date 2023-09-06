@@ -4,19 +4,7 @@ import {findAngle, findBB, findBBFromACoords, findBBFromImage} from '../utils/Ge
 
 export function RectangleGrabVisualization({canvas, rectangle, shape, imageSrc}) {
 
-    let loadedImage = null;
-
-    const replaceLoadedImage = (newImg) => {
-        if (loadedImage) {
-            canvas.remove(loadedImage);
-            loadedImage = null;
-        }
-        if (newImg) {
-            canvas.insertAt(newImg, 3);
-            loadedImage = newImg;
-        }
-        canvas.renderAll();
-    }
+    const [loadedImage, setLoadedImage] = useState(null);
   
     useEffect(() => {
         const sh = shape.shape;
@@ -29,7 +17,7 @@ export function RectangleGrabVisualization({canvas, rectangle, shape, imageSrc})
                 const bound2 = findBBFromImage (img);
 
                 fabric.Image.fromURL(img.toDataURL(), (cimg) => {
-                    replaceLoadedImage(cimg);
+                    setLoadedImage(cimg);
                 },
                 {
                     width: length,
@@ -47,11 +35,22 @@ export function RectangleGrabVisualization({canvas, rectangle, shape, imageSrc})
                 cropY: bound.top,
             });
             return () => {
-                replaceLoadedImage(null);
+                setLoadedImage(null);
             }
         }
 
     }, [canvas, shape, imageSrc]);
+
+    useEffect(() => {
+        if (loadedImage) {
+            canvas.insertAt(loadedImage, 3);
+            canvas.renderAll();
+            return () => {
+                canvas.remove(loadedImage);
+                canvas.renderAll();
+            }
+        }
+    }, [loadedImage]);
 
   return (
     <>
