@@ -30,7 +30,7 @@ export function BackgroundImage({canvas, layer, angleOfRotation}) {
         //If not for the timeout - the remembering does not work - only one image is remembered
         setTimeout(() => {
             setFabricObjectToRemember(img);
-        }, 10);
+        }, 1000);
     });
   }, [layer, canvas]);
 

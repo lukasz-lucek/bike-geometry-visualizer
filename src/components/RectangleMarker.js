@@ -11,24 +11,6 @@ export function RectangleMarker({canvas, shape, imageSrc}) {
     rectangle.fill = 'transparent';
     rectangle.stroke = 'red';
     rectangle.strokeWidth = sh.strokeWidth;
-    
-    // const center = {
-    //     x: (sh.x1 + sh.x2) / 2, 
-    //     y: (sh.y1 + sh.y2) / 2
-    // }
-    // const width = sh.width;
-    // const length = Math.sqrt(Math.pow(sh.x1-sh.x2,2) + Math.pow(sh.y1-sh.y2,2));
-    // const angle = Math.atan2(sh.y2-sh.y1, sh.x2-sh.x1) * 180 / Math.PI;
-
-    // const rectangle = new fabric.Rect({
-    //     left: center.x - length/2,
-    //     top: center.y - width/2,
-    //     fill: 'transparent',
-    //     stroke: 'red',
-    //     strokeWidth: sh.strokeWidth,
-    //     width: length,
-    //     height: width,
-    // });
 
     return rectangle;
   }, [shape, canvas]);

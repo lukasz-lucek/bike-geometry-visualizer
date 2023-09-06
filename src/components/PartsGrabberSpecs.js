@@ -4,6 +4,9 @@ import { useCanvasContext } from '../contexts/CanvasContext.js';
 
 const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
 
+  const strokeWidth = 1*pxPerMm;
+  const visualizationColor = "red";
+
   const {
     state: [contextState, ],
   } = useCanvasContext(); 
@@ -19,16 +22,7 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
     setState( newState );
   }
 
-  const strokeWidth = 1*pxPerMm;
-  const visualizationColor = "red";
-  const defauldStTTOffset = 30;
-  const defauldHtTTOffset = 30;
-  const defauldHbBtOffset = 50;
-  const defaultTTWidth = 40;
-  const defaultBTWidth = 60;
-  const defaultSTWidth = 30;
-  const defaultHTWidth = 40;
-  const defaultForkWidth = 40;
+  
 
   const getTTStartPoint = () => {
     const seatTubeTop = points["seatTubeTop"];
@@ -39,8 +33,8 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
         Math.pow(seatTubeTop.x - bottomBracketCenter.x, 2) + Math.pow(seatTubeTop.y - bottomBracketCenter.y, 2)
         ) / points.stTtOffset;
       return {
-        x: seatTubeTop.x + Math.abs(seatTubeTop.x - bottomBracketCenter.x) / ratio,
-        y: seatTubeTop.y + Math.abs(seatTubeTop.y - bottomBracketCenter.y) / ratio,
+        x: seatTubeTop.x - (seatTubeTop.x - bottomBracketCenter.x) / ratio,
+        y: seatTubeTop.y - (seatTubeTop.y - bottomBracketCenter.y) / ratio,
       }
     }
     return null;
@@ -75,8 +69,8 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
         Math.pow(headTubeTop.x - headTubeBottom.x, 2) + Math.pow(headTubeTop.y - headTubeBottom.y, 2)
         ) / points.htTtOffset;
       return {
-        x: headTubeTop.x + Math.abs(headTubeTop.x - headTubeBottom.x) / ratio,
-        y: headTubeTop.y + Math.abs(headTubeTop.y - headTubeBottom.y) / ratio,
+        x: headTubeTop.x - (headTubeTop.x - headTubeBottom.x) / ratio,
+        y: headTubeTop.y - (headTubeTop.y - headTubeBottom.y) / ratio,
       }
     }
     return null;
@@ -91,8 +85,24 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
         Math.pow(headTubeTop.x - headTubeBottom.x, 2) + Math.pow(headTubeTop.y - headTubeBottom.y, 2)
         ) / points.hbBtOffset;
       return {
-        x: headTubeBottom.x - Math.abs(headTubeTop.x - headTubeBottom.x) / ratio,
-        y: headTubeBottom.y - Math.abs(headTubeTop.y - headTubeBottom.y) / ratio,
+        x: headTubeBottom.x + (headTubeTop.x - headTubeBottom.x) / ratio,
+        y: headTubeBottom.y + (headTubeTop.y - headTubeBottom.y) / ratio,
+      }
+    }
+    return null;
+  }
+
+  const getSeatstayEndPoint = () => {
+    const seatTubeTop = points["seatTubeTop"];
+    const bottomBracketCenter = points["bottomBracketCenter"];
+
+    if (seatTubeTop && bottomBracketCenter) {
+      const ratio = Math.sqrt(
+        Math.pow(seatTubeTop.x - bottomBracketCenter.x, 2) + Math.pow(seatTubeTop.y - bottomBracketCenter.y, 2)
+        ) / points.bbSeatstayOffset;
+      return {
+        x: seatTubeTop.x - (seatTubeTop.x - bottomBracketCenter.x) / ratio,
+        y: seatTubeTop.y - (seatTubeTop.y - bottomBracketCenter.y) / ratio,
       }
     }
     return null;
@@ -243,7 +253,116 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
     contextState.addShapeVisualizationFunc("forkGrab", null, visualizationColor);
   }
 
+  const hilightChainstay = () => {
+    const chainstayStart = points["rearWheelCenter"];
+    const chainstayEnd = points["bottomBracketCenter"];
+
+    console.log("hilighting chainstay");
+
+    if (chainstayStart && chainstayEnd) {
+      console.log("hilighting chainstay even more");
+      contextState.addShapeVisualizationFunc("cahinstayGrab", {
+        type: 'rectangle',
+        strokeWidth: strokeWidth,
+        x1: chainstayStart.x,
+        y1: chainstayStart.y,
+        x2: chainstayEnd.x,
+        y2: chainstayEnd.y,
+        width: points.chainstayWidth,
+      }, visualizationColor);
+    }
+  }
+
+  const hideChainstay = () => {
+    contextState.addShapeVisualizationFunc("cahinstayGrab", null, visualizationColor);
+  }
+
+  const hilightBbSeatstayOffset = () => {
+    const stEnd = points["seatTubeTop"];
+    const seatstayEnd = getSeatstayEndPoint();
+    
+    if (stEnd && seatstayEnd) {
+      contextState.addShapeVisualizationFunc("bbSeatstayOffset", {
+        type: 'line',
+        strokeWidth: strokeWidth,
+        x1: stEnd.x,
+        y1: stEnd.y,
+        x2: seatstayEnd.x,
+        y2: seatstayEnd.y,
+      }, visualizationColor);
+    }
+  }
+
+  const hideBbSeatstayOffset = () => {
+    contextState.addShapeVisualizationFunc("bbSeatstayOffset", null, visualizationColor);
+  }
+
+  const hilightSeatstay = () => {
+    const seatstayStart = points["rearWheelCenter"];
+    const seatstayEnd = getSeatstayEndPoint();
+
+    if (seatstayStart && seatstayEnd) {
+      contextState.addShapeVisualizationFunc("seatstayGrab", {
+        type: 'rectangle',
+        strokeWidth: strokeWidth,
+        x1: seatstayStart.x,
+        y1: seatstayStart.y,
+        x2: seatstayEnd.x,
+        y2: seatstayEnd.y,
+        width: points.seatstayWidth,
+      }, visualizationColor);
+    }
+  }
+
+  const hideSeatstay = () => {
+    contextState.addShapeVisualizationFunc("seatstayGrab", null, visualizationColor);
+  }
+
+  const hilightWheels = () => {
+    const rearWheelCenter = points["rearWheelCenter"];
+    const frontWheelCenter = points["frontWheelCenter"];
+
+    if (rearWheelCenter) {
+      contextState.addShapeVisualizationFunc("rearWheelGrab", {
+        type: 'circle',
+        strokeWidth: strokeWidth,
+        x: rearWheelCenter.x,
+        y: rearWheelCenter.y,
+        radius: points.wheelsRadius,
+      }, visualizationColor);
+    }
+
+    if (frontWheelCenter) {
+      contextState.addShapeVisualizationFunc("frontWheelGrab", {
+        type: 'circle',
+        strokeWidth: strokeWidth,
+        x: frontWheelCenter.x,
+        y: frontWheelCenter.y,
+        radius: points.wheelsRadius,
+      }, visualizationColor);
+    }
+  }
+
+  const hideWheels = () => {
+    contextState.addShapeVisualizationFunc("rearWheelGrab", null, visualizationColor);
+    contextState.addShapeVisualizationFunc("frontWheelGrab", null, visualizationColor);
+  }
+
   useEffect(() => {
+
+    const defauldStTTOffset = 30;
+    const defauldHtTTOffset = 30;
+    const defauldHbBtOffset = 50;
+    const defaultTTWidth = 40;
+    const defaultBTWidth = 60;
+    const defaultSTWidth = 30;
+    const defaultHTWidth = 40;
+    const defaultForkWidth = 40;
+    const defaultChainstayWidth = 30;
+    const defaultBbSeatstayOffset = 30;
+    const defaultSeatstayWidth = 30;
+    const defaultWheelsRadius = 350;
+
     if (points.htTtOffset == null) {
       updatePoints({htTtOffset: defauldHtTTOffset});
     }
@@ -268,7 +387,18 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
     if (points.forkWidth == null) {
       updatePoints({forkWidth: defaultForkWidth});
     }
-    
+    if (points.chainstayWidth == null) {
+      updatePoints({chainstayWidth: defaultChainstayWidth});
+    }
+    if (points.bbSeatstayOffset == null) {
+      updatePoints({bbSeatstayOffset: defaultBbSeatstayOffset});
+    }
+    if (points.seatstayWidth == null) {
+      updatePoints({seatstayWidth: defaultSeatstayWidth});
+    }
+    if (points.wheelsRadius == null) {
+      updatePoints({wheelsRadius: defaultWheelsRadius});
+    }
 
     if (state.highlightedElement == 'stTtOffset') {
       hilightStTtOffset();
@@ -319,6 +449,31 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
       hilightFork();
     } else {
       hideFork();
+    }
+
+    if (state.highlightedElement == 'cahinstayGrab') {
+      hilightChainstay();
+    } else {
+      hideChainstay();
+    }
+
+    if (state.highlightedElement == 'bbSeatstayOffset') {
+      hilightBbSeatstayOffset();
+    } else {
+      hideBbSeatstayOffset();
+    }
+
+    if (state.highlightedElement == 'seatstayGrab' || 
+        state.highlightedElement == 'bbSeatstayOffset') {
+      hilightSeatstay();
+    } else {
+      hideSeatstay();
+    }
+
+    if (state.highlightedElement == 'wheelsGrab') {
+      hilightWheels();
+    } else {
+      hideWheels();
     }
   }, [contextState.addShapeVisualizationFunc, state, points, pxPerMm, updatePoints]);
 
@@ -387,6 +542,34 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
             <td>{ points.forkWidth?.toFixed(0)}</td>
             <td><button onClick={() => {updatePoints({forkWidth: points.forkWidth + 5})}}>+</button></td>
             <td><button onClick={() => {updatePoints({forkWidth: points.forkWidth - 5})}}>-</button></td>
+          </tr>
+
+          <tr onMouseEnter={() => {updateState({highlightedElement: "cahinstayGrab"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
+            <td>chainstay-Radius</td>
+            <td>{ points.chainstayWidth?.toFixed(0)}</td>
+            <td><button onClick={() => {updatePoints({chainstayWidth: points.chainstayWidth + 5})}}>+</button></td>
+            <td><button onClick={() => {updatePoints({chainstayWidth: points.chainstayWidth - 5})}}>-</button></td>
+          </tr>
+
+          <tr onMouseEnter={() => {updateState({highlightedElement: "bbSeatstayOffset"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
+            <td>HB-BT-Off</td>
+            <td>{ points.bbSeatstayOffset?.toFixed(0)}</td>
+            <td><button onClick={() => {updatePoints({bbSeatstayOffset: points.bbSeatstayOffset + 5})}}>+</button></td>
+            <td><button onClick={() => {updatePoints({bbSeatstayOffset: points.bbSeatstayOffset - 5})}}>-</button></td>
+          </tr>
+
+          <tr onMouseEnter={() => {updateState({highlightedElement: "seatstayGrab"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
+            <td>Seatstay-Radius</td>
+            <td>{ points.seatstayWidth?.toFixed(0)}</td>
+            <td><button onClick={() => {updatePoints({seatstayWidth: points.seatstayWidth + 5})}}>+</button></td>
+            <td><button onClick={() => {updatePoints({seatstayWidth: points.seatstayWidth - 5})}}>-</button></td>
+          </tr>
+
+          <tr onMouseEnter={() => {updateState({highlightedElement: "wheelsGrab"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
+            <td>Wheel-Radius</td>
+            <td>{ points.wheelsRadius?.toFixed(0)}</td>
+            <td><button onClick={() => {updatePoints({wheelsRadius: points.wheelsRadius + 5})}}>+</button></td>
+            <td><button onClick={() => {updatePoints({wheelsRadius: points.wheelsRadius - 5})}}>-</button></td>
           </tr>
           
         </tbody>
