@@ -354,7 +354,7 @@ const BikeGeometryTable = ({ points, wheelbase, updatePoints }) => {
         <thead>
           <tr>
             <th>Spec</th>
-            <th>Value(mm)</th>
+            <th>Value</th>
           </tr>
         </thead>
         <tbody>
@@ -367,7 +367,7 @@ const BikeGeometryTable = ({ points, wheelbase, updatePoints }) => {
             <td>{stack.toFixed(0)}</td>
           </tr>
           <tr onMouseEnter={() => {updateState({highlightedElement: "topTubeEffective"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
-            <td>Top Tube (effective)</td>
+            <td>Top Tube (eff)</td>
             <td>{topTube.toFixed(0)}</td>
           </tr>
           <tr onMouseEnter={() => {updateState({highlightedElement: "seatTube"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>

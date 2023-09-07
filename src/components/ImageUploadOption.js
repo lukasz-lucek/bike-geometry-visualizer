@@ -238,6 +238,26 @@ const ImageUploadOption = () => {
             {state.geometryPoints['seatTubeTop'] ? state.geometryPoints['seatTubeTop'].y.toFixed(1) : '____'}
           )
         </button>
+        <button
+          className={state.selectedPoint === 'crankArmEnd' ? 'selected-crank-arm-end' : 'crank-arm-end'}
+          onClick={() => handleAddPoint('crankArmEnd', '.crank-arm-end', '.selected-crank-arm-end')}
+        >
+          Crank Arm End
+          (
+            {state.geometryPoints['crankArmEnd'] ? state.geometryPoints['crankArmEnd'].x.toFixed(1) : '____'},
+            {state.geometryPoints['crankArmEnd'] ? state.geometryPoints['crankArmEnd'].y.toFixed(1) : '____'}
+          )
+        </button>
+        <button
+          className={state.selectedPoint === 'handlebarMount' ? 'selected-handlebars-mount' : 'handlebars-mount'}
+          onClick={() => handleAddPoint('handlebarMount', '.handlebars-mount', '.selected-handlebars-mount')}
+        >
+          Handlebar mount point
+          (
+            {state.geometryPoints['handlebarMount'] ? state.geometryPoints['handlebarMount'].x.toFixed(1) : '____'},
+            {state.geometryPoints['handlebarMount'] ? state.geometryPoints['handlebarMount'].y.toFixed(1) : '____'}
+          )
+        </button>
         <button disabled = {true}
           onClick={() => fixRoation()}>
           Sugested rotation: to fix wheel level

@@ -1,20 +1,34 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { fabric } from 'fabric';
-// import RectangleGrabVisualization from './RectangleGrabVisualization.js';
+import WheelGrabVisualization from './WheelGrabVisualization.js';
 
 export function CircleMarker({canvas, shape, imageSrc}) {
   
   useEffect(() => {
     const sh = shape.shape;
-    const circle = new fabric.Circle({
-      left: sh.x - sh.radius,
-      top: sh.y - sh.radius,
-      radius: sh.radius,
-      fill: 'transparent',
-      stroke: 'red',
-      strokeWidth: sh.strokeWidth,
-    });
-    canvas.insertAt(circle, 2);
+    // if (sh.startAngle && sh.endAngle) {
+      const circle = new fabric.Circle({
+        left: sh.x - sh.radius,
+        top: sh.y - sh.radius,
+        radius: sh.radius,
+        fill: 'transparent',
+        stroke: 'red',
+        strokeWidth: sh.strokeWidth,
+        startAngle: sh.startAngle,
+        endAngle: sh.endAngle
+      });
+      canvas.insertAt(circle, 2);
+    // } else {
+    //   const circle = new fabric.Circle({
+    //     left: sh.x - sh.radius,
+    //     top: sh.y - sh.radius,
+    //     radius: sh.radius,
+    //     fill: 'transparent',
+    //     stroke: 'red',
+    //     strokeWidth: sh.strokeWidth,
+    //   });
+    //   canvas.insertAt(circle, 2);
+    // }
 
     canvas.renderAll();
 
@@ -27,7 +41,7 @@ export function CircleMarker({canvas, shape, imageSrc}) {
 
   return (
     <>
-      {/* <RectangleGrabVisualization canvas={canvas} rectangle={rectangle} shape={shape} imageSrc={imageSrc}/> */}
+      <WheelGrabVisualization canvas={canvas} shape={shape} imageSrc={imageSrc}/>
     </>
   );
 }

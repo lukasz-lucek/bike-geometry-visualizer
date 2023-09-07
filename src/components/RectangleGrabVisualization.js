@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { fabric } from 'fabric';
-import {findAngle, findBB, findBBFromACoords, findBBFromImage} from '../utils/GeometryUtils.js'
+import {findAngle, findBB, findBBFromImage} from '../utils/GeometryUtils.js'
 
-export function RectangleGrabVisualization({canvas, rectangle, shape, imageSrc}) {
+export function RectangleGrabVisualization({canvas, shape, imageSrc}) {
 
     const [loadedImage, setLoadedImage] = useState(null);
   

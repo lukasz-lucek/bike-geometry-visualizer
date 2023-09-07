@@ -29,7 +29,7 @@ export function RectangleMarker({canvas, shape, imageSrc}) {
 
   return (
     <>
-      <RectangleGrabVisualization canvas={canvas} rectangle={rectangle} shape={shape} imageSrc={imageSrc}/>
+      <RectangleGrabVisualization canvas={canvas} shape={shape} imageSrc={imageSrc}/>
     </>
   );
 }

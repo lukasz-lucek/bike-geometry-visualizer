@@ -33,7 +33,7 @@ export function Canvas({setCanvas, children}) {
 
   return (
     <>
-        <canvas ref={canvasRef} width="1024" height="768"/>
+        <canvas ref={canvasRef} width="1200" height="920"/>
         {children}
     </>
   );

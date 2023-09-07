@@ -161,3 +161,27 @@ img:hover {
   color: #fff;
   /* Add other styles as needed to indicate selection */
 }
+
+.crank-arm-end:hover {
+  background-color: #DAA5A5;
+  color: #fff;
+  /* Add other styles as needed to indicate selection */
+}
+
+.selected-crank-arm-end {
+  background-color: #DAA5A5;
+  color: #fff;
+  /* Add other styles as needed to indicate selection */
+}
+
+.handlebars-mount:hover {
+  background-color: #B9B5A1;
+  color: #fff;
+  /* Add other styles as needed to indicate selection */
+}
+
+.selected-handlebars-mount {
+  background-color: #B9B5A1;
+  color: #fff;
+  /* Add other styles as needed to indicate selection */
+}

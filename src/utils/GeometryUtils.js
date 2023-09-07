@@ -80,9 +80,18 @@ const findBB = ({x1, y1}, {x2, y2}, width) => {
     return findBBFromACoords(findACoords({x1: x1, y1: y1}, {x2: x2, y2: y2}, width));
 }
 
+const findCircleBB = (x, y, radius) => {
+    return {
+        left: x - radius,
+        top: y - radius,
+        width: 2*radius,
+        height: 2*radius
+    } 
+}
+
 const findBBFromImage = (image) => {
     console.log("Accords from image: ", findACoordsFromImage(image));
     return findBBFromACoords(findACoordsFromImage(image));
 }
 
-export {findRectangle, findBBFromRectangle, findBB, findAngle, findBBFromACoords, findBBFromImage};
+export {findRectangle, findBBFromRectangle, findBB, findAngle, findBBFromACoords, findBBFromImage, findCircleBB};
