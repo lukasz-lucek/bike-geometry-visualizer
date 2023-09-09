@@ -8,7 +8,7 @@ const Workspace = ( ) => {
   const [canvas, setCanvas] = useState(null);
 
   const {
-    state: [, updateContextState],
+    state: [, updateCanvasState],
   } = useCanvasContext();
 
   const visualizerRef = useRef(null);
@@ -35,14 +35,20 @@ const Workspace = ( ) => {
     return visualizerRef.current.fixRotationFunc(angle);
   }
 
+  const clearCanvas = () => {
+    canvas.clear();
+  }
+
   useEffect(() => {
 
-    updateContextState({
+    updateCanvasState({
       addLayerToCanvasFunc : addNewLayer,
       enablePointPickerFunc : enablePointPicker,
       disablePointPickerFun : disablePointPicker,
       addShapeVisualizationFunc : addShapeVisualizationFunc,
       fixRotationFunc: fixRotationFunc,
+      clearCanvas: clearCanvas,
+      canvas: canvas,
     });
 
   }, [canvas]);

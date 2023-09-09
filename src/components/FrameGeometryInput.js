@@ -1,39 +1,34 @@
 // src/components/FrameGeometryInput.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useCanvasContext } from '../contexts/CanvasContext.js';
+import BikeGeometryTable from '../components/BikeGeometryTable.js';
+import GeometrySaver from './GeometrySaver.js';
+import SizesTable from '../components/SizesTable.js';
+import { useGeometryContext } from '../contexts/GeometryContext.js';
 
 const FrameGeometryInput = () => {
-  const [size, setSize] = useState('');
-  const [reach, setReach] = useState('');
-  const [stack, setStack] = useState('');
-  // ... add more state variables for other parameters
+  const {
+    state: [state, updateState],
+  } = useGeometryContext();
 
-  const handleAddFrame = () => {
-    if (size && reach && stack) {
+  const updatePoints = (newPartialPoints) => {
+    updateState({geometryPoints: {...state.geometryPoints, ...newPartialPoints}});
+  }
 
-      setSize('');
-      setReach('');
-      setStack('');
-      // ... reset other state variables
-    }
-  };
+  const {
+    state: [canvasState, ],
+  } = useCanvasContext();
 
+
+  useEffect(() => {
+    canvasState.clearCanvas();
+  }, []);
   return (
     <div className="frame-input">
-      <h3>Add Frame Geometry Parameters</h3>
-      <label>
-        Size:
-        <input type="text" value={size} onChange={(e) => setSize(e.target.value)} />
-      </label>
-      <label>
-        Reach:
-        <input type="text" value={reach} onChange={(e) => setReach(e.target.value)} />
-      </label>
-      <label>
-        Stack:
-        <input type="text" value={stack} onChange={(e) => setStack(e.target.value)} />
-      </label>
-      {/* Add more input fields for other parameters */}
-      <button onClick={handleAddFrame}>Add Frame</button>
+      <BikeGeometryTable points={state.geometryPoints} wheelbase={state.wheelbase} updatePoints={updatePoints}>
+        Original geometry from image
+      </BikeGeometryTable>
+      <SizesTable state={state} updateState={updateState}/>
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import GeometrySaver from './GeometrySaver';
 
 const ToolSelection = ({ selectedTool, handleToolSelect }) => {
   const tools = [
@@ -9,6 +10,7 @@ const ToolSelection = ({ selectedTool, handleToolSelect }) => {
 
   return (
     <div className="toolbox">
+      <GeometrySaver/>
       {tools.map((tool) => (
         <button
           key={tool.name}

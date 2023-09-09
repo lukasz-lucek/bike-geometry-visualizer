@@ -2,31 +2,19 @@
 import React, { useState, useEffect } from 'react';
 import { useCanvasContext } from '../contexts/CanvasContext.js'; // Import the useCanvasContext hook
 import BikeGeometryTable from '../components/BikeGeometryTable.js';
-import DropdownActions from '../components/DropdownActions.js';
 import '../App.css';
+import GeometrySaver from './GeometrySaver.js';
+import PartsGrabberSpecs from './PartsGrabberSpecs.js';
+import { useGeometryContext } from '../contexts/GeometryContext.js';
 
 const ImageUploadOption = () => {
   const {
-    state: [contextState, ],
+    state: [canvasState, ],
   } = useCanvasContext(); // Access the addLayerToCanvas method from context
 
-  const knownGeometriesKey = 'knownGeometries'
-  const defaultState = {
-    dragOver: false,
-    wheelbase: '',
-    selectedPoint: null,
-    geometryPoints: {},
-    selectedFile: null,
-    bikeDataName: '',
-    bikesList: Object.keys(JSON.parse(localStorage.getItem(knownGeometriesKey))),
-  }
-
-  const [state, setState] = useState(defaultState);
-
-  const updateState = (newPartialState) => {
-    const newState = {...state, ...newPartialState};
-    setState( newState );
-  }
+  const {
+    state: [state, updateState],
+  } = useGeometryContext();
 
   const handleDrop = (e) => {
     e.preventDefault();
@@ -68,7 +56,7 @@ const ImageUploadOption = () => {
     }
     const computedStyle = getComputedStyle(button);
     const color = computedStyle.getPropertyValue("background-color");
-    const promise = contextState.enablePointPickerFunc(color);
+    const promise = canvasState.enablePointPickerFunc(color);
     promise.then((point) => {
       const stateChange = {
         geometryPoints: {...state.geometryPoints,[pointType]: {x: point.x, y: point.y, color: color}}, 
@@ -79,51 +67,6 @@ const ImageUploadOption = () => {
     updateState({selectedPoint: pointType});
 
   };
-
-  const saveGeometry = () => {
-    if (state.bikeDataName != '') {
-      let knownGeometries = JSON.parse(localStorage.getItem('knownGeometries'));
-      if (knownGeometries == null) {
-        knownGeometries = {};
-      }
-      knownGeometries[state.bikeDataName] = {
-        selectedFile : state.selectedFile,
-        geometryPoints : state.geometryPoints,
-        wheelbase: state.wheelbase
-      };
-      localStorage.setItem('knownGeometries', JSON.stringify(knownGeometries));
-      updateState({bikesList: Object.keys(knownGeometries)});
-    }
-  }
-
-  const loadBikeGeometry = (item) => {
-    let knownGeometries = JSON.parse(localStorage.getItem('knownGeometries'));
-    if (knownGeometries == null) {
-      console.error("no data in local storage - unable to load");
-      return;
-    }
-    const geometryData = knownGeometries[item];
-    if (geometryData == null || geometryData.selectedFile == null || geometryData.geometryPoints == null) {
-      console.error("Broken data in local storage - cannot load");
-      return;
-    }
-    updateState({
-      selectedFile: geometryData.selectedFile,
-      geometryPoints: geometryData.geometryPoints,
-      bikeDataName: item,
-      wheelbase: geometryData.wheelbase
-    });
-  }
-
-  const removeBikeGeometry = (item) => {
-    let knownGeometries = JSON.parse(localStorage.getItem('knownGeometries'));
-    if (knownGeometries == null) {
-      knownGeometries = {};
-    }
-    delete knownGeometries[item];
-    localStorage.setItem('knownGeometries', JSON.stringify(knownGeometries));
-    updateState({bikesList: Object.keys(knownGeometries)});
-  }
 
   const getSuggestedRotationAngle = () => {
     const x1 = state.geometryPoints['rearWheelCenter'].x;
@@ -137,7 +80,7 @@ const ImageUploadOption = () => {
   }
 
   const fixRoation = () => {
-    contextState.fixRotationFunc(getSuggestedRotationAngle());
+    canvasState.fixRotationFunc(getSuggestedRotationAngle());
   }
 
   const updatePoints = (newPartialPoints) => {
@@ -148,7 +91,7 @@ const ImageUploadOption = () => {
     //setPointSelected(() => handleCanvasClick);
 
     for (const [geometryPointKey, {x: x, y: y, color: color}] of Object.entries(state.geometryPoints)) {
-      contextState.addShapeVisualizationFunc(geometryPointKey, {type:"point", x: x, y: y}, color);
+      canvasState.addShapeVisualizationFunc(geometryPointKey, {type:"point", x: x, y: y}, color);
     }
 
     if (state.selectedFile != null) {
@@ -156,14 +99,14 @@ const ImageUploadOption = () => {
         type: 'image',
         src: state.selectedFile,
       };
-      contextState.addLayerToCanvasFunc(newLayer); // Add the new layer to the canvas
+      canvasState.addLayerToCanvasFunc(newLayer); // Add the new layer to the canvas
     }
 
     // Clean up event listeners when the component unmounts
     return () => {
       //setPointSelected(() => null);
     };
-  }, [contextState, state.geometryPoints, state.selectedFile]);
+  }, [canvasState, state.geometryPoints, state.selectedFile]);
 
   return (
     <div className="image-upload-option" onDrop={handleDrop} onDragOver={handleDragOver} onDragLeave={handleDragLeave}>
@@ -268,15 +211,12 @@ const ImageUploadOption = () => {
           )
         </button>
       </div>
-      <BikeGeometryTable points={state.geometryPoints} wheelbase={state.wheelbase} updatePoints={updatePoints}/>
-      <input
-        type="text"
-        placeholder="enter name to save"
-        value={state.bikeDataName}
-        onChange={(e) => updateState({bikeDataName: e.target.value})}
-      />
-      <button disabled={state.bikeDataName == ''} onClick={() => saveGeometry()}>Save</button>
-      <DropdownActions items={state.bikesList} onLoad={loadBikeGeometry} onRemove={removeBikeGeometry}/>
+      <div className="bike-geometry-table">
+        <BikeGeometryTable points={state.geometryPoints} wheelbase={state.wheelbase} updatePoints={updatePoints}>
+          Bike Geometry Specifications
+        </BikeGeometryTable>
+        <PartsGrabberSpecs points={state.geometryPoints} wheelbase={state.wheelbase} updatePoints={updatePoints}/>
+      </div>
     </div>
   );
 };

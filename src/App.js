@@ -4,6 +4,7 @@ import ToolSelection from './components/ToolSelection.js'; // Import the ToolSel
 import ToolOptionsArea from './components/ToolOptionsArea.js'; // Import the ToolOptionsArea component
 import Workspace from './components/Workspace.js'; // Import the Workspace component
 import { CanvasProvider } from './contexts/CanvasContext.js'; // Update the import path
+import GeometryProvider from './contexts/GeometryContext.js';
 
 
 
@@ -16,17 +17,19 @@ const App = () => {
 
   return (
     <CanvasProvider>
-      <div className="app-container">
-        <div className="tool-selection-area">
-          <ToolSelection selectedTool={selectedTool} handleToolSelect={handleToolSelect} />
+      <GeometryProvider>
+        <div className="app-container">
+          <div className="tool-selection-area">
+            <ToolSelection selectedTool={selectedTool} handleToolSelect={handleToolSelect} />
+          </div>
+          <div className="tool-options-area">
+            <ToolOptionsArea selectedTool={selectedTool} />
+          </div>
+          <div className="workspace">
+            <Workspace />
+          </div>
         </div>
-        <div className="tool-options-area">
-          <ToolOptionsArea selectedTool={selectedTool} />
-        </div>
-        <div className="workspace">
-          <Workspace />
-        </div>
-      </div>
+      </GeometryProvider>
     </CanvasProvider>
   );
 };

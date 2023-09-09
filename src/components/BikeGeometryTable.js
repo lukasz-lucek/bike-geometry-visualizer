@@ -1,10 +1,10 @@
 // src/components/BikeGeometryTable.js
 import React, {useEffect, useState} from 'react';
 import { useCanvasContext } from '../contexts/CanvasContext.js';
+import { findPxPerMm } from '../utils/GeometryUtils.js';
 import './BikeGeometryTable.css'; // Import the CSS file
-import PartsGrabberSpecs from './PartsGrabberSpecs.js';
 
-const BikeGeometryTable = ({ points, wheelbase, updatePoints }) => {
+const BikeGeometryTable = ({ points, wheelbase, children }) => {
 
   const {
     state: [contextState, ],
@@ -42,8 +42,7 @@ const BikeGeometryTable = ({ points, wheelbase, updatePoints }) => {
   const frontWheelCenter = points["frontWheelCenter"];
 
   if (rearWheelCenter && frontWheelCenter) {
-    const wheelbasePx = Math.sqrt(Math.pow(rearWheelCenter.x - frontWheelCenter.x, 2) + Math.pow(rearWheelCenter.y - frontWheelCenter.y, 2));
-    pxPerMm = wheelbasePx / wheelbase;
+    pxPerMm = findPxPerMm(rearWheelCenter, frontWheelCenter, wheelbase)
     strokeWidth = strokeWidth*pxPerMm;
 
     const bottomBracketCenter = points["bottomBracketCenter"];
@@ -349,7 +348,7 @@ const BikeGeometryTable = ({ points, wheelbase, updatePoints }) => {
   return (
     <div className="bike-geometry-table">
       <div>
-      <h3>Bike Geometry Specifications</h3>
+      <h3>{children}</h3>
       <table>
         <thead>
           <tr>
@@ -401,7 +400,6 @@ const BikeGeometryTable = ({ points, wheelbase, updatePoints }) => {
         </tbody>
       </table>
       </div>
-      <PartsGrabberSpecs points={points} pxPerMm={pxPerMm} updatePoints={updatePoints}/>
     </div>
   );
 };

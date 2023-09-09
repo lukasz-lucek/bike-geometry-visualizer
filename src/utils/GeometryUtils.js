@@ -80,6 +80,20 @@ const findBB = ({x1, y1}, {x2, y2}, width) => {
     return findBBFromACoords(findACoords({x1: x1, y1: y1}, {x2: x2, y2: y2}, width));
 }
 
+const findBBWithMargins = ({x1, y1}, {x2, y2}, w) => {
+    const {left, top, width, height} = findBB({x1: x1, y1: y1}, {x2: x2, y2: y2}, w);
+    const leftProt = left - w/2;
+    const topProt = top - w/2;
+    const xCorrection = leftProt < 0 ? leftProt : 0;
+    const yCorrection = topProt < 0 ? topProt : 0;
+    return {
+        left: left - w/2 - xCorrection,
+        top: top - w/2 - yCorrection,
+        width: width + w + xCorrection,
+        height: height + w + yCorrection,
+    }
+}
+
 const findCircleBB = (x, y, radius) => {
     return {
         left: x - radius,
@@ -94,4 +108,23 @@ const findBBFromImage = (image) => {
     return findBBFromACoords(findACoordsFromImage(image));
 }
 
-export {findRectangle, findBBFromRectangle, findBB, findAngle, findBBFromACoords, findBBFromImage, findCircleBB};
+const findPxPerMm = (point1, point2, distance) => {
+
+  if (point1 && point2) {
+    const distancePx = Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2));
+    return distancePx / distance;
+  }
+  return null;
+}
+
+export {
+    findRectangle,
+    findBBFromRectangle,
+    findBB,
+    findAngle,
+    findBBFromACoords,
+    findBBFromImage,
+    findCircleBB,
+    findBBWithMargins,
+    findPxPerMm
+};

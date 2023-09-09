@@ -1,9 +1,12 @@
 // src/components/BikeGeometryTable.js
 import React, {useEffect, useState} from 'react';
 import { useCanvasContext } from '../contexts/CanvasContext.js';
+import { findPxPerMm } from '../utils/GeometryUtils.js';
 import TableValueEdit from './TableValueEdit.js';
 
-const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
+const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
+
+  const pxPerMm = findPxPerMm(points["rearWheelCenter"], points["frontWheelCenter"], wheelbase)
 
   const strokeWidth = 3*pxPerMm;
   const visualizationColor = "red";
@@ -22,8 +25,6 @@ const PartsGrabberSpecs = ({ points, pxPerMm, updatePoints }) => {
     const newState = {...state, ...newPartialState};
     setState( newState );
   }
-
-  
 
   const getTTStartPoint = () => {
     const seatTubeTop = points["seatTubeTop"];

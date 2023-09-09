@@ -16,6 +16,8 @@ export const CanvasProvider = ({ children }) => {
     disablePointPickerFun : () => {},
     addShapeVisualizationFunc : (shape) => {},
     fixRotationFunc : (angle) => {return new Promise ((resolve , reject) => {reject();})},
+    clearCanvas : () => {},
+    canvas : null,
   };
 
   const [state, setState] = useState(defaultState);
