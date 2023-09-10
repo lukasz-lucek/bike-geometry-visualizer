@@ -2,6 +2,7 @@
 import React from 'react';
 import ImageUploadOption from './ImageUploadOption'; // Import the ImageUploadOption component
 import FrameGeometryInput from './FrameGeometryInput'; // Import the ImageUploadOption component
+import ImageGeometryGrabber from './ImageGeometryGrabber';
 
 const ToolOptionsArea = ({ selectedTool }) => {
   const renderToolOptions = () => {
@@ -10,6 +11,8 @@ const ToolOptionsArea = ({ selectedTool }) => {
         return <ImageUploadOption />;
       case 'frameGeometry':
         return <FrameGeometryInput />;
+      case 'imageGeometryGrabber':
+          return <ImageGeometryGrabber />;
       // Add more cases for other tools and their options components here
       default:
         return null;

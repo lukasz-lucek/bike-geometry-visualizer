@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { fabric } from 'fabric';
+import { useCanvasContext } from '../contexts/CanvasContext';
 
-export function PointMarker({canvas, shape}) {
+export function PointMarker({shape}) {
+  const {
+    state: [canvasState, ],
+  } = useCanvasContext();
   
   useEffect(() => {
-
+    const canvas = canvasState.canvas;
     const circle = new fabric.Circle({
       radius: 13,
       fill: 'transparent', // Set the fill to transparent
@@ -24,7 +28,7 @@ export function PointMarker({canvas, shape}) {
       canvas.renderAll();
     }
 
-  }, [shape, canvas]);
+  }, [shape, canvasState.canvas]);
 
   return (
     <>

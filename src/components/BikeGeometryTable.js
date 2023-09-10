@@ -3,6 +3,8 @@ import React, {useEffect, useState} from 'react';
 import { useCanvasContext } from '../contexts/CanvasContext.js';
 import { findPxPerMm } from '../utils/GeometryUtils.js';
 import './BikeGeometryTable.css'; // Import the CSS file
+import BikeGeometryTableAngleRow from './BikeGeometryTableAngleRow.js';
+import BikeGeometryTableLineRow from './BikeGeometryTableLineRow.js';
 
 const BikeGeometryTable = ({ points, wheelbase, children }) => {
 
@@ -11,7 +13,25 @@ const BikeGeometryTable = ({ points, wheelbase, children }) => {
   } = useCanvasContext(); 
 
   const defaultState = {
-    highlightedElement : null
+    highlightedElement : null,
+    measures: {
+      stack: 0,
+      reach: 0,
+      topTube: 0,
+      seatTubeCT: 0,
+      headAngle: 0,
+      seatAngle: 0,
+      headTube: 0,
+      chainstay: 0,
+      bbDrop: 0,
+      crankArm: 0,
+      wheelbase: 0,
+    },
+    helpserPoints: {
+
+    },
+    pxPerMm: 0,
+    strokeWidth: 5,
   }
 
   const [state, setState] = useState(defaultState);
@@ -23,327 +43,121 @@ const BikeGeometryTable = ({ points, wheelbase, children }) => {
 
   const visualizationColor = "red";
 
-  // Calculate bike geometry specs based on the provided points and wheelbase
-  const finalWheelbase=wheelbase ? Number(wheelbase) : 0;
+  useEffect(() => {
+    const finalWheelbase=wheelbase ? Number(wheelbase) : 0;
 
-  let stack=0;
-  let reach=0;
-  let topTube=0;
-  let seatTubeCT=0;
-  let headAngle=0;
-  let seatAngle=0;
-  let headTube=0;
-  let chainstay=0;
-  let bbDrop=0;
-  let pxPerMm=0;
-  let strokeWidth=5;
-
-  const rearWheelCenter = points["rearWheelCenter"];
-  const frontWheelCenter = points["frontWheelCenter"];
-
-  if (rearWheelCenter && frontWheelCenter) {
-    pxPerMm = findPxPerMm(rearWheelCenter, frontWheelCenter, wheelbase)
-    strokeWidth = strokeWidth*pxPerMm;
-
-    const bottomBracketCenter = points["bottomBracketCenter"];
-    const headTubeTop = points["headTubeTop"];
-    const seatTubeTop = points["seatTubeTop"];
-    const headTubeBottom = points["headTubeBottom"];
-
-    if (bottomBracketCenter && headTubeTop) {
-        stack = Math.abs(headTubeTop.y - bottomBracketCenter.y) / pxPerMm;
-        reach = Math.abs(headTubeTop.x - bottomBracketCenter.x) / pxPerMm;
-    }
-
-    if (seatTubeTop && bottomBracketCenter) {
-        seatTubeCT = Math.sqrt(Math.pow(bottomBracketCenter.x - seatTubeTop.x, 2) + Math.pow(bottomBracketCenter.y - seatTubeTop.y, 2)) / pxPerMm;
-        const seatAngleRad = Math.atan2(Math.abs(seatTubeTop.y-bottomBracketCenter.y), Math.abs(seatTubeTop.x - bottomBracketCenter.x));
-        seatAngle = (seatAngleRad * 180) / Math.PI;
-        
-        if (headTubeTop) {
-            const seatAngleRadTo90 = (Math.PI / 2.0) - seatAngleRad;
-            topTube = reach + Math.tan(seatAngleRadTo90) * stack;
-        }
-    }
+    let stack=0;
+    let reach=0;
+    let topTube=0;
+    let seatTubeCT=0;
+    let headAngle=0;
+    let seatAngle=0;
+    let headTube=0;
+    let chainstay=0;
+    let bbDrop=0;
+    let crankArm=0;
     
-    if (headTubeBottom && headTubeTop) {
-        headTube = Math.sqrt(Math.pow(headTubeBottom.x - headTubeTop.x, 2) + Math.pow(headTubeBottom.y - headTubeTop.y, 2)) / pxPerMm;
-        headAngle = (Math.atan2(Math.abs(headTubeTop.y-headTubeBottom.y), Math.abs(headTubeTop.x - headTubeBottom.x)) * 180) / Math.PI;
-    }
+    let pxPerMm=0;
+    let strokeWidth=5;
 
-    if (bottomBracketCenter && rearWheelCenter) {
-        chainstay = Math.sqrt(Math.pow(bottomBracketCenter.x - rearWheelCenter.x, 2) + Math.pow(bottomBracketCenter.y - rearWheelCenter.y, 2)) / pxPerMm;
-        bbDrop = Math.abs(bottomBracketCenter.y - rearWheelCenter.y) / pxPerMm;
-    }
-  }
+    let wheelBaseEnd=null;
+    let bbTop=null;
+    let stackReachTouch=null;
+    let topTubeEffEnd=null;
+    let headAngleCenter=null;
+    let headAngleStart=null;
+    let seatAngleStart=null;
 
-  const hilightWheelbase = () => {
     const rearWheelCenter = points["rearWheelCenter"];
     const frontWheelCenter = points["frontWheelCenter"];
 
     if (rearWheelCenter && frontWheelCenter) {
-      contextState.addShapeVisualizationFunc("rearWheelLine", {
-        type: 'line',
-        strokeWidth: strokeWidth,
-        x1: rearWheelCenter.x,
-        y1: rearWheelCenter.y,
-        x2: frontWheelCenter.x,
-        y2: rearWheelCenter.y
-      }, visualizationColor);
+      pxPerMm = findPxPerMm(rearWheelCenter, frontWheelCenter, wheelbase)
+      strokeWidth = strokeWidth*pxPerMm;
+
+      wheelBaseEnd = {x: frontWheelCenter.x, y: rearWheelCenter.y}
+
+
+      const bottomBracketCenter = points["bottomBracketCenter"];
+      const headTubeTop = points["headTubeTop"];
+      const seatTubeTop = points["seatTubeTop"];
+      const headTubeBottom = points["headTubeBottom"];
+      const crankArmEnd = points["crankArmEnd"];
+
+      if (bottomBracketCenter && headTubeTop) {
+          stack = Math.abs(headTubeTop.y - bottomBracketCenter.y) / pxPerMm;
+          reach = Math.abs(headTubeTop.x - bottomBracketCenter.x) / pxPerMm;
+          stackReachTouch = {x: bottomBracketCenter.x, y: headTubeTop.y}
+      }
+
+      if (seatTubeTop && bottomBracketCenter) {
+          seatTubeCT = Math.sqrt(Math.pow(bottomBracketCenter.x - seatTubeTop.x, 2) + Math.pow(bottomBracketCenter.y - seatTubeTop.y, 2)) / pxPerMm;
+          const seatAngleRad = Math.atan2(Math.abs(seatTubeTop.y-bottomBracketCenter.y), Math.abs(seatTubeTop.x - bottomBracketCenter.x));
+          seatAngle = (seatAngleRad * 180) / Math.PI;
+
+          seatAngleStart = {
+            x: rearWheelCenter.x,
+            y: bottomBracketCenter.y,
+          }
+          
+          if (headTubeTop) {
+              const seatAngleRadTo90 = (Math.PI / 2.0) - seatAngleRad;
+              topTube = reach + Math.tan(seatAngleRadTo90) * stack;
+              topTubeEffEnd = {x: headTubeTop.x - topTube * pxPerMm, y: headTubeTop.y};
+          }
+      }
+      
+      if (headTubeBottom && headTubeTop) {
+          headTube = Math.sqrt(Math.pow(headTubeBottom.x - headTubeTop.x, 2) + Math.pow(headTubeBottom.y - headTubeTop.y, 2)) / pxPerMm;
+          headAngle = (Math.atan2(Math.abs(headTubeTop.y-headTubeBottom.y), Math.abs(headTubeTop.x - headTubeBottom.x)) * 180) / Math.PI;
+
+          headAngleCenter = {
+            x: headTubeTop.x + (frontWheelCenter.y - headTubeTop.y) / Math.tan(headAngle * Math.PI / 180.0),
+            y: frontWheelCenter.y,
+          }
+          headAngleStart = {
+            x: bottomBracketCenter.x,
+            y: frontWheelCenter.y,
+          }
+      }
+
+      if (bottomBracketCenter) {
+          chainstay = Math.sqrt(Math.pow(bottomBracketCenter.x - rearWheelCenter.x, 2) + Math.pow(bottomBracketCenter.y - rearWheelCenter.y, 2)) / pxPerMm;
+          bbDrop = Math.abs(bottomBracketCenter.y - rearWheelCenter.y) / pxPerMm;
+          bbTop = {x: bottomBracketCenter.x, y: rearWheelCenter.y};
+
+          if (crankArmEnd) {
+            crankArm = Math.sqrt(Math.pow(bottomBracketCenter.x - crankArmEnd.x, 2) + Math.pow(bottomBracketCenter.y - crankArmEnd.y, 2)) / pxPerMm;
+          }
+      }
     }
-  }
-
-  const hideWheelbase = () => {
-    contextState.addShapeVisualizationFunc("rearWheelLine", null, visualizationColor);
-    contextState.addShapeVisualizationFunc("frontWheelLine", null, visualizationColor);
-  }
-
-  const hilightChainstay = () => {
-    const rearWheelCenter = points["rearWheelCenter"];
-    const bottomBracketCenter = points["bottomBracketCenter"];
-
-    if (rearWheelCenter && bottomBracketCenter) {
-      contextState.addShapeVisualizationFunc("chainstayLine", {
-        type: 'line',
-        strokeWidth: strokeWidth,
-        x1: rearWheelCenter.x,
-        y1: rearWheelCenter.y,
-        x2: bottomBracketCenter.x,
-        y2: bottomBracketCenter.y
-      }, visualizationColor);
-    }
-  }
-
-  const hideChainstay = () => {
-    contextState.addShapeVisualizationFunc("chainstayLine", null, visualizationColor);
-  }
-
-  const hilightHeadTube = () => {
-    const headTubeTop = points["headTubeTop"];
-    const headTubeBottom = points["headTubeBottom"];
-
-    if (headTubeTop && headTubeBottom) {
-      contextState.addShapeVisualizationFunc("headTubeLine", {
-        type: 'line',
-        strokeWidth: strokeWidth,
-        x1: headTubeTop.x,
-        y1: headTubeTop.y,
-        x2: headTubeBottom.x,
-        y2: headTubeBottom.y
-      }, visualizationColor);
-    }
-  }
-
-  const hideHeadTube = () => {
-    contextState.addShapeVisualizationFunc("headTubeLine", null, visualizationColor);
-  }
-
-  const hilightSeatTube = () => {
-    const seatTubeTop = points["seatTubeTop"];
-    const seatTubeBottom = points["bottomBracketCenter"];
-
-    if (seatTubeTop && seatTubeBottom) {
-      contextState.addShapeVisualizationFunc("seatTubeLine", {
-        type: 'line',
-        strokeWidth: strokeWidth,
-        x1: seatTubeTop.x,
-        y1: seatTubeTop.y,
-        x2: seatTubeBottom.x,
-        y2: seatTubeBottom.y
-      }, visualizationColor);
-    }
-  }
-
-  const hideSeatTube = () => {
-    contextState.addShapeVisualizationFunc("seatTubeLine", null, visualizationColor);
-  }
-
-  const hilightTopTubeEffective = () => {
-    const headTubeTop = points["headTubeTop"];
-
-    if (headTubeTop && pxPerMm > 0 && topTube) {
-      contextState.addShapeVisualizationFunc("topTubeEffectiveLine", {
-        type: 'line',
-        strokeWidth: strokeWidth,
-        x1: headTubeTop.x,
-        y1: headTubeTop.y,
-        x2: headTubeTop.x - topTube * pxPerMm,
-        y2: headTubeTop.y
-      }, visualizationColor);
-    }
-  }
-
-  const hideTopTubeEffective = () => {
-    contextState.addShapeVisualizationFunc("topTubeEffectiveLine", null, visualizationColor);
-  }
-
-  const hilightStack = () => {
-    const headTubeTop = points["headTubeTop"];
-    const bottomBracketCenter = points["bottomBracketCenter"];
-
-    if (headTubeTop && bottomBracketCenter) {
-      contextState.addShapeVisualizationFunc("stackLine", {
-        type: 'line',
-        strokeWidth: strokeWidth,
-        x1: bottomBracketCenter.x,
-        y1: bottomBracketCenter.y,
-        x2: bottomBracketCenter.x,
-        y2: headTubeTop.y
-      }, visualizationColor);
-    }
-  }
-
-  const hideStack = () => {
-    contextState.addShapeVisualizationFunc("stackLine", null, visualizationColor);
-  }
-
-  const hilightReach = () => {
-    const headTubeTop = points["headTubeTop"];
-    const bottomBracketCenter = points["bottomBracketCenter"];
-
-    if (headTubeTop && bottomBracketCenter) {
-      contextState.addShapeVisualizationFunc("reachLine", {
-        type: 'line',
-        strokeWidth: strokeWidth,
-        x1: headTubeTop.x,
-        y1: headTubeTop.y,
-        x2: bottomBracketCenter.x,
-        y2: headTubeTop.y
-      }, visualizationColor);
-    }
-  }
-
-  const hideReach = () => {
-    contextState.addShapeVisualizationFunc("reachLine", null, visualizationColor);
-  }
-
-  const hilightBBDrop = () => {
-    const rearWheelCenter = points["rearWheelCenter"];
-    const bottomBracketCenter = points["bottomBracketCenter"];
-
-    if (rearWheelCenter && bottomBracketCenter) {
-      contextState.addShapeVisualizationFunc("bbDropLine", {
-        type: 'line',
-        strokeWidth: strokeWidth,
-        x1: bottomBracketCenter.x,
-        y1: bottomBracketCenter.y,
-        x2: bottomBracketCenter.x,
-        y2: rearWheelCenter.y
-      }, visualizationColor);
-    }
-  }
-
-  const hideBBDrop = () => {
-    contextState.addShapeVisualizationFunc("bbDropLine", null, visualizationColor);
-  }
-
-  const hilightHeadAngle = () => {
-    const frontWheelCenter = points["frontWheelCenter"];
-    const bottomBracketCenter = points["bottomBracketCenter"];
-    const headTubeTop = points["headTubeTop"];
-
-    if (frontWheelCenter && bottomBracketCenter && headTubeTop) {
-      contextState.addShapeVisualizationFunc("headAngle", {
-        type: 'angle',
-        strokeWidth: strokeWidth,
-        x1: bottomBracketCenter.x,
-        y1: frontWheelCenter.y,
-        x2: headTubeTop.x + (frontWheelCenter.y - headTubeTop.y) / Math.tan(headAngle * Math.PI / 180.0),
-        y2: frontWheelCenter.y,
-        x3: headTubeTop.x,
-        y3: headTubeTop.y,
-      }, visualizationColor);
-    }
-  }
-
-  const hideHeadAngle = () => {
-    contextState.addShapeVisualizationFunc("headAngle", null, visualizationColor);
-  }
-
-  const hilightSeatAngle = () => {
-    const rearWheelCenter = points["rearWheelCenter"];
-    const bottomBracketCenter = points["bottomBracketCenter"];
-    const seatTubeTop = points["seatTubeTop"];
-
-    if (rearWheelCenter && bottomBracketCenter && seatTubeTop) {
-      contextState.addShapeVisualizationFunc("seatAngle", {
-        type: 'angle',
-        strokeWidth: strokeWidth,
-        x1: rearWheelCenter.x,
-        y1: bottomBracketCenter.y,
-        x2: bottomBracketCenter.x,
-        y2: bottomBracketCenter.y,
-        x3: seatTubeTop.x,
-        y3: seatTubeTop.y,
-      }, visualizationColor);
-    }
-  }
-
-  const hideSeatAngle = () => {
-    contextState.addShapeVisualizationFunc("seatAngle", null, visualizationColor);
-  }
-
-  useEffect(() => {
-    if (state.highlightedElement == 'stack') {
-      hilightStack();
-    } else {
-      hideStack();
-    }
-
-    if (state.highlightedElement == 'reach') {
-      hilightReach();
-    } else {
-      hideReach();
-    }
-
-    if (state.highlightedElement == 'topTubeEffective') {
-      hilightTopTubeEffective();
-    } else {
-      hideTopTubeEffective();
-    }
-
-    if (state.highlightedElement == 'seatTube') {
-      hilightSeatTube();
-    } else {
-      hideSeatTube();
-    }
-
-    if (state.highlightedElement == 'wheelbase') {
-      hilightWheelbase();
-    } else {
-      hideWheelbase();
-    }
-
-    if (state.highlightedElement == 'chainstay') {
-      hilightChainstay();
-    } else {
-      hideChainstay();
-    }
-
-    if (state.highlightedElement == 'headTube') {
-      hilightHeadTube();
-    } else {
-      hideHeadTube();
-    }
-
-    if (state.highlightedElement == 'bbDrop') {
-      hilightBBDrop();
-    } else {
-      hideBBDrop();
-    }
-
-    if (state.highlightedElement == 'headAngle') {
-      hilightHeadAngle();
-    } else {
-      hideHeadAngle();
-    }
-
-    if (state.highlightedElement == 'seatAngle') {
-      hilightSeatAngle();
-    } else {
-      hideSeatAngle();
-    }
-  }, [contextState.addShapeVisualizationFunc, state, points, wheelbase]);
+    updateState({
+      measures: {
+        stack: stack,
+        reach: reach,
+        topTube: topTube,
+        seatTubeCT: seatTubeCT,
+        headAngle: headAngle,
+        seatAngle: seatAngle,
+        headTube: headTube,
+        chainstay: chainstay,
+        bbDrop: bbDrop,
+        crankArm: crankArm,
+        wheelbase: finalWheelbase,
+      },
+      helpserPoints: {
+        wheelBaseEnd,
+        bbTop,
+        stackReachTouch,
+        topTubeEffEnd,
+        headAngleCenter,
+        headAngleStart,
+        seatAngleStart,
+      },
+      pxPerMm: pxPerMm,
+      strokeWidth: strokeWidth,
+    });
+  }, [points, wheelbase]);
 
   return (
     <div className="bike-geometry-table">
@@ -357,46 +171,86 @@ const BikeGeometryTable = ({ points, wheelbase, children }) => {
           </tr>
         </thead>
         <tbody>
-          <tr onMouseEnter={() => {updateState({highlightedElement: "reach"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
-            <td>Reach</td>
-            <td>{reach.toFixed(0)}</td>
-          </tr>
-          <tr onMouseEnter={() => {updateState({highlightedElement: "stack"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
-            <td>Stack</td>
-            <td>{stack.toFixed(0)}</td>
-          </tr>
-          <tr onMouseEnter={() => {updateState({highlightedElement: "topTubeEffective"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
-            <td>Top Tube (eff)</td>
-            <td>{topTube.toFixed(0)}</td>
-          </tr>
-          <tr onMouseEnter={() => {updateState({highlightedElement: "seatTube"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
-            <td>Seat Tube C-T</td>
-            <td>{seatTubeCT.toFixed(0)}</td>
-          </tr>
-          <tr onMouseEnter={() => {updateState({highlightedElement: "headAngle"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
-            <td>Head Angle</td>
-            <td>{headAngle.toFixed(0)}</td>
-          </tr>
-          <tr onMouseEnter={() => {updateState({highlightedElement: "seatAngle"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
-            <td>Seat Angle</td>
-            <td>{seatAngle.toFixed(0)}</td>
-          </tr>
-          <tr onMouseEnter={() => {updateState({highlightedElement: "headTube"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
-            <td>Head Tube</td>
-            <td>{headTube.toFixed(0)}</td>
-          </tr>
-          <tr  onMouseEnter={() => {updateState({highlightedElement: "chainstay"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
-            <td>Chainstay</td>
-            <td>{chainstay.toFixed(0)}</td>
-          </tr>
-          <tr onMouseEnter={() => {updateState({highlightedElement: "wheelbase"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
-            <td>Wheelbase</td>
-            <td>{finalWheelbase.toFixed(0)}</td>
-          </tr>
-          <tr onMouseEnter={() => {updateState({highlightedElement: "bbDrop"})}} onMouseLeave={() => {updateState({highlightedElement: null})}}>
-            <td>BB Drop</td>
-            <td>{bbDrop.toFixed(0)}</td>
-          </tr>
+          <BikeGeometryTableLineRow 
+            value={state.measures.reach}
+            startPoint={state.helpserPoints.stackReachTouch}
+            endPoint={points["headTubeTop"]}
+            strokeWidth={state.strokeWidth}>
+              Reach
+          </BikeGeometryTableLineRow>
+          <BikeGeometryTableLineRow 
+            value={state.measures.stack}
+            startPoint={state.helpserPoints.stackReachTouch}
+            endPoint={points["bottomBracketCenter"]}
+            strokeWidth={state.strokeWidth}>
+              Stack
+          </BikeGeometryTableLineRow>
+          <BikeGeometryTableLineRow 
+            value={state.measures.topTube}
+            startPoint={state.helpserPoints.topTubeEffEnd}
+            endPoint={points["headTubeTop"]}
+            strokeWidth={state.strokeWidth}>
+              Top Tube (eff)
+          </BikeGeometryTableLineRow>
+          <BikeGeometryTableLineRow 
+            value={state.measures.seatTubeCT}
+            startPoint={points["seatTubeTop"]}
+            endPoint={points["bottomBracketCenter"]}
+            strokeWidth={state.strokeWidth}>
+              Seat Tube C-T
+          </BikeGeometryTableLineRow>
+          <BikeGeometryTableLineRow 
+            value={state.measures.headTube}
+            startPoint={points["headTubeTop"]}
+            endPoint={points["headTubeBottom"]}
+            strokeWidth={state.strokeWidth}>
+              Head Tube
+          </BikeGeometryTableLineRow>
+          <BikeGeometryTableLineRow 
+            value={state.measures.chainstay}
+            startPoint={points["rearWheelCenter"]}
+            endPoint={points["bottomBracketCenter"]}
+            strokeWidth={state.strokeWidth}>
+              Chainstay
+          </BikeGeometryTableLineRow>
+          <BikeGeometryTableLineRow 
+            value={state.measures.wheelbase}
+            startPoint={points["rearWheelCenter"]}
+            endPoint={state.helpserPoints.wheelBaseEnd}
+            strokeWidth={state.strokeWidth}>
+              Wheelbase
+          </BikeGeometryTableLineRow>
+          <BikeGeometryTableLineRow 
+            value={state.measures.bbDrop}
+            startPoint={points["bottomBracketCenter"]}
+            endPoint={state.helpserPoints.bbTop}
+            strokeWidth={state.strokeWidth}>
+              BB Drop
+          </BikeGeometryTableLineRow>
+          <BikeGeometryTableLineRow 
+            value={state.measures.crankArm}
+            startPoint={points["bottomBracketCenter"]}
+            endPoint={points["crankArmEnd"]}
+            strokeWidth={state.strokeWidth}>
+              Crank Arm
+          </BikeGeometryTableLineRow>
+
+          <BikeGeometryTableAngleRow 
+            value={state.measures.headAngle}
+            startPoint={state.helpserPoints.headAngleStart}
+            middlePoint={state.helpserPoints.headAngleCenter}
+            endPoint={points["headTubeTop"]}
+            strokeWidth={state.strokeWidth}>
+              Head Angle
+          </BikeGeometryTableAngleRow>
+          <BikeGeometryTableAngleRow 
+            value={state.measures.seatAngle}
+            startPoint={state.helpserPoints.seatAngleStart}
+            middlePoint={points["bottomBracketCenter"]}
+            endPoint={points["seatTubeTop"]}
+            strokeWidth={state.strokeWidth}>
+              Seat Angle
+          </BikeGeometryTableAngleRow>
         </tbody>
       </table>
       </div>

@@ -1,12 +1,6 @@
 // src/components/Visualizer.js
 import React, { forwardRef, useImperativeHandle, useEffect, useState} from 'react';
-import BackgroundImage from "../components/BackgroundImage.js"
-import PointMarker from "../components/PointMarker.js"
-import LineMarker from "../components/LineMarker.js"
-import AngleMarker from "../components/AngleMarker.js"
 import PointPicker from "../components/PointPicker.js"
-import RectangleMarker from "../components/RectangleMarker.js"
-import CircleMarker from './CircleMarker.js';
 
 const Visualizer = forwardRef(({canvas}, ref) => {
   const defaultState = {
@@ -101,26 +95,6 @@ const Visualizer = forwardRef(({canvas}, ref) => {
   
   return (
     <div className="visualizer">
-      {/* {state.layers.map((layer, i) => layer ? 
-        <BackgroundImage key={'BackgroundImage'+i} layer={layer} canvas={canvas} angleOfRotation={state.angleOfRotation}/> :
-        null)}, */}
-      { Object.keys(state.overlayShapes).map((key, i) => 
-        state.overlayShapes[key]?.shape?.type == 'point' ?  <PointMarker key={'PointMarker'+i} shape={state.overlayShapes[key]} canvas={canvas}/> : null
-      )}
-      { Object.keys(state.overlayShapes).map((key, i) => 
-        state.overlayShapes[key]?.shape?.type == 'line' ?  <LineMarker key={'LineMarker'+i} shape={state.overlayShapes[key]} canvas={canvas}/> : null
-      )}
-      { Object.keys(state.overlayShapes).map((key, i) => 
-        state.overlayShapes[key]?.shape?.type == 'angle' ?  <AngleMarker key={'AngleMarker'+i} shape={state.overlayShapes[key]} canvas={canvas}/> : null
-      )}
-      {/* { Object.keys(state.overlayShapes).map((key, i) => 
-        state.overlayShapes[key]?.shape?.type == 'rectangle' ?  
-          <RectangleMarker key={'RectangleMarker'+i} shape={state.overlayShapes[key]} canvas={canvas} imageSrc={state.layers[0]} /> : null
-      )}
-      { Object.keys(state.overlayShapes).map((key, i) => 
-        state.overlayShapes[key]?.shape?.type == 'circle' ?  
-          <CircleMarker key={'CircleMarker'+i} shape={state.overlayShapes[key]} canvas={canvas} imageSrc={state.layers[0]} /> : null
-      )} */}
       {state.pickerEnabled ? <PointPicker canvas={canvas} pickerColor={state.pickerColor}/> : null}
     </div>
   );

@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { fabric } from 'fabric';
+import { useCanvasContext } from '../contexts/CanvasContext';
 
-export function AngleMarker({canvas, shape}) {
+export function AngleMarker({shape}) {
+  const {
+    state: [canvasState, ],
+  } = useCanvasContext();
   
   useEffect(() => {
-
+    const canvas = canvasState.canvas;
     const line1 = new fabric.Line(
       [shape.shape.x1, shape.shape.y1, shape.shape.x2, shape.shape.y2],
       {
@@ -68,7 +72,7 @@ export function AngleMarker({canvas, shape}) {
       canvas.renderAll();
     }
 
-  }, [shape, canvas]);
+  }, [shape, canvasState.canvas]);
 
   return (
     <>

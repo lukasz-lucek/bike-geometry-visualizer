@@ -4,6 +4,7 @@ import GeometrySaver from './GeometrySaver';
 const ToolSelection = ({ selectedTool, handleToolSelect }) => {
   const tools = [
     { name: 'imageUpload', label: 'Image Upload Tool' },
+    { name: 'imageGeometryGrabber', label: 'Image Geometry Grabbing' },
     { name: 'frameGeometry', label: 'Geometry Specs' },
     // Add more tools here as needed
   ];

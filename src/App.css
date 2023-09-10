@@ -3,8 +3,8 @@
 .app-container {
   display: grid;
   grid-template-columns: 1fr 2fr;
-  grid-template-rows: auto; /* Auto rows */
-  grid-gap: 10px; /* Gap between grid items */
+  grid-template-rows: auto 1fr; /* Auto rows */
+  grid-gap: 10px; /* Gaautop between grid items */
 }
 
 .tool-selection-area {

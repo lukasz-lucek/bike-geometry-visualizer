@@ -357,7 +357,7 @@ const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
           </RectanglePartGrabberControls>
 
         </div>
-        <table enabled={pxPerMm != 0}>
+        {/* <table enabled={pxPerMm != 0}>
           <thead>
             <tr>
               <th>Spec</th>
@@ -422,7 +422,7 @@ const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
             </tr>
 
           </tbody>
-        </table>
+        </table> */}
       </div>
     </div>
   );
