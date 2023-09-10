@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import { useCanvasContext } from '../contexts/CanvasContext.js';
 import BikeGeometryTable from '../components/BikeGeometryTable.js';
-import GeometrySaver from './GeometrySaver.js';
 import SizesTable from '../components/SizesTable.js';
 import { useGeometryContext } from '../contexts/GeometryContext.js';
 
@@ -21,7 +20,7 @@ const FrameGeometryInput = () => {
 
 
   useEffect(() => {
-    canvasState.clearCanvas();
+    canvasState.canvas.clear();
   }, []);
   return (
     <div className="frame-input">

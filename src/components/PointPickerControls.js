@@ -1,8 +1,8 @@
 // src/components/Visualizer.js
 import React, { forwardRef, useImperativeHandle, useEffect, useState} from 'react';
-import PointPicker from "../components/PointPicker.js"
+import PointPicker from "./PointPicker.js"
 
-const Visualizer = forwardRef(({canvas}, ref) => {
+const PointPickerControls = forwardRef(({canvas}, ref) => {
   const defaultState = {
     layers: [],
     pickerEnabled: false,
@@ -28,25 +28,6 @@ const Visualizer = forwardRef(({canvas}, ref) => {
   }
 
   useImperativeHandle(ref, () => ({
-    addNewLayer (layer) {
-        if (state.layers[0] && layer.src == state.layers[0].src) {
-          console.log("same image - no need to cahnge layer");
-          return;
-        }
-        console.log("Visualizer.addNewLayer");
-        updateState( {
-            layers: [layer]
-        });
-    },
-
-    disablePointPicker () {
-        updateState ( {
-            pickerEnabled : false,
-        });
-    },
-
-    
-
     enablePointPicker (color) {
       console.log("starting point selection");
       return new Promise( (resolve, ) => {
@@ -69,21 +50,6 @@ const Visualizer = forwardRef(({canvas}, ref) => {
           
       });
     },
-
-    addShapeVisualizationFunc (key, shape, color) {
-      const curKnown = state.overlayShapes;
-      if (shape == null) {
-        delete curKnown[key];
-      } else {
-        curKnown[key] = {shape: shape, color: color};
-      }
-      updateState( {overlayShapes: curKnown});
-    },
-
-    fixRotationFunc(angle) {
-      console.log("Fixing rotation");
-      updateState({angleOfRotation: angle});
-    }
   }));
 
   useEffect(() => {
@@ -91,7 +57,7 @@ const Visualizer = forwardRef(({canvas}, ref) => {
       removeMouseUpHandlers();
     }
     canvas.renderAll();
-  }, [state, canvas]);
+  }, [state.pickerEnabled, canvas]);
   
   return (
     <div className="visualizer">
@@ -100,4 +66,4 @@ const Visualizer = forwardRef(({canvas}, ref) => {
   );
 });
 
-export default Visualizer;
+export default PointPickerControls;

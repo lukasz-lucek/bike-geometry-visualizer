@@ -11,12 +11,7 @@ export const useCanvasContext = () => {
 
 export const CanvasProvider = ({ children }) => {
   const defaultState = {
-    addLayerToCanvasFunc : (layer) => {},
-    enablePointPickerFunc : (color) => {return new Promise ((resolve , reject) => {reject();})},
-    disablePointPickerFun : () => {},
     addShapeVisualizationFunc : (shape) => {},
-    fixRotationFunc : (angle) => {return new Promise ((resolve , reject) => {reject();})},
-    clearCanvas : () => {},
     canvas : null,
   };
 

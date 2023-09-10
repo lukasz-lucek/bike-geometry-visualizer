@@ -1,5 +1,5 @@
 // src/components/ImageUploadOption.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useCanvasContext } from '../contexts/CanvasContext.js'; // Import the useCanvasContext hook
 import BikeGeometryTable from '../components/BikeGeometryTable.js';
 import '../App.css';
@@ -7,6 +7,7 @@ import PartsGrabberSpecs from './PartsGrabberSpecs.js';
 import { useGeometryContext } from '../contexts/GeometryContext.js';
 import BackgroundImage from "../components/BackgroundImage.js"
 import GeometryPointVisualization from './GeometryPointsVisualization.js';
+import PointPickerControls from './PointPickerControls.js';
 
 const ImageGeometryGrabber = () => {
   const defaultState = {
@@ -25,6 +26,8 @@ const ImageGeometryGrabber = () => {
     state: [geometryState, updateGeometryState],
   } = useGeometryContext();
 
+  const pointPickerControlsRef = useRef(null);
+
   const handleAddPoint = (pointType, style, backupStyle) => {
     let button = document.querySelector(style, 'hover');
     if (button == null) {
@@ -32,7 +35,7 @@ const ImageGeometryGrabber = () => {
     }
     const computedStyle = getComputedStyle(button);
     const color = computedStyle.getPropertyValue("background-color");
-    const promise = canvasState.enablePointPickerFunc(color);
+    const promise = pointPickerControlsRef.current.enablePointPicker(color);
     promise.then((point) => {
       const stateChange = {
         geometryPoints: {...geometryState.geometryPoints,[pointType]: {x: point.x, y: point.y, color: color}}
@@ -82,8 +85,8 @@ const ImageGeometryGrabber = () => {
         >
           Rear Wheel Center 
           (
-            {geometryState.geometryPoints['rearWheelCenter'] ? geometryState.geometryPoints['rearWheelCenter'].x.toFixed(1) : '____'},
-            {geometryState.geometryPoints['rearWheelCenter'] ? geometryState.geometryPoints['rearWheelCenter'].y.toFixed(1) : '____'}
+            {geometryState.geometryPoints['rearWheelCenter'] ? geometryState.geometryPoints['rearWheelCenter'].x.toFixed(0) : '____'},
+            {geometryState.geometryPoints['rearWheelCenter'] ? geometryState.geometryPoints['rearWheelCenter'].y.toFixed(0) : '____'}
           )
         </button>
         <button
@@ -92,8 +95,8 @@ const ImageGeometryGrabber = () => {
         >
           Front Wheel Center
           (
-            {geometryState.geometryPoints['frontWheelCenter'] ? geometryState.geometryPoints['frontWheelCenter'].x.toFixed(1) : '____'},
-            {geometryState.geometryPoints['frontWheelCenter'] ? geometryState.geometryPoints['frontWheelCenter'].y.toFixed(1) : '____'}
+            {geometryState.geometryPoints['frontWheelCenter'] ? geometryState.geometryPoints['frontWheelCenter'].x.toFixed(0) : '____'},
+            {geometryState.geometryPoints['frontWheelCenter'] ? geometryState.geometryPoints['frontWheelCenter'].y.toFixed(0) : '____'}
           )
         </button>
         <button
@@ -102,8 +105,8 @@ const ImageGeometryGrabber = () => {
         >
           Bottom Bracket Center
           (
-            {geometryState.geometryPoints['bottomBracketCenter'] ? geometryState.geometryPoints['bottomBracketCenter'].x.toFixed(1) : '____'},
-            {geometryState.geometryPoints['bottomBracketCenter'] ? geometryState.geometryPoints['bottomBracketCenter'].y.toFixed(1) : '____'}
+            {geometryState.geometryPoints['bottomBracketCenter'] ? geometryState.geometryPoints['bottomBracketCenter'].x.toFixed(0) : '____'},
+            {geometryState.geometryPoints['bottomBracketCenter'] ? geometryState.geometryPoints['bottomBracketCenter'].y.toFixed(0) : '____'}
           )
         </button>
         <button
@@ -112,8 +115,8 @@ const ImageGeometryGrabber = () => {
         >
           Head Tube Top
           (
-            {geometryState.geometryPoints['headTubeTop'] ? geometryState.geometryPoints['headTubeTop'].x.toFixed(1) : '____'},
-            {geometryState.geometryPoints['headTubeTop'] ? geometryState.geometryPoints['headTubeTop'].y.toFixed(1) : '____'}
+            {geometryState.geometryPoints['headTubeTop'] ? geometryState.geometryPoints['headTubeTop'].x.toFixed(0) : '____'},
+            {geometryState.geometryPoints['headTubeTop'] ? geometryState.geometryPoints['headTubeTop'].y.toFixed(0) : '____'}
           )
         </button>
         <button
@@ -122,8 +125,8 @@ const ImageGeometryGrabber = () => {
         >
           Head Tube Bottom
           (
-            {geometryState.geometryPoints['headTubeBottom'] ? geometryState.geometryPoints['headTubeBottom'].x.toFixed(1) : '____'},
-            {geometryState.geometryPoints['headTubeBottom'] ? geometryState.geometryPoints['headTubeBottom'].y.toFixed(1) : '____'}
+            {geometryState.geometryPoints['headTubeBottom'] ? geometryState.geometryPoints['headTubeBottom'].x.toFixed(0) : '____'},
+            {geometryState.geometryPoints['headTubeBottom'] ? geometryState.geometryPoints['headTubeBottom'].y.toFixed(0) : '____'}
           )
         </button>
         <button
@@ -132,8 +135,8 @@ const ImageGeometryGrabber = () => {
         >
           Seat Tube Top
           (
-            {geometryState.geometryPoints['seatTubeTop'] ? geometryState.geometryPoints['seatTubeTop'].x.toFixed(1) : '____'},
-            {geometryState.geometryPoints['seatTubeTop'] ? geometryState.geometryPoints['seatTubeTop'].y.toFixed(1) : '____'}
+            {geometryState.geometryPoints['seatTubeTop'] ? geometryState.geometryPoints['seatTubeTop'].x.toFixed(0) : '____'},
+            {geometryState.geometryPoints['seatTubeTop'] ? geometryState.geometryPoints['seatTubeTop'].y.toFixed(0) : '____'}
           )
         </button>
         <button
@@ -142,8 +145,8 @@ const ImageGeometryGrabber = () => {
         >
           Crank Arm End
           (
-            {geometryState.geometryPoints['crankArmEnd'] ? geometryState.geometryPoints['crankArmEnd'].x.toFixed(1) : '____'},
-            {geometryState.geometryPoints['crankArmEnd'] ? geometryState.geometryPoints['crankArmEnd'].y.toFixed(1) : '____'}
+            {geometryState.geometryPoints['crankArmEnd'] ? geometryState.geometryPoints['crankArmEnd'].x.toFixed(0) : '____'},
+            {geometryState.geometryPoints['crankArmEnd'] ? geometryState.geometryPoints['crankArmEnd'].y.toFixed(0) : '____'}
           )
         </button>
         <button
@@ -152,8 +155,19 @@ const ImageGeometryGrabber = () => {
         >
           Handlebar mount point
           (
-            {geometryState.geometryPoints['handlebarMount'] ? geometryState.geometryPoints['handlebarMount'].x.toFixed(1) : '____'},
-            {geometryState.geometryPoints['handlebarMount'] ? geometryState.geometryPoints['handlebarMount'].y.toFixed(1) : '____'}
+            {geometryState.geometryPoints['handlebarMount'] ? geometryState.geometryPoints['handlebarMount'].x.toFixed(0) : '____'},
+            {geometryState.geometryPoints['handlebarMount'] ? geometryState.geometryPoints['handlebarMount'].y.toFixed(0) : '____'}
+          )
+        </button>
+
+        <button
+          className={state.selectedPoint === 'seatMount' ? 'selected-seat-mount' : 'seat-mount'}
+          onClick={() => handleAddPoint('seatMount', '.seat-mount', '.selected-seat-mount')}
+        >
+          Seat mount point
+          (
+            {geometryState.geometryPoints['seatMount'] ? geometryState.geometryPoints['seatMount'].x.toFixed(0) : '____'},
+            {geometryState.geometryPoints['seatMount'] ? geometryState.geometryPoints['seatMount'].y.toFixed(0) : '____'}
           )
         </button>
         
@@ -165,6 +179,7 @@ const ImageGeometryGrabber = () => {
         <PartsGrabberSpecs points={geometryState.geometryPoints} wheelbase={geometryState.wheelbase} updatePoints={updatePoints}/>
         {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'}/>}
         <GeometryPointVisualization/>
+        {canvasState.canvas && <PointPickerControls ref={pointPickerControlsRef} canvas={canvasState.canvas}/>}
       </div>
     </div>
   );

@@ -185,3 +185,15 @@ img:hover {
   color: #fff;
   /* Add other styles as needed to indicate selection */
 }
+
+.seat-mount:hover {
+  background-color: #71D6B5;
+  color: #fff;
+  /* Add other styles as needed to indicate selection */
+}
+
+.seat-handlebars-mount {
+  background-color: #71D6B5;
+  color: #fff;
+  /* Add other styles as needed to indicate selection */
+}
