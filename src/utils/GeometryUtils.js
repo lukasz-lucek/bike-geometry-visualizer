@@ -117,6 +117,24 @@ const findPxPerMm = (point1, point2, distance) => {
   return null;
 }
 
+const findIntermediatePoint = (point1, point2, offset) => {
+    if (point1 && point2) {
+        const distance = Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2));
+        if (distance == 0) {
+            return {
+                x: point1.x,
+                y: point1.y,
+              }
+        }
+        const ratio = offset / distance;
+        return {
+          x: point1.x - (point1.x - point2.x) * ratio,
+          y: point1.y - (point1.y - point2.y) * ratio,
+        }
+      }
+      return null;
+}
+
 export {
     findRectangle,
     findBBFromRectangle,
@@ -126,5 +144,6 @@ export {
     findBBFromImage,
     findCircleBB,
     findBBWithMargins,
-    findPxPerMm
+    findPxPerMm,
+    findIntermediatePoint
 };

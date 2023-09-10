@@ -3,17 +3,25 @@ import React, { useState, useEffect } from 'react';
 import { useCanvasContext } from '../contexts/CanvasContext.js'; // Import the useCanvasContext hook
 import BikeGeometryTable from '../components/BikeGeometryTable.js';
 import '../App.css';
-import GeometrySaver from './GeometrySaver.js';
 import PartsGrabberSpecs from './PartsGrabberSpecs.js';
 import { useGeometryContext } from '../contexts/GeometryContext.js';
+import BackgroundImage from "../components/BackgroundImage.js"
 
 const ImageUploadOption = () => {
+  const defaultState = {
+    dragOver: false,
+    selectedPoint: null,
+  };
+  const [state, setState] = useState(defaultState);
+  const updateState = (newPartialState) => {
+    setState({...state,...newPartialState});
+  }
   const {
     state: [canvasState, ],
-  } = useCanvasContext(); // Access the addLayerToCanvas method from context
+  } = useCanvasContext();
 
   const {
-    state: [state, updateState],
+    state: [geometryState, updateGeometryState],
   } = useGeometryContext();
 
   const handleDrop = (e) => {
@@ -28,7 +36,7 @@ const ImageUploadOption = () => {
   const handleImageSelection = (file) => {
     const reader = new FileReader();
     reader.onloadend = () => {
-      updateState({selectedFile:reader.result});
+      updateGeometryState({selectedFile:reader.result});
     };
     reader.readAsDataURL(file);
   };
@@ -59,20 +67,20 @@ const ImageUploadOption = () => {
     const promise = canvasState.enablePointPickerFunc(color);
     promise.then((point) => {
       const stateChange = {
-        geometryPoints: {...state.geometryPoints,[pointType]: {x: point.x, y: point.y, color: color}}, 
-        selectedPoint: null
+        geometryPoints: {...geometryState.geometryPoints,[pointType]: {x: point.x, y: point.y, color: color}}
       };
-      updateState(stateChange);
+      updateGeometryState(stateChange);
+      updateState({selectedPoint: null});
     });
     updateState({selectedPoint: pointType});
 
   };
 
   const getSuggestedRotationAngle = () => {
-    const x1 = state.geometryPoints['rearWheelCenter'].x;
-    const y1 = state.geometryPoints['rearWheelCenter'].y;
-    const x2 = state.geometryPoints['frontWheelCenter'].x;
-    const y2 = state.geometryPoints['frontWheelCenter'].y;
+    const x1 = geometryState.geometryPoints['rearWheelCenter'].x;
+    const y1 = geometryState.geometryPoints['rearWheelCenter'].y;
+    const x2 = geometryState.geometryPoints['frontWheelCenter'].x;
+    const y2 = geometryState.geometryPoints['frontWheelCenter'].y;
     
     const initialAngle = Math.atan((y1 - y2) / (x2 - x1));
     const initialAngleDegrees = initialAngle * (180 / Math.PI);
@@ -84,29 +92,21 @@ const ImageUploadOption = () => {
   }
 
   const updatePoints = (newPartialPoints) => {
-    updateState({geometryPoints: {...state.geometryPoints, ...newPartialPoints}});
+    updateGeometryState({geometryPoints: {...geometryState.geometryPoints, ...newPartialPoints}});
   }
 
   useEffect(() => {
     //setPointSelected(() => handleCanvasClick);
 
-    for (const [geometryPointKey, {x: x, y: y, color: color}] of Object.entries(state.geometryPoints)) {
+    for (const [geometryPointKey, {x: x, y: y, color: color}] of Object.entries(geometryState.geometryPoints)) {
       canvasState.addShapeVisualizationFunc(geometryPointKey, {type:"point", x: x, y: y}, color);
-    }
-
-    if (state.selectedFile != null) {
-      const newLayer = {
-        type: 'image',
-        src: state.selectedFile,
-      };
-      canvasState.addLayerToCanvasFunc(newLayer); // Add the new layer to the canvas
     }
 
     // Clean up event listeners when the component unmounts
     return () => {
       //setPointSelected(() => null);
     };
-  }, [canvasState, state.geometryPoints, state.selectedFile]);
+  }, [canvasState, geometryState.geometryPoints]);
 
   return (
     <div className="image-upload-option" onDrop={handleDrop} onDragOver={handleDragOver} onDragLeave={handleDragLeave}>
@@ -117,8 +117,8 @@ const ImageUploadOption = () => {
       <input
         type="text"
         placeholder="Wheelbase (mm)"
-        value={state.wheelbase}
-        onChange={(e) => updateState({wheelbase: e.target.value})}
+        value={geometryState.wheelbase}
+        onChange={(e) => updateGeometryState({wheelbase: e.target.value})}
       />
       <div className="point-buttons">
         <button
@@ -127,8 +127,8 @@ const ImageUploadOption = () => {
         >
           Rear Wheel Center 
           (
-            {state.geometryPoints['rearWheelCenter'] ? state.geometryPoints['rearWheelCenter'].x.toFixed(1) : '____'},
-            {state.geometryPoints['rearWheelCenter'] ? state.geometryPoints['rearWheelCenter'].y.toFixed(1) : '____'}
+            {geometryState.geometryPoints['rearWheelCenter'] ? geometryState.geometryPoints['rearWheelCenter'].x.toFixed(1) : '____'},
+            {geometryState.geometryPoints['rearWheelCenter'] ? geometryState.geometryPoints['rearWheelCenter'].y.toFixed(1) : '____'}
           )
         </button>
         <button
@@ -137,8 +137,8 @@ const ImageUploadOption = () => {
         >
           Front Wheel Center
           (
-            {state.geometryPoints['frontWheelCenter'] ? state.geometryPoints['frontWheelCenter'].x.toFixed(1) : '____'},
-            {state.geometryPoints['frontWheelCenter'] ? state.geometryPoints['frontWheelCenter'].y.toFixed(1) : '____'}
+            {geometryState.geometryPoints['frontWheelCenter'] ? geometryState.geometryPoints['frontWheelCenter'].x.toFixed(1) : '____'},
+            {geometryState.geometryPoints['frontWheelCenter'] ? geometryState.geometryPoints['frontWheelCenter'].y.toFixed(1) : '____'}
           )
         </button>
         <button
@@ -147,8 +147,8 @@ const ImageUploadOption = () => {
         >
           Bottom Bracket Center
           (
-            {state.geometryPoints['bottomBracketCenter'] ? state.geometryPoints['bottomBracketCenter'].x.toFixed(1) : '____'},
-            {state.geometryPoints['bottomBracketCenter'] ? state.geometryPoints['bottomBracketCenter'].y.toFixed(1) : '____'}
+            {geometryState.geometryPoints['bottomBracketCenter'] ? geometryState.geometryPoints['bottomBracketCenter'].x.toFixed(1) : '____'},
+            {geometryState.geometryPoints['bottomBracketCenter'] ? geometryState.geometryPoints['bottomBracketCenter'].y.toFixed(1) : '____'}
           )
         </button>
         <button
@@ -157,8 +157,8 @@ const ImageUploadOption = () => {
         >
           Head Tube Top
           (
-            {state.geometryPoints['headTubeTop'] ? state.geometryPoints['headTubeTop'].x.toFixed(1) : '____'},
-            {state.geometryPoints['headTubeTop'] ? state.geometryPoints['headTubeTop'].y.toFixed(1) : '____'}
+            {geometryState.geometryPoints['headTubeTop'] ? geometryState.geometryPoints['headTubeTop'].x.toFixed(1) : '____'},
+            {geometryState.geometryPoints['headTubeTop'] ? geometryState.geometryPoints['headTubeTop'].y.toFixed(1) : '____'}
           )
         </button>
         <button
@@ -167,8 +167,8 @@ const ImageUploadOption = () => {
         >
           Head Tube Bottom
           (
-            {state.geometryPoints['headTubeBottom'] ? state.geometryPoints['headTubeBottom'].x.toFixed(1) : '____'},
-            {state.geometryPoints['headTubeBottom'] ? state.geometryPoints['headTubeBottom'].y.toFixed(1) : '____'}
+            {geometryState.geometryPoints['headTubeBottom'] ? geometryState.geometryPoints['headTubeBottom'].x.toFixed(1) : '____'},
+            {geometryState.geometryPoints['headTubeBottom'] ? geometryState.geometryPoints['headTubeBottom'].y.toFixed(1) : '____'}
           )
         </button>
         <button
@@ -177,8 +177,8 @@ const ImageUploadOption = () => {
         >
           Seat Tube Top
           (
-            {state.geometryPoints['seatTubeTop'] ? state.geometryPoints['seatTubeTop'].x.toFixed(1) : '____'},
-            {state.geometryPoints['seatTubeTop'] ? state.geometryPoints['seatTubeTop'].y.toFixed(1) : '____'}
+            {geometryState.geometryPoints['seatTubeTop'] ? geometryState.geometryPoints['seatTubeTop'].x.toFixed(1) : '____'},
+            {geometryState.geometryPoints['seatTubeTop'] ? geometryState.geometryPoints['seatTubeTop'].y.toFixed(1) : '____'}
           )
         </button>
         <button
@@ -187,8 +187,8 @@ const ImageUploadOption = () => {
         >
           Crank Arm End
           (
-            {state.geometryPoints['crankArmEnd'] ? state.geometryPoints['crankArmEnd'].x.toFixed(1) : '____'},
-            {state.geometryPoints['crankArmEnd'] ? state.geometryPoints['crankArmEnd'].y.toFixed(1) : '____'}
+            {geometryState.geometryPoints['crankArmEnd'] ? geometryState.geometryPoints['crankArmEnd'].x.toFixed(1) : '____'},
+            {geometryState.geometryPoints['crankArmEnd'] ? geometryState.geometryPoints['crankArmEnd'].y.toFixed(1) : '____'}
           )
         </button>
         <button
@@ -197,25 +197,26 @@ const ImageUploadOption = () => {
         >
           Handlebar mount point
           (
-            {state.geometryPoints['handlebarMount'] ? state.geometryPoints['handlebarMount'].x.toFixed(1) : '____'},
-            {state.geometryPoints['handlebarMount'] ? state.geometryPoints['handlebarMount'].y.toFixed(1) : '____'}
+            {geometryState.geometryPoints['handlebarMount'] ? geometryState.geometryPoints['handlebarMount'].x.toFixed(1) : '____'},
+            {geometryState.geometryPoints['handlebarMount'] ? geometryState.geometryPoints['handlebarMount'].y.toFixed(1) : '____'}
           )
         </button>
         <button disabled = {true}
           onClick={() => fixRoation()}>
           Sugested rotation: to fix wheel level
           (
-            {state.geometryPoints['frontWheelCenter'] && state.geometryPoints['rearWheelCenter'] ? 
+            {geometryState.geometryPoints['frontWheelCenter'] && geometryState.geometryPoints['rearWheelCenter'] ? 
               getSuggestedRotationAngle().toFixed(2) :
               '____'}
           )
         </button>
       </div>
       <div className="bike-geometry-table">
-        <BikeGeometryTable points={state.geometryPoints} wheelbase={state.wheelbase} updatePoints={updatePoints}>
+        <BikeGeometryTable points={geometryState.geometryPoints} wheelbase={geometryState.wheelbase} updatePoints={updatePoints}>
           Bike Geometry Specifications
         </BikeGeometryTable>
-        <PartsGrabberSpecs points={state.geometryPoints} wheelbase={state.wheelbase} updatePoints={updatePoints}/>
+        <PartsGrabberSpecs points={geometryState.geometryPoints} wheelbase={geometryState.wheelbase} updatePoints={updatePoints}/>
+        {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'} imageSrc={geometryState.selectedFile} canvas={canvasState.canvas} angleOfRotation={0}/>}
       </div>
     </div>
   );

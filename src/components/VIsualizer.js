@@ -101,9 +101,9 @@ const Visualizer = forwardRef(({canvas}, ref) => {
   
   return (
     <div className="visualizer">
-      {state.layers.map((layer, i) => layer ? 
+      {/* {state.layers.map((layer, i) => layer ? 
         <BackgroundImage key={'BackgroundImage'+i} layer={layer} canvas={canvas} angleOfRotation={state.angleOfRotation}/> :
-        null)},
+        null)}, */}
       { Object.keys(state.overlayShapes).map((key, i) => 
         state.overlayShapes[key]?.shape?.type == 'point' ?  <PointMarker key={'PointMarker'+i} shape={state.overlayShapes[key]} canvas={canvas}/> : null
       )}
@@ -113,14 +113,14 @@ const Visualizer = forwardRef(({canvas}, ref) => {
       { Object.keys(state.overlayShapes).map((key, i) => 
         state.overlayShapes[key]?.shape?.type == 'angle' ?  <AngleMarker key={'AngleMarker'+i} shape={state.overlayShapes[key]} canvas={canvas}/> : null
       )}
-      { Object.keys(state.overlayShapes).map((key, i) => 
+      {/* { Object.keys(state.overlayShapes).map((key, i) => 
         state.overlayShapes[key]?.shape?.type == 'rectangle' ?  
           <RectangleMarker key={'RectangleMarker'+i} shape={state.overlayShapes[key]} canvas={canvas} imageSrc={state.layers[0]} /> : null
       )}
       { Object.keys(state.overlayShapes).map((key, i) => 
         state.overlayShapes[key]?.shape?.type == 'circle' ?  
           <CircleMarker key={'CircleMarker'+i} shape={state.overlayShapes[key]} canvas={canvas} imageSrc={state.layers[0]} /> : null
-      )}
+      )} */}
       {state.pickerEnabled ? <PointPicker canvas={canvas} pickerColor={state.pickerColor}/> : null}
     </div>
   );

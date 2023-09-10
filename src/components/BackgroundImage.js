@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { fabric } from 'fabric';
 
-export function BackgroundImage({canvas, layer, angleOfRotation}) {
+export function BackgroundImage({canvas, imageSrc, angleOfRotation}) {
   const [fabricObject, setFabricObject] = useState(null);
 
   useEffect(() => {
     canvas.setViewportTransform([1,0,0,1,0,0]);
-    fabric.Image.fromURL(layer.src, (img) => {
+    fabric.Image.fromURL(imageSrc, (img) => {
         img.lockMovementX = true;
         img.lockMovementY = true;
         canvas.setZoom(Math.min(canvas.width / img.width, canvas.height / img.height));
@@ -14,7 +14,7 @@ export function BackgroundImage({canvas, layer, angleOfRotation}) {
         canvas.interactive = false;
         setFabricObject(img);
     });
-  }, [layer, canvas]);
+  }, [imageSrc, canvas]);
 
   useEffect(() => {
     if (fabricObject != null) {

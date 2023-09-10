@@ -3,13 +3,13 @@ import { fabric } from 'fabric';
 import RectangleGrabVisualization from './RectangleGrabVisualization.js';
 import {findRectangle} from '../utils/GeometryUtils.js'
 
-export function RectangleMarker({canvas, shape, imageSrc}) {
+export function RectangleMarker({canvas, shape}) {
 
   const rectangle = useMemo(() => {
     const sh = shape.shape;
     const rectangle = findRectangle({x1: sh.x1, y1: sh.y1},{x2: sh.x2, y2: sh.y2},sh.width);
     rectangle.fill = 'transparent';
-    rectangle.stroke = 'red';
+    rectangle.stroke = shape.color;
     rectangle.strokeWidth = sh.strokeWidth;
 
     return rectangle;
@@ -25,11 +25,11 @@ export function RectangleMarker({canvas, shape, imageSrc}) {
       canvas.renderAll();
     }
 
-  }, [shape, canvas, imageSrc]);
+  }, [shape, canvas]);
 
   return (
     <>
-      <RectangleGrabVisualization canvas={canvas} shape={shape} imageSrc={imageSrc}/>
+      <RectangleGrabVisualization canvas={canvas} shape={shape}/>
     </>
   );
 }
