@@ -25,39 +25,6 @@ const ImageGeometryGrabber = () => {
     state: [geometryState, updateGeometryState],
   } = useGeometryContext();
 
-  const handleDrop = (e) => {
-    e.preventDefault();
-    updateState({dragOver: false});
-    const file = e.dataTransfer.files[0];
-    if (file) {
-      handleImageSelection(file);
-    }
-  };
-
-  const handleImageSelection = (file) => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      updateGeometryState({selectedFile:reader.result});
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const handleFileInputChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      handleImageSelection(file);
-    }
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    updateState({dragOver: true});
-  };
-
-  const handleDragLeave = () => {
-    updateState({dragOver: false});
-  };
-
   const handleAddPoint = (pointType, style, backupStyle) => {
     let button = document.querySelector(style, 'hover');
     if (button == null) {
@@ -88,35 +55,26 @@ const ImageGeometryGrabber = () => {
     return initialAngleDegrees;
   }
 
-  const fixRoation = () => {
-    canvasState.fixRotationFunc(getSuggestedRotationAngle());
-  }
-
   const updatePoints = (newPartialPoints) => {
     updateGeometryState({geometryPoints: {...geometryState.geometryPoints, ...newPartialPoints}});
   }
 
-  useEffect(() => {
-    //setPointSelected(() => handleCanvasClick);
-
-    for (const [geometryPointKey, {x: x, y: y, color: color}] of Object.entries(geometryState.geometryPoints)) {
-      canvasState.addShapeVisualizationFunc(geometryPointKey, {type:"point", x: x, y: y}, color);
-    }
-
-    // Clean up event listeners when the component unmounts
-    return () => {
-      //setPointSelected(() => null);
-    };
-  }, [canvasState, geometryState.geometryPoints]);
-
   return (
-    <div className="image-upload-option" onDrop={handleDrop} onDragOver={handleDragOver} onDragLeave={handleDragLeave}>
+    <div className="image-upload-option">
       <input
         type="text"
         placeholder="Wheelbase (mm)"
         value={geometryState.wheelbase}
         onChange={(e) => updateGeometryState({wheelbase: e.target.value})}
       />
+      <p>
+          Sugested rotation: to fix wheel level
+          (
+            {geometryState.geometryPoints['frontWheelCenter'] && geometryState.geometryPoints['rearWheelCenter'] ? 
+              getSuggestedRotationAngle().toFixed(2) :
+              '____'}
+          )
+        </p>
       <div className="point-buttons">
         <button
           className={state.selectedPoint === 'rearWheelCenter' ? 'selected-rear-wheel-center' : 'rear-wheel-center'}
@@ -198,15 +156,7 @@ const ImageGeometryGrabber = () => {
             {geometryState.geometryPoints['handlebarMount'] ? geometryState.geometryPoints['handlebarMount'].y.toFixed(1) : '____'}
           )
         </button>
-        <button disabled = {true}
-          onClick={() => fixRoation()}>
-          Sugested rotation: to fix wheel level
-          (
-            {geometryState.geometryPoints['frontWheelCenter'] && geometryState.geometryPoints['rearWheelCenter'] ? 
-              getSuggestedRotationAngle().toFixed(2) :
-              '____'}
-          )
-        </button>
+        
       </div>
       <div className="bike-geometry-table">
         <BikeGeometryTable points={geometryState.geometryPoints} wheelbase={geometryState.wheelbase} updatePoints={updatePoints}>
