@@ -7,11 +7,16 @@ export const useGeometryContext = () => {
 };
 
 export const GeometryProvider = ({ children }) => {
+  const storage = localStorage.getItem("knownGeometries");
+  let bikesList = [];
+  if (storage) {
+    bikesList = Object.keys(JSON.parse(storage));
+  }
   const defaultState = {
     wheelbase: '',
     geometryPoints: {},
     selectedFile: null,
-    bikesList: Object.keys(JSON.parse(localStorage.getItem("knownGeometries"))),
+    bikesList: bikesList,
   }
 
   const [state, setState] = useState(defaultState);
