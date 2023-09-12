@@ -2,6 +2,7 @@
 import React, {useEffect, useState} from 'react';
 import { useCanvasContext } from '../contexts/CanvasContext.js';
 import { findPxPerMm } from '../utils/GeometryUtils.js';
+import CirclePartGrabberControls from './CirclePartsGrabberControls.js';
 import RectanglePartGrabberControls from './RectanglePartGrabberControls.js';
 
 const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
@@ -355,6 +356,20 @@ const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
           pxPerMm = {pxPerMm}>
             CrankArm
           </RectanglePartGrabberControls>
+          <CirclePartGrabberControls partKey="rearWheel" centerPoint="rearWheelCenter" pxPerMm = {pxPerMm}>
+            RearWheel
+          </CirclePartGrabberControls>
+          <CirclePartGrabberControls partKey="frontWheel" centerPoint="frontWheelCenter" pxPerMm = {pxPerMm}>
+            FrontWheel
+          </CirclePartGrabberControls>
+          <CirclePartGrabberControls partKey="chainring" centerPoint="bottomBracketCenter" pxPerMm = {pxPerMm}>
+            Chainring
+          </CirclePartGrabberControls>
+
+        </div>
+
+        <div>
+          
 
         </div>
         {/* <table enabled={pxPerMm != 0}>
