@@ -58,61 +58,7 @@ const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
     }
     return null;
   }
-
-  const hilightWheels = () => {
-    const rearWheelCenter = points["rearWheelCenter"];
-    const frontWheelCenter = points["frontWheelCenter"];
-
-    if (rearWheelCenter) {
-      contextState.addShapeVisualizationFunc("rearWheelGrab", {
-        type: 'circle',
-        strokeWidth: strokeWidth,
-        x: rearWheelCenter.x,
-        y: rearWheelCenter.y,
-        radius: points.wheelsRadius * pxPerMm,
-        startAngle: 0,
-        endAngle: 360
-      }, visualizationColor);
-    }
-
-    if (frontWheelCenter) {
-      contextState.addShapeVisualizationFunc("frontWheelGrab", {
-        type: 'circle',
-        strokeWidth: strokeWidth,
-        x: frontWheelCenter.x,
-        y: frontWheelCenter.y,
-        radius: points.wheelsRadius * pxPerMm,
-        startAngle: 0,
-        endAngle: 360
-      }, visualizationColor);
-    }
-  }
-
-  const hideWheels = () => {
-    contextState.addShapeVisualizationFunc("rearWheelGrab", null, visualizationColor);
-    contextState.addShapeVisualizationFunc("frontWheelGrab", null, visualizationColor);
-  }
-
-  const hilightChainring = () => {
-    const bottomBracketCenter = points["bottomBracketCenter"];
-
-    if (bottomBracketCenter) {
-      contextState.addShapeVisualizationFunc("chainringGrab", {
-        type: 'circle',
-        strokeWidth: strokeWidth,
-        x: bottomBracketCenter.x,
-        y: bottomBracketCenter.y,
-        radius: points.chainringRadius * pxPerMm,
-        startAngle: 0,
-        endAngle: 360
-      }, visualizationColor);
-    }
-  }
-
-  const hideChainring = () => {
-    contextState.addShapeVisualizationFunc("chainringGrab", null, visualizationColor);
-  }
-
+  
   const hilightSeatpost = () => {
     const seatTubeTop = points["seatTubeTop"];
     const seatpostEnd = getSeatpostEnd();
@@ -198,8 +144,6 @@ const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
 
   useEffect(() => {
 
-    const defaultWheelsRadius = 360;
-    const defaultChainringRadius = 100;
     const defaultSeatPostLength = 350;
     const defaultSeatPostWidth = 300;
     const defaultStemOffset = 50;
@@ -207,12 +151,6 @@ const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
     const defaultSpacersWidth = 45;
     const defaultHandlebarsRadius = 200;
 
-    if (points.wheelsRadius == null) {
-      updatePoints({wheelsRadius: defaultWheelsRadius});
-    }
-    if (points.chainringRadius == null) {
-      updatePoints({chainringRadius: defaultChainringRadius});
-    }
     if (points.seatpostLength == null) {
       updatePoints({seatpostLength: defaultSeatPostLength});
     }
@@ -230,18 +168,6 @@ const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
     }
     if (points.handlebarsRadius == null) {
       updatePoints({handlebarsRadius: defaultHandlebarsRadius});
-    }
-
-    if (state.highlightedElement == 'wheelsGrab') {
-      hilightWheels();
-    } else {
-      hideWheels();
-    }
-
-    if (state.highlightedElement == 'chainringGrab') {
-      hilightChainring();
-    } else {
-      hideChainring();
     }
 
     if (state.highlightedElement == 'seatpostGrab') {
@@ -368,10 +294,6 @@ const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
 
         </div>
 
-        <div>
-          
-
-        </div>
         {/* <table enabled={pxPerMm != 0}>
           <thead>
             <tr>
