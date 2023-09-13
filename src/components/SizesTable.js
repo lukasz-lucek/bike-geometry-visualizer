@@ -30,7 +30,7 @@ const SizesTable = ({state, updateState }) => {
 
   const addSizeToTable = (name) => {
     const ns = {...state.sizesTable, ...Object.fromEntries([[name, mState.measures]])};
-    updateState({sizesTable : ns});
+    updateState({sizesTable : JSON.parse(JSON.stringify(ns))});
   }
 
   const removeSizeVromTable = (name) => {
@@ -87,7 +87,8 @@ const SizesTable = ({state, updateState }) => {
                 <td key={'V'+size+measurement}>
                   <input
                     value={state.sizesTable[size][measurement].toFixed(0)}
-                    onChange={(e) => setMeasureValue(Number(e.target.value), size, measurement)}/>
+                    onChange={(e) => setMeasureValue(Number(e.target.value), size, measurement)}
+                    type="number"/>
                 </td>
               ))}
             </tr>

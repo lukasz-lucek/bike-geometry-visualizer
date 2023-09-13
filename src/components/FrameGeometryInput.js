@@ -34,7 +34,7 @@ const FrameGeometryInput = () => {
       </BikeGeometryTable>
       <SizesTable state={state} updateState={updateState}/>
 
-      {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'}/>}
+      {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'} isGrayedOut={true} desiredPxPerMM={1}/>}
     </div>
   );
 };
