@@ -4,6 +4,7 @@ import { useCanvasContext } from '../contexts/CanvasContext.js';
 import BikeGeometryTable from '../components/BikeGeometryTable.js';
 import SizesTable from '../components/SizesTable.js';
 import { useGeometryContext } from '../contexts/GeometryContext.js';
+import BackgroundImage from './BackgroundImage.js';
 
 const FrameGeometryInput = () => {
   const {
@@ -14,9 +15,13 @@ const FrameGeometryInput = () => {
     updateState({geometryPoints: {...state.geometryPoints, ...newPartialPoints}});
   }
 
-  const {
+  const { 
     state: [canvasState, ],
   } = useCanvasContext();
+
+  const {
+    state: [geometryState, updateGeometryState],
+  } = useGeometryContext();
 
 
   useEffect(() => {
@@ -28,6 +33,8 @@ const FrameGeometryInput = () => {
         Original geometry from image
       </BikeGeometryTable>
       <SizesTable state={state} updateState={updateState}/>
+
+      {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'}/>}
     </div>
   );
 };

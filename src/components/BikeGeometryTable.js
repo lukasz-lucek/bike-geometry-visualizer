@@ -1,6 +1,7 @@
 // src/components/BikeGeometryTable.js
 import React, {useEffect, useState} from 'react';
 import { useCanvasContext } from '../contexts/CanvasContext.js';
+import { useMeasurementsContext } from '../contexts/MeasurementsContext.js';
 import { findPxPerMm } from '../utils/GeometryUtils.js';
 import './BikeGeometryTable.css'; // Import the CSS file
 import BikeGeometryTableAngleRow from './BikeGeometryTableAngleRow.js';
@@ -11,6 +12,15 @@ const BikeGeometryTable = ({ points, wheelbase, children }) => {
   const {
     state: [contextState, ],
   } = useCanvasContext(); 
+
+  const {
+    state: [state, setState],
+  } = useMeasurementsContext(); 
+
+  const updateState = (newPartialState) => {
+    const newState = {...state, ...newPartialState};
+    setState( newState );
+  }
 
   const defaultState = {
     highlightedElement : null,
@@ -34,12 +44,7 @@ const BikeGeometryTable = ({ points, wheelbase, children }) => {
     strokeWidth: 5,
   }
 
-  const [state, setState] = useState(defaultState);
-
-  const updateState = (newPartialState) => {
-    const newState = {...state, ...newPartialState};
-    setState( newState );
-  }
+  // const [state, setState] = useState(defaultState);
 
   const visualizationColor = "red";
 
