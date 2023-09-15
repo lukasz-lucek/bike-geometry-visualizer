@@ -8,20 +8,18 @@ import BackgroundImage from './BackgroundImage.js';
 
 const FrameGeometryInput = () => {
   const {
-    state: [state, updateState],
+    state: [geometryState, updateGeometryState],
   } = useGeometryContext();
 
   const updatePoints = (newPartialPoints) => {
-    updateState({geometryPoints: {...state.geometryPoints, ...newPartialPoints}});
+    updateGeometryState({geometryPoints: {...geometryState.geometryPoints, ...newPartialPoints}});
   }
 
   const { 
     state: [canvasState, ],
   } = useCanvasContext();
 
-  const {
-    state: [geometryState, updateGeometryState],
-  } = useGeometryContext();
+  
 
 
   useEffect(() => {
@@ -29,10 +27,10 @@ const FrameGeometryInput = () => {
   }, []);
   return (
     <div className="frame-input">
-      <BikeGeometryTable points={state.geometryPoints} wheelbase={state.wheelbase} updatePoints={updatePoints}>
+      <BikeGeometryTable points={geometryState.geometryPoints} wheelbase={geometryState.wheelbase} updatePoints={updatePoints}>
         Original geometry from image
       </BikeGeometryTable>
-      <SizesTable state={state} updateState={updateState}/>
+      <SizesTable state={geometryState} updateState={updateGeometryState}/>
 
       {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'} isGrayedOut={true} desiredPxPerMM={1}/>}
     </div>

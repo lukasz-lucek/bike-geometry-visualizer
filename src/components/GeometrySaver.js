@@ -19,7 +19,8 @@ const GeometrySaver = () => {
       knownGeometries[bikeDataName] = {
         selectedFile : state.selectedFile,
         geometryPoints : state.geometryPoints,
-        wheelbase: state.wheelbase
+        wheelbase: state.wheelbase,
+        sizesTable: state.sizesTable,
       };
       localStorage.setItem('knownGeometries', JSON.stringify(knownGeometries));
       updateState({bikesList: Object.keys(knownGeometries)});
@@ -40,7 +41,8 @@ const GeometrySaver = () => {
     updateState({
       selectedFile: geometryData.selectedFile,
       geometryPoints: geometryData.geometryPoints,
-      wheelbase: geometryData.wheelbase
+      wheelbase: geometryData.wheelbase,
+      sizesTable: geometryData.sizesTable,
     });
 
     setBikeDataName(item);

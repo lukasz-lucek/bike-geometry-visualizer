@@ -178,7 +178,7 @@ const ImageGeometryGrabber = () => {
         </BikeGeometryTable>
         <PartsGrabberSpecs points={geometryState.geometryPoints} wheelbase={geometryState.wheelbase} updatePoints={updatePoints}/>
         {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'}/>}
-        <GeometryPointVisualization/>
+        <GeometryPointVisualization pointsSet={geometryState.geometryPoints}/>
         {canvasState.canvas && <PointPickerControls ref={pointPickerControlsRef} canvas={canvasState.canvas}/>}
       </div>
     </div>

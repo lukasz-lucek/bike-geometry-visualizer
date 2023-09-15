@@ -1,9 +1,11 @@
 // src/components/FrameGeometryInput.js
 import React, { useEffect, useState } from 'react';
 import { useMeasurementsContext } from '../contexts/MeasurementsContext';
+import GeometryPointsFromMeasures from './GeometryPointsFromMeasures';
 
 const SizesTable = ({state, updateState }) => {
   const [sizeName, setSizeName] = useState('');
+  const [highlightedSize, setHighlightedSize] = useState();
 
   const sizesTable = state.sizesTable ? state.sizesTable : {};
   const knownSizes = Object.keys(sizesTable);
@@ -29,6 +31,7 @@ const SizesTable = ({state, updateState }) => {
   }, [state, mState.measures]);
 
   const addSizeToTable = (name) => {
+    console.log(state);
     const ns = {...state.sizesTable, ...Object.fromEntries([[name, mState.measures]])};
     updateState({sizesTable : JSON.parse(JSON.stringify(ns))});
   }
@@ -84,9 +87,12 @@ const SizesTable = ({state, updateState }) => {
             <tr key={'R'+measurement}>
               <td key={'H'+measurement}>{measurement}</td>
               {knownSizes.map((size) => (
-                <td key={'V'+size+measurement}>
+                <td 
+                  key={'V'+size+measurement}
+                  onMouseEnter={() => {setHighlightedSize(size)}} 
+                  onMouseLeave={() => {setHighlightedSize(null)}}>
                   <input
-                    value={state.sizesTable[size][measurement].toFixed(0)}
+                    value={state.sizesTable[size][measurement].toFixed(2)}
                     onChange={(e) => setMeasureValue(Number(e.target.value), size, measurement)}
                     type="number"/>
                 </td>
@@ -95,6 +101,7 @@ const SizesTable = ({state, updateState }) => {
           ))}
         </tbody>
       </table>
+      {highlightedSize && <GeometryPointsFromMeasures sizeMeasures={state.sizesTable[highlightedSize]} desiredPxPerMM={1}/> }
     </div>
   );
 };
