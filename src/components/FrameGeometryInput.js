@@ -27,9 +27,9 @@ const FrameGeometryInput = () => {
   }, []);
   return (
     <div className="frame-input">
-      <BikeGeometryTable points={geometryState.geometryPoints} wheelbase={geometryState.wheelbase} updatePoints={updatePoints}>
+      {/* <BikeGeometryTable points={geometryState.geometryPoints} wheelbase={geometryState.wheelbase} updatePoints={updatePoints}>
         Original geometry from image
-      </BikeGeometryTable>
+      </BikeGeometryTable> */}
       <SizesTable state={geometryState} updateState={updateGeometryState}/>
 
       {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'} isGrayedOut={true} desiredPxPerMM={1}/>}

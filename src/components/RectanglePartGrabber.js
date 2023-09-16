@@ -4,7 +4,16 @@ import { useGeometryContext } from '../contexts/GeometryContext';
 import { findIntermediatePoint } from '../utils/GeometryUtils';
 import RectangleMarker from './RectangleMarker';
 
-export function RectanglePartGrabber({leftOffset, rightOffset, width, anchorPoints, pxPerMm, strokeWidth}) {
+export function RectanglePartGrabber(
+  {leftOffset,
+    rightOffset,
+    width,
+    anchorPoints,
+    pxPerMm,
+    strokeWidth,
+    leftPlacementPoint=null,
+    rightPlacementPoint=null,
+    layer=3}) {
 
   const {
     state: [canvasState, ],
@@ -45,7 +54,14 @@ export function RectanglePartGrabber({leftOffset, rightOffset, width, anchorPoin
 
   return (
     <>
-      {shape && <RectangleMarker shape={shape} canvas={canvasState.canvas}/>}
+      {shape &&
+      <RectangleMarker
+        shape={shape}
+        canvas={canvasState.canvas}
+        leftPlacementPoint={leftPlacementPoint}
+        rightPlacementPoint={rightPlacementPoint}
+        layer={layer}
+      />}
     </>
   );
 }

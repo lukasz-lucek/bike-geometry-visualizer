@@ -11,7 +11,8 @@ export function GeometryPointVisualization({pointsSet}) {
 
   useEffect(() => {
     let allShapes = {};
-    for (const [geometryPointKey, {x: x, y: y, color: color}] of Object.entries(pointsSet)) {
+    const pointsToShow = Object.entries(pointsSet).filter(([geometryPointKey, entry]) => {return entry && entry.x && entry.y});
+    for (const [geometryPointKey, {x: x, y: y, color: color}] of pointsToShow) {
       allShapes[geometryPointKey] = {shape: {type:"point", x: x, y: y}, color: color};
     }
     setShapes(allShapes);

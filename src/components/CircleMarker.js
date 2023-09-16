@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { fabric } from 'fabric';
 import WheelGrabVisualization from './WheelGrabVisualization.js';
 
-export function CircleMarker({canvas, shape}) {
+export function CircleMarker({canvas, shape, placementPoint=null, scale=1, layer=3}) {
   
   useEffect(() => {
     const sh = shape.shape;
@@ -41,7 +41,12 @@ export function CircleMarker({canvas, shape}) {
 
   return (
     <>
-      <WheelGrabVisualization canvas={canvas} shape={shape}/>
+      <WheelGrabVisualization
+        canvas={canvas}
+        shape={shape}
+        placementPoint={placementPoint}
+        scale={scale}
+        layer={layer}/>
     </>
   );
 }

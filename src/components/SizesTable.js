@@ -31,7 +31,6 @@ const SizesTable = ({state, updateState }) => {
   }, [state, mState.measures]);
 
   const addSizeToTable = (name) => {
-    console.log(state);
     const ns = {...state.sizesTable, ...Object.fromEntries([[name, mState.measures]])};
     updateState({sizesTable : JSON.parse(JSON.stringify(ns))});
   }
@@ -48,7 +47,6 @@ const SizesTable = ({state, updateState }) => {
   }
 
   const setMeasureValue = (newVal, size, measurement) => {
-    console.log(newVal,  state.sizesTable);
     const newState = state.sizesTable;
     newState[size][measurement] = newVal;
     updateState({sizesTable : newState});
@@ -92,7 +90,7 @@ const SizesTable = ({state, updateState }) => {
                   onMouseEnter={() => {setHighlightedSize(size)}} 
                   onMouseLeave={() => {setHighlightedSize(null)}}>
                   <input
-                    value={state.sizesTable[size][measurement].toFixed(2)}
+                    value={state.sizesTable[size][measurement].toFixed(0)}
                     onChange={(e) => setMeasureValue(Number(e.target.value), size, measurement)}
                     type="number"/>
                 </td>

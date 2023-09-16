@@ -21,7 +21,6 @@ const PointPickerControls = forwardRef(({canvas}, ref) => {
   const removeMouseUpHandlers = () => {
     for (var prop in canvas.__eventListeners) {
       if (canvas.__eventListeners.hasOwnProperty(prop) && prop === 'mouse:up') {
-          console.log("removing mouse up handler");
           delete canvas.__eventListeners[prop]
       }
     }
@@ -29,7 +28,6 @@ const PointPickerControls = forwardRef(({canvas}, ref) => {
 
   useImperativeHandle(ref, () => ({
     enablePointPicker (color) {
-      console.log("starting point selection");
       return new Promise( (resolve, ) => {
           canvas.on("mouse:up", function (e) {
           if (e.isClick && e.target != null) {

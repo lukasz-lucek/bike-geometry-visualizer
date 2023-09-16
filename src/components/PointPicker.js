@@ -55,7 +55,6 @@ export function PointPicker({canvas, pickerColor}) {
       canvas.hoverCursor = 'default';
       for (var prop in canvas.__eventListeners) {
           if (canvas.__eventListeners.hasOwnProperty(prop) && prop === 'mouse:move') {
-              console.log("removing mouse move handler");
               delete canvas.__eventListeners[prop]
           }
       }

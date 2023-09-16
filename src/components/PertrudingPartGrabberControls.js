@@ -23,7 +23,6 @@ export function PertrudingPartGrabberControls({partKey, anchorPoints, pxPerMm, l
 
   const updateParts = (newPartialParts) => {
     if (newPartialParts[partKey].length) {
-      console.log("updateParts - adding endPoint");
       const points = geometryState.geometryPoints;
       const endPoint = findIntermediatePoint(points[anchorPoints.tl], points[anchorPoints.bl], -newPartialParts[partKey].length  * pxPerMm);
       newPartialParts[partKey].endPoint = endPoint;
@@ -39,7 +38,6 @@ export function PertrudingPartGrabberControls({partKey, anchorPoints, pxPerMm, l
     };
     const parts = geometryState.parts;
     if (!parts || !parts[partKey]) {
-      console.log("new part - no part in data")
       updateParts(Object.fromEntries([[partKey, defaultPartSetup]]));
     } else {
       updateParts(Object.fromEntries([[partKey, parts[partKey]]]));

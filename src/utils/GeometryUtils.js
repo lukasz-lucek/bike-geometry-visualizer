@@ -1,16 +1,16 @@
 import { fabric } from 'fabric';
 
-const findAngle = ({x1, y1}, {x2, y2}) => {
+const findAngle = ({x: x1, y: y1}, {x: x2, y: y2}) => {
     return Math.atan2(y2-y1, x2-x1) * 180 / Math.PI;
 }
 
-const findRectangle = ({x1, y1}, {x2, y2}, width) => {
+const findRectangle = ({x: x1, y: y1}, {x: x2, y: y2}, width) => {
     const center = {
         x: (x1 + x2) / 2, 
         y: (y1 + y2) / 2
     }
     const length = Math.sqrt(Math.pow(x1-x2,2) + Math.pow(y1-y2,2));
-    const angle = findAngle({x1: x1, y1: y1}, {x2: x2, y2: y2});
+    const angle = findAngle({x: x1, y: y1}, {x: x2, y: y2});
 
     const rectangle = new fabric.Rect({
         left: center.x - length/2,
@@ -59,7 +59,6 @@ const findACoords = ({x1, y1}, {x2, y2}, width) => {
 }
 
 const findACoordsFromImage = (image) => {
-    console.log("image width: ", image.width, " image height: ", image.height, image);
     const angle = image.angle * Math.PI / 180;
     const sina = Math.sin(angle);
     const cosa = Math.cos(angle);
@@ -80,17 +79,17 @@ const findBB = ({x1, y1}, {x2, y2}, width) => {
     return findBBFromACoords(findACoords({x1: x1, y1: y1}, {x2: x2, y2: y2}, width));
 }
 
-const findBBWithMargins = ({x1, y1}, {x2, y2}, w) => {
+const findBBWithMargins = ({x1, y1}, {x2, y2}, w, margin) => {
     const {left, top, width, height} = findBB({x1: x1, y1: y1}, {x2: x2, y2: y2}, w);
-    const leftProt = left - w/2;
-    const topProt = top - w/2;
+    const leftProt = left - margin/2;
+    const topProt = top - margin/2;
     const xCorrection = leftProt < 0 ? leftProt : 0;
     const yCorrection = topProt < 0 ? topProt : 0;
     return {
-        left: left - w/2 - xCorrection,
-        top: top - w/2 - yCorrection,
-        width: width + w + xCorrection,
-        height: height + w + yCorrection,
+        left: left - margin/2 - xCorrection,
+        top: top - margin/2 - yCorrection,
+        width: width + margin + xCorrection,
+        height: height + margin + yCorrection,
     }
 }
 
@@ -104,7 +103,6 @@ const findCircleBB = (x, y, radius) => {
 }
 
 const findBBFromImage = (image) => {
-    console.log("Accords from image: ", findACoordsFromImage(image));
     return findBBFromACoords(findACoordsFromImage(image));
 }
 
@@ -135,6 +133,10 @@ const findIntermediatePoint = (point1, point2, offset) => {
       return null;
 }
 
+const  findDistance = (point1, point2) => {
+    return Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2));
+}
+
 export {
     findRectangle,
     findBBFromRectangle,
@@ -145,5 +147,6 @@ export {
     findCircleBB,
     findBBWithMargins,
     findPxPerMm,
-    findIntermediatePoint
+    findIntermediatePoint,
+    findDistance
 };

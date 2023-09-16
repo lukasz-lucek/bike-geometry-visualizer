@@ -1,0 +1,233 @@
+// src/components/BikeGeometryTable.js
+import React, {useEffect, useState} from 'react';
+import { useGeometryContext } from '../contexts/GeometryContext.js';
+import { findPxPerMm } from '../utils/GeometryUtils.js';
+import CirclePartGrabber from './CirclePartGrabber.js';
+import RectanglePartGrabber from './RectanglePartGrabber.js';
+
+const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
+  const {
+    state: [geometryState, ],
+  } = useGeometryContext();
+
+  const [pxPerMm, setPxPerMm] = useState(null);
+
+  const dPPMM = desiredPxPerMM != null ? desiredPxPerMM : pxPerMm;
+
+  useEffect(() => {
+    if (!geometryState.geometryPoints ||
+        !geometryState.geometryPoints.rearWheelCenter ||
+        !geometryState.geometryPoints.frontWheelCenter ||
+        !geometryState.wheelbase)
+    {
+      return;
+    }
+    const pPMm = findPxPerMm(geometryState.geometryPoints.rearWheelCenter, geometryState.geometryPoints.frontWheelCenter, geometryState.wheelbase);
+    setPxPerMm(pPMm);
+  }, [geometryState.geometryPoints, geometryState.wheelbase, destinationPoints]);
+
+  return (
+    <>
+    {pxPerMm &&
+    <div>
+      {geometryState.geometryPoints.rearWheel && destinationPoints.rearWheelCenter &&
+      <CirclePartGrabber
+        radius = {geometryState.geometryPoints.rearWheel.radius}
+        centerPoint = {"rearWheelCenter"}
+        pxPerMm = {pxPerMm}
+        strokeWidth = {0}
+        placementPoint = {destinationPoints.rearWheelCenter}
+        desiredPxPerMM = {dPPMM}
+        layer={3}/>
+      }
+      
+      {geometryState.geometryPoints.frontWheel && destinationPoints.frontWheelCenter &&
+      <CirclePartGrabber
+        radius = {geometryState.geometryPoints.frontWheel.radius}
+        centerPoint = {"frontWheelCenter"}
+        pxPerMm = {pxPerMm}
+        strokeWidth = {0}
+        placementPoint = {destinationPoints.frontWheelCenter}
+        desiredPxPerMM = {dPPMM}
+        layer={3}/>
+      }
+
+      {geometryState.geometryPoints.chainring && destinationPoints.bottomBracketCenter &&
+      <CirclePartGrabber
+        radius = {geometryState.geometryPoints.chainring.radius}
+        centerPoint = {"bottomBracketCenter"}
+        pxPerMm = {pxPerMm}
+        strokeWidth = {0}
+        placementPoint = {destinationPoints.bottomBracketCenter}
+        desiredPxPerMM = {dPPMM}
+        layer={5}/>
+      }
+
+      {geometryState.geometryPoints.chainstay && destinationPoints.bottomBracketCenter && destinationPoints.rearWheelCenter &&
+      <RectanglePartGrabber 
+        leftOffset = {geometryState.geometryPoints.chainstay.leftOffset} 
+        rightOffset = {geometryState.geometryPoints.chainstay.rightOffset} 
+        width = {geometryState.geometryPoints.chainstay.width}
+        anchorPoints = {{
+          tl: "rearWheelCenter",
+          bl: "rearWheelCenter",
+          tr: "bottomBracketCenter",
+          br: "bottomBracketCenter",
+        }}
+        pxPerMm = {pxPerMm}
+        strokeWidth = {0}
+        leftPlacementPoint = {destinationPoints.rearWheelCenter}
+        rightPlacementPoint = {destinationPoints.bottomBracketCenter}
+        layer={7}/>
+      }
+
+      {geometryState.geometryPoints.seatTube && destinationPoints.bottomBracketCenter && destinationPoints.seatTubeTop &&
+      <RectanglePartGrabber 
+        leftOffset = {geometryState.geometryPoints.seatTube.leftOffset} 
+        rightOffset = {geometryState.geometryPoints.seatTube.rightOffset} 
+        width = {geometryState.geometryPoints.seatTube.width}
+        anchorPoints = {{
+          tl: "seatTubeTop",
+          bl: "seatTubeTop",
+          tr: "bottomBracketCenter",
+          br: "bottomBracketCenter"
+        }}
+        pxPerMm = {pxPerMm}
+        strokeWidth = {0}
+        leftPlacementPoint = {destinationPoints.seatTubeTop}
+        rightPlacementPoint = {destinationPoints.bottomBracketCenter}
+        layer={9}/>
+      }
+
+      {geometryState.geometryPoints.seatstay && destinationPoints.rearWheelCenter && destinationPoints.seatStayRight &&
+      <RectanglePartGrabber 
+        leftOffset = {geometryState.geometryPoints.seatstay.leftOffset} 
+        rightOffset = {geometryState.geometryPoints.seatstay.rightOffset} 
+        width = {geometryState.geometryPoints.seatstay.width}
+        anchorPoints={{
+          tl: "rearWheelCenter",
+          bl: "rearWheelCenter",
+          tr: "seatTubeTop",
+          br: "bottomBracketCenter"
+        }}
+        pxPerMm = {pxPerMm}
+        strokeWidth = {0}
+        leftPlacementPoint = {destinationPoints.rearWheelCenter}
+        rightPlacementPoint = {destinationPoints.seatStayRight}
+        layer={7}/>
+      }
+
+      {geometryState.geometryPoints.topTube && destinationPoints.topTubeLeft && destinationPoints.topTubeRight &&
+      <RectanglePartGrabber 
+        leftOffset = {geometryState.geometryPoints.topTube.leftOffset} 
+        rightOffset = {geometryState.geometryPoints.topTube.rightOffset} 
+        width = {geometryState.geometryPoints.topTube.width}
+        anchorPoints={{
+          tl: "seatTubeTop",
+          bl: "bottomBracketCenter",
+          tr: "headTubeTop",
+          br: "headTubeBottom"
+        }}
+        pxPerMm = {pxPerMm}
+        strokeWidth = {0}
+        leftPlacementPoint = {destinationPoints.topTubeLeft}
+        rightPlacementPoint = {destinationPoints.topTubeRight}
+        layer={7}/>
+      }
+
+      {geometryState.geometryPoints.bottomTube && destinationPoints.bottomBracketCenter && destinationPoints.bottomTubeRight &&
+      <RectanglePartGrabber 
+        leftOffset = {geometryState.geometryPoints.bottomTube.leftOffset} 
+        rightOffset = {geometryState.geometryPoints.bottomTube.rightOffset} 
+        width = {geometryState.geometryPoints.bottomTube.width}
+        anchorPoints={{
+          tl: "bottomBracketCenter",
+          bl: "bottomBracketCenter",
+          tr: "headTubeBottom",
+          br: "headTubeTop"
+        }}
+        pxPerMm = {pxPerMm}
+        strokeWidth = {0}
+        leftPlacementPoint = {destinationPoints.bottomBracketCenter}
+        rightPlacementPoint = {destinationPoints.bottomTubeRight}
+        layer={7}/>
+      }
+
+      {geometryState.geometryPoints.bottomTube && destinationPoints.bottomBracketCenter && destinationPoints.bottomTubeRight &&
+      <RectanglePartGrabber 
+        leftOffset = {geometryState.geometryPoints.bottomTube.leftOffset} 
+        rightOffset = {geometryState.geometryPoints.bottomTube.rightOffset} 
+        width = {geometryState.geometryPoints.bottomTube.width}
+        anchorPoints={{
+          tl: "bottomBracketCenter",
+          bl: "bottomBracketCenter",
+          tr: "headTubeBottom",
+          br: "headTubeTop"
+        }}
+        pxPerMm = {pxPerMm}
+        strokeWidth = {0}
+        leftPlacementPoint = {destinationPoints.bottomBracketCenter}
+        rightPlacementPoint = {destinationPoints.bottomTubeRight}
+        layer={7}/>
+      }
+
+      {geometryState.geometryPoints.headTube && destinationPoints.headTubeTop && destinationPoints.headTubeBottom &&
+      <RectanglePartGrabber 
+        leftOffset = {geometryState.geometryPoints.headTube.leftOffset} 
+        rightOffset = {geometryState.geometryPoints.headTube.rightOffset} 
+        width = {geometryState.geometryPoints.headTube.width}
+        anchorPoints={{
+          tl: "headTubeTop",
+          bl: "headTubeTop",
+          tr: "headTubeBottom",
+          br: "headTubeBottom"
+        }}
+        pxPerMm = {pxPerMm}
+        strokeWidth = {0}
+        leftPlacementPoint = {destinationPoints.headTubeTop}
+        rightPlacementPoint = {destinationPoints.headTubeBottom}
+        layer={7}/>
+      }
+
+      {geometryState.geometryPoints.fork && destinationPoints.frontWheelCenter && destinationPoints.headTubeBottom &&
+      <RectanglePartGrabber 
+        leftOffset = {geometryState.geometryPoints.fork.leftOffset} 
+        rightOffset = {geometryState.geometryPoints.fork.rightOffset} 
+        width = {geometryState.geometryPoints.fork.width}
+        anchorPoints={{
+          tl: "headTubeBottom",
+          bl: "headTubeBottom",
+          tr: "frontWheelCenter",
+          br: "frontWheelCenter"
+        }}
+        pxPerMm = {pxPerMm}
+        strokeWidth = {0}
+        leftPlacementPoint = {destinationPoints.headTubeBottom}
+        rightPlacementPoint = {destinationPoints.frontWheelCenter}
+        layer={7}/>
+      }
+
+      {geometryState.geometryPoints.crankArm && destinationPoints.bottomBracketCenter && destinationPoints.crankArmEnd &&
+      <RectanglePartGrabber 
+        leftOffset = {geometryState.geometryPoints.crankArm.leftOffset} 
+        rightOffset = {geometryState.geometryPoints.crankArm.rightOffset} 
+        width = {geometryState.geometryPoints.crankArm.width}
+        anchorPoints={{
+          tl: "bottomBracketCenter",
+          bl: "bottomBracketCenter",
+          tr: "crankArmEnd",
+          br: "crankArmEnd"
+        }}
+        pxPerMm = {pxPerMm}
+        strokeWidth = {0}
+        leftPlacementPoint = {destinationPoints.bottomBracketCenter}
+        rightPlacementPoint = {destinationPoints.crankArmEnd}
+        layer={7}/>
+      } 
+    </div>
+    }
+    </>
+  );
+};
+
+export default BikeImageStitcher;

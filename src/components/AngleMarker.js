@@ -36,8 +36,6 @@ export function AngleMarker({shape}) {
     const startAngle = Math.atan2(shape.shape.y1-shape.shape.y2, shape.shape.x1-shape.shape.x2) * 180 / Math.PI;
     const endAngle =  Math.atan2(shape.shape.y3-shape.shape.y1, shape.shape.x3-shape.shape.x2) * 180 / Math.PI;
 
-    console.log("start angle: ", startAngle, " end angle: ", endAngle);
-
     const circle = new fabric.Circle({
       radius: 50,
       left: shape.shape.x2 - 50,
