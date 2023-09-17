@@ -19,7 +19,7 @@ const FrameGeometryInput = () => {
     state: [canvasState, ],
   } = useCanvasContext();
 
-  
+  const [showShadowImage, setShowShadowImage] = useState(true);
 
 
   useEffect(() => {
@@ -31,8 +31,9 @@ const FrameGeometryInput = () => {
         Original geometry from image
       </BikeGeometryTable> */}
       <SizesTable state={geometryState} updateState={updateGeometryState}/>
+      <p><input type="checkbox" checked={showShadowImage} onChange={() => {setShowShadowImage(!showShadowImage);}}/><label>Show Shadow Image</label></p>
 
-      {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'} isGrayedOut={true} desiredPxPerMM={1}/>}
+      {geometryState.selectedFile && showShadowImage && <BackgroundImage key={'BackgroundImage'} isGrayedOut={true} desiredPxPerMM={1}/>}
     </div>
   );
 };

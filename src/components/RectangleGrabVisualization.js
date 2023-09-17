@@ -13,7 +13,7 @@ export function RectangleGrabVisualization({canvas, shape, leftPlacementPoint=nu
   
     useEffect(() => {
         const sh = shape.shape;
-        const margin = 35;
+        const margin = 0;
         let scale = 1;
         if (leftPlacementPoint && rightPlacementPoint) {
             const orgDistance = findDistance({x: sh.x1, y: sh.y1}, {x: sh.x2, y: sh.y2});

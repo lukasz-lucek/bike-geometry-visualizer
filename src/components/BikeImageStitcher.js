@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 import { useGeometryContext } from '../contexts/GeometryContext.js';
 import { findPxPerMm } from '../utils/GeometryUtils.js';
 import CirclePartGrabber from './CirclePartGrabber.js';
+import PertrudingPartGrabber from './PertrudingPartGrabber.js';
 import RectanglePartGrabber from './RectanglePartGrabber.js';
 
 const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
@@ -222,6 +223,36 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         strokeWidth = {0}
         leftPlacementPoint = {destinationPoints.bottomBracketCenter}
         rightPlacementPoint = {destinationPoints.crankArmEnd}
+        layer={7}/>
+      }
+
+      {geometryState.geometryPoints.headstack && destinationPoints.headTubeTop && destinationPoints.headTubeBottom &&
+      <PertrudingPartGrabber 
+        width = {geometryState.geometryPoints.headstack.width}
+        length = {geometryState.geometryPoints.headstack.length}
+        anchorPoints={{
+          tl: "headTubeTop",
+          bl: "headTubeBottom",
+        }}
+        pxPerMm = {pxPerMm}
+        strokeWidth = {0}
+        leftPlacementPoint = {destinationPoints.headTubeTop}
+        rightPlacementPoint = {destinationPoints.stemMount}
+        layer={7}/>
+      }
+
+      {geometryState.geometryPoints.seatpost && destinationPoints.seatTubeTop && destinationPoints.bottomBracketCenter &&
+      <PertrudingPartGrabber 
+        width = {geometryState.geometryPoints.seatpost.width}
+        length = {geometryState.geometryPoints.seatpost.length}
+        anchorPoints={{
+          tl: "seatTubeTop",
+          bl: "bottomBracketCenter",
+        }}
+        pxPerMm = {pxPerMm}
+        strokeWidth = {0}
+        leftPlacementPoint = {destinationPoints.seatTubeTop}
+        rightPlacementPoint = {destinationPoints.seatpostEnd}
         layer={7}/>
       } 
     </div>

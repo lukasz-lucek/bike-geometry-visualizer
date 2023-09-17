@@ -3,7 +3,14 @@ import { useCanvasContext } from '../contexts/CanvasContext';
 import { useGeometryContext } from '../contexts/GeometryContext';
 import { CirclePartGrabber } from './CirclePartGrabber';
 
-export function CirclePartGrabberControls({partKey, centerPoint, pxPerMm, children}) {
+export function CirclePartGrabberControls({
+  partKey,
+  centerPoint,
+  pxPerMm,
+  defaultPartSetup={
+    radius : 100
+  },
+  children}) {
 
   const {
     state: [canvasState, ],
@@ -21,16 +28,12 @@ export function CirclePartGrabberControls({partKey, centerPoint, pxPerMm, childr
     updateGeometryState({geometryPoints: {...geometryState.geometryPoints, ...newPartialPoints}});
   }
 
-  const defaultPartSetup = {
-    radius : 0
-  }
-
   useEffect(() => {
     const points = geometryState.geometryPoints;
     if (!points[partKey]) {
       updatePoints(Object.fromEntries([[partKey, defaultPartSetup]]));
     }
-  }, [geometryState.geometryPoints]);
+  }, [geometryState.geometryPoints, defaultPartSetup]);
 
   const updateRadius = (val) => {
     let curPartSetup = geometryState.geometryPoints[partKey];

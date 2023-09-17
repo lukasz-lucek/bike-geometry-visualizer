@@ -74,7 +74,7 @@ const SizesTable = ({state, updateState }) => {
               <th key={'H'+size}>
                 <p>
                   {size}
-                  <button onClick={() => removeSizeVromTable(size)}>Remove</button>
+                  <button onClick={() => removeSizeVromTable(size)}>Rem</button>
                 </p>
               </th>
             ))}

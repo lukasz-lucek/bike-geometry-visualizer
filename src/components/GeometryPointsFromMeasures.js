@@ -54,6 +54,8 @@ const GeometryPointsFromMeasures = ({ sizeMeasures, desiredPxPerMM=null}) => {
     let topTubeRight = null;
     let bottomTubeRight = null;
     let crankArmEnd = null;
+    let seatpostEnd = null;
+    let stemMount = null;
 
     const bb = sizeMeasures.bbDrop;
     const cs = sizeMeasures.chainstay;
@@ -100,6 +102,15 @@ const GeometryPointsFromMeasures = ({ sizeMeasures, desiredPxPerMM=null}) => {
             color: helperPointsColor,
           }
         }
+
+        if (geometryContext.geometryPoints.seatpost) {
+          const seatpostEndPoint = findIntermediatePoint(seatTubeTop, bottomBracketCenter, - geometryContext.geometryPoints.seatpost.length * dPPMM);
+          seatpostEnd = {
+            x: seatpostEndPoint.x,
+            y: seatpostEndPoint.y,
+            color: helperPointsColor,
+          }
+        }
       }
 
       const stack = sizeMeasures.stack;
@@ -137,6 +148,15 @@ const GeometryPointsFromMeasures = ({ sizeMeasures, desiredPxPerMM=null}) => {
               color: helperPointsColor,
             }
           }
+
+          if (geometryContext.geometryPoints.headstack) {
+            const stemMountPoint = findIntermediatePoint(headTubeTop, headTubeBottom, -geometryContext.geometryPoints.headstack.length * dPPMM);
+            stemMount = {
+              x: stemMountPoint.x,
+              y: stemMountPoint.y,
+              color: helperPointsColor,
+            }
+          }
         }
       }
     }
@@ -154,6 +174,8 @@ const GeometryPointsFromMeasures = ({ sizeMeasures, desiredPxPerMM=null}) => {
         topTubeRight: topTubeRight,
         bottomTubeRight: bottomTubeRight,
         crankArmEnd: crankArmEnd,
+        seatpostEnd: seatpostEnd,
+        stemMount: stemMount,
       },
     });
   }, [sizeMeasures, desiredPxPerMM, geometryContext.geometryPoints]);

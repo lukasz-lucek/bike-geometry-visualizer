@@ -4,7 +4,15 @@ import { useGeometryContext } from '../contexts/GeometryContext';
 import { findIntermediatePoint } from '../utils/GeometryUtils';
 import RectangleMarker from './RectangleMarker';
 
-export function PertrudingPartGrabber({width, length, anchorPoints, pxPerMm, strokeWidth}) {
+export function PertrudingPartGrabber({
+  width,
+  length,
+  anchorPoints,
+  pxPerMm,
+  strokeWidth,
+  leftPlacementPoint=null,
+  rightPlacementPoint=null,
+  layer=3}) {
 
   const {
     state: [canvasState, ],
@@ -45,7 +53,12 @@ export function PertrudingPartGrabber({width, length, anchorPoints, pxPerMm, str
 
   return (
     <>
-      {shape && <RectangleMarker shape={shape} canvas={canvasState.canvas}/>}
+      {shape && <RectangleMarker
+        shape={shape}
+        canvas={canvasState.canvas}
+        leftPlacementPoint={leftPlacementPoint}
+        rightPlacementPoint={rightPlacementPoint}
+        layer={layer}/>}
     </>
   );
 }

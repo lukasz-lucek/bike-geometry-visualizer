@@ -5,7 +5,18 @@ import { findIntermediatePoint } from '../utils/GeometryUtils';
 import PertrudingPartGrabber from './PertrudingPartGrabber';
 import RectanglePartGrabber from './RectanglePartGrabber';
 
-export function PertrudingPartGrabberControls({partKey, anchorPoints, pxPerMm, lengthName, widthName, connectorWidthName, children}) {
+export function PertrudingPartGrabberControls({
+  partKey,
+  anchorPoints,
+  pxPerMm,
+  lengthName,
+  widthName,
+  defaultPartSetup={
+    length : 40,
+    width : 30,
+  },
+  children
+}) {
 
   const {
     state: [canvasState, ],
@@ -14,59 +25,41 @@ export function PertrudingPartGrabberControls({partKey, anchorPoints, pxPerMm, l
   const singleStep = 5;
 
   const [partHighlight, setPartHighlight] = useState(false);
-  const [localPoints, setLocalPoints] = useState({});
-  // const [rightOffsetHighlight, setRightOffsetHighlight] = useState(false);
 
   const {
     state: [geometryState, updateGeometryState],
   } = useGeometryContext();
 
-  const updateParts = (newPartialParts) => {
-    if (newPartialParts[partKey].length) {
-      const points = geometryState.geometryPoints;
-      const endPoint = findIntermediatePoint(points[anchorPoints.tl], points[anchorPoints.bl], -newPartialParts[partKey].length  * pxPerMm);
-      newPartialParts[partKey].endPoint = endPoint;
-    }
-    updateGeometryState({parts: {...geometryState.parts, ...newPartialParts}});
+  const updatePoints = (newPartialPoints) => {
+    updateGeometryState({geometryPoints: {...geometryState.geometryPoints, ...newPartialPoints}});
   }
 
-  useEffect(() => {
-    const defaultPartSetup = {
-      length : 50,
-      width: 10,
-      connectorWidth: 10,
-    };
-    const parts = geometryState.parts;
-    if (!parts || !parts[partKey]) {
-      updateParts(Object.fromEntries([[partKey, defaultPartSetup]]));
-    } else {
-      updateParts(Object.fromEntries([[partKey, parts[partKey]]]));
-    }
-  }, [geometryState.geometryPoints]);
+  // const updateParts = (newPartialParts) => {
+  //   if (newPartialParts[partKey].length) {
+  //     const points = geometryState.geometryPoints;
+  //     const endPoint = findIntermediatePoint(points[anchorPoints.tl], points[anchorPoints.bl], -newPartialParts[partKey].length  * pxPerMm);
+  //     newPartialParts[partKey].endPoint = endPoint;
+  //   }
+  //   updateGeometryState({parts: {...geometryState.parts, ...newPartialParts}});
+  // }
 
   useEffect(() => {
     const points = geometryState.geometryPoints;
-    if (geometryState.parts && geometryState.parts[partKey]) {
-      const endPoint = geometryState.parts[partKey]?.endPoint;
-      if (endPoint) {
-        setLocalPoints({
-          partStart: points[anchorPoints.tl],
-          partEnd: endPoint,
-        })
-      }
+    if (!points[partKey]) {
+      updatePoints(Object.fromEntries([[partKey, defaultPartSetup]]));
     }
-  }, [geometryState.geometryPoints, geometryState.parts]);
+  }, [geometryState.geometryPoints]);
 
   const updateLength = (val) => {
-    let curPartSetup = geometryState.parts[partKey];
+    let curPartSetup = geometryState.geometryPoints[partKey];
     curPartSetup.length += val;
-    updateParts(Object.fromEntries([[partKey, curPartSetup]]));
+    updatePoints(Object.fromEntries([[partKey, curPartSetup]]));
   }
 
   const updateWidth = (val) => {
-    let curPartSetup = geometryState.parts[partKey];
+    let curPartSetup = geometryState.geometryPoints[partKey];
     curPartSetup.width += val;
-    updateParts(Object.fromEntries([[partKey, curPartSetup]]));
+    updatePoints(Object.fromEntries([[partKey, curPartSetup]]));
   }
 
   return (
@@ -80,30 +73,23 @@ export function PertrudingPartGrabberControls({partKey, anchorPoints, pxPerMm, l
         <tbody>
           <tr onMouseEnter={() => {setPartHighlight(true)}} onMouseLeave={() => {setPartHighlight(false)}}>
             <td>{lengthName ? lengthName : "Length"}</td>
-            <td>{ geometryState.parts && geometryState.parts[partKey]?.length?.toFixed(0)}</td>
+            <td>{ geometryState.geometryPoints && geometryState.geometryPoints[partKey]?.length?.toFixed(0)}</td>
             <td><button onClick={() => {updateLength(singleStep)}}>+</button></td>
             <td><button onClick={() => {updateLength(-singleStep)}}>-</button></td>
           </tr>
 
           <tr onMouseEnter={() => {setPartHighlight(true)}} onMouseLeave={() => {setPartHighlight(false)}}>
             <td>{widthName ? widthName : "Width"}</td>
-            <td>{ geometryState.parts && geometryState.parts[partKey]?.width?.toFixed(0)}</td>
+            <td>{ geometryState.geometryPoints && geometryState.geometryPoints[partKey]?.width?.toFixed(0)}</td>
             <td><button onClick={() => {updateWidth(singleStep)}}>+</button></td>
             <td><button onClick={() => {updateWidth(-singleStep)}}>-</button></td>
           </tr>
 
           {partHighlight &&
-              <RectanglePartGrabber 
-                points = {localPoints}
-                leftOffset = {0} 
-                rightOffset = {0} 
-                width = {geometryState.parts[partKey]?.width}
-                anchorPoints = {{
-                  tl: "partStart",
-                  bl: "partStart",
-                  tr: "partEnd",
-                  br: "partEnd",
-                }}
+              <PertrudingPartGrabber 
+                width = {geometryState.geometryPoints[partKey]?.width}
+                length = {geometryState.geometryPoints[partKey]?.length}
+                anchorPoints = {anchorPoints}
                 pxPerMm = {pxPerMm}
                 strokeWidth = {1}/>}
 

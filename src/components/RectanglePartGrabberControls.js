@@ -4,7 +4,16 @@ import { useGeometryContext } from '../contexts/GeometryContext';
 import OffsetMarker from './OffsetMarker';
 import RectanglePartGrabber from './RectanglePartGrabber';
 
-export function RectanglePartGrabberControls({partKey, anchorPoints, pxPerMm, children}) {
+export function RectanglePartGrabberControls({
+  partKey,
+  anchorPoints,
+  pxPerMm,
+  defaultPartSetup={
+    leftOffset : 0,
+    rightOffset : 0,
+    width: 10,
+  },
+  children}) {
 
   const {
     state: [canvasState, ],
@@ -24,18 +33,12 @@ export function RectanglePartGrabberControls({partKey, anchorPoints, pxPerMm, ch
     updateGeometryState({geometryPoints: {...geometryState.geometryPoints, ...newPartialPoints}});
   }
 
-  const defaultPartSetup = {
-    leftOffset : 0,
-    rightOffset : 0,
-    width: 10,
-  }
-
   useEffect(() => {
     const points = geometryState.geometryPoints;
     if (!points[partKey]) {
       updatePoints(Object.fromEntries([[partKey, defaultPartSetup]]));
     }
-  }, [geometryState.geometryPoints]);
+  }, [geometryState.geometryPoints, defaultPartSetup]);
 
   const updateLeftOffset = (val) => {
     let curPartSetup = geometryState.geometryPoints[partKey];
