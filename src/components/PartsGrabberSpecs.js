@@ -5,6 +5,7 @@ import { findPxPerMm } from '../utils/GeometryUtils.js';
 import CirclePartGrabberControls from './CirclePartsGrabberControls.js';
 import PertrudingPartGrabberControls from './PertrudingPartGrabberControls.js';
 import RectanglePartGrabberControls from './RectanglePartGrabberControls.js';
+import StemPartGrabberControls from './StemPartGrabberControls.js';
 
 const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
 
@@ -380,6 +381,21 @@ const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
             }}>
             Stem spacers
           </PertrudingPartGrabberControls>
+
+          <StemPartGrabberControls
+            partKey="stem"
+            anchorPoints={{
+              tl: "headTubeTop",
+              bl: "headTubeBottom",
+              tr: "handlebarMount",
+              offset: "headstack"
+            }}
+            pxPerMm = {pxPerMm}
+            defaultPartSetup={{
+              width: 40,
+            }}>
+            Stem
+          </StemPartGrabberControls>
 
         </div>
 

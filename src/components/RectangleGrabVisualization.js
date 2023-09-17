@@ -3,7 +3,7 @@ import { fabric } from 'fabric';
 import {findAngle, findBBWithMargins, findBBFromImage, findDistance} from '../utils/GeometryUtils.js'
 import { useGeometryContext } from '../contexts/GeometryContext.js';
 
-export function RectangleGrabVisualization({canvas, shape, leftPlacementPoint=null, rightPlacementPoint=null, layer=3}) {
+export function RectangleGrabVisualization({canvas, shape, leftPlacementPoint=null, rightPlacementPoint=null, layer=3, scaling=1}) {
 
     const {
         state: [geometryState, ],
@@ -14,11 +14,12 @@ export function RectangleGrabVisualization({canvas, shape, leftPlacementPoint=nu
     useEffect(() => {
         const sh = shape.shape;
         const margin = 0;
-        let scale = 1;
+        let scaleX = scaling;
+        let scaleY = scaling;
         if (leftPlacementPoint && rightPlacementPoint) {
             const orgDistance = findDistance({x: sh.x1, y: sh.y1}, {x: sh.x2, y: sh.y2});
             const newDistance = findDistance(leftPlacementPoint, rightPlacementPoint);
-            scale = newDistance / orgDistance;
+            scaleX = newDistance / orgDistance;
         }
         if (geometryState.selectedFile) {
             const bound = findBBWithMargins({x1: sh.x1, y1: sh.y1},{x2: sh.x2, y2: sh.y2},sh.width, margin);
@@ -49,8 +50,8 @@ export function RectangleGrabVisualization({canvas, shape, leftPlacementPoint=nu
                                 movedImage.rotate(landingAngle);
                                 setLoadedImage(movedImage);
                             },{
-                                top: landingPoint.y - scale*cimg.height/2,
-                                left: landingPoint.x - scale*cimg.width/2,
+                                top: landingPoint.y - scaleY*cimg.height/2,
+                                left: landingPoint.x - scaleX*cimg.width/2,
                             });
                         } else {
                             setLoadedImage(cimg);
@@ -59,8 +60,8 @@ export function RectangleGrabVisualization({canvas, shape, leftPlacementPoint=nu
                     {
                         width: length+margin,
                         height: sh.width,
-                        scaleX: scale,
-                        scaleY: scale,
+                        scaleX: scaleX,
+                        scaleY: scaleY,
                         cropY: (bound2.height - sh.width) / 2,
                         cropX: (bound2.width - length - margin) / 2,
                     })

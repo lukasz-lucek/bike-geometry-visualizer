@@ -22,12 +22,12 @@ const BikeGeometryTableLineRow = ({ value, startPoint, endPoint, strokeWidth, ch
         color: visualizationColor,
       })
     }
-  }, [startPoint, endPoint]);
+  }, [startPoint, endPoint, strokeWidth]);
 
   return (
     <tr onMouseEnter={() => {setIsHighlighted(true)}} onMouseLeave={() => {setIsHighlighted(false)}}>
       <td>{children}</td>
-      <td>{value.toFixed(0)}</td>
+      <td>{value?value.toFixed(0):0}</td>
       {isHighlighted && shape && <LineMarker shape={shape}/>}
     </tr>
   );

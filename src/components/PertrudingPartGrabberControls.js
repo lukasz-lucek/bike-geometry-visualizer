@@ -34,15 +34,6 @@ export function PertrudingPartGrabberControls({
     updateGeometryState({geometryPoints: {...geometryState.geometryPoints, ...newPartialPoints}});
   }
 
-  // const updateParts = (newPartialParts) => {
-  //   if (newPartialParts[partKey].length) {
-  //     const points = geometryState.geometryPoints;
-  //     const endPoint = findIntermediatePoint(points[anchorPoints.tl], points[anchorPoints.bl], -newPartialParts[partKey].length  * pxPerMm);
-  //     newPartialParts[partKey].endPoint = endPoint;
-  //   }
-  //   updateGeometryState({parts: {...geometryState.parts, ...newPartialParts}});
-  // }
-
   useEffect(() => {
     const points = geometryState.geometryPoints;
     if (!points[partKey]) {

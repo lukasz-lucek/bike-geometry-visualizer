@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import RectangleGrabVisualization from './RectangleGrabVisualization.js';
 import {findRectangle} from '../utils/GeometryUtils.js'
 
-export function RectangleMarker({canvas, shape, leftPlacementPoint=null, rightPlacementPoint=null, layer=3}) {
+export function RectangleMarker({canvas, shape, leftPlacementPoint=null, rightPlacementPoint=null, layer=3, scaling=1}) {
 
   const rectangle = useMemo(() => {
     const sh = shape.shape;
@@ -33,7 +33,8 @@ export function RectangleMarker({canvas, shape, leftPlacementPoint=null, rightPl
         shape={shape}
         leftPlacementPoint={leftPlacementPoint}
         rightPlacementPoint={rightPlacementPoint}
-        layer={layer}/>
+        layer={layer}
+        scaling={scaling}/>
     </>
   );
 }

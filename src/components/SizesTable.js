@@ -90,7 +90,7 @@ const SizesTable = ({state, updateState }) => {
                   onMouseEnter={() => {setHighlightedSize(size)}} 
                   onMouseLeave={() => {setHighlightedSize(null)}}>
                   <input
-                    value={state.sizesTable[size][measurement].toFixed(0)}
+                    value={state.sizesTable[size][measurement] ? state.sizesTable[size][measurement].toFixed(0) : 0}
                     onChange={(e) => setMeasureValue(Number(e.target.value), size, measurement)}
                     type="number"/>
                 </td>

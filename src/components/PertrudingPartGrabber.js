@@ -12,7 +12,9 @@ export function PertrudingPartGrabber({
   strokeWidth,
   leftPlacementPoint=null,
   rightPlacementPoint=null,
-  layer=3}) {
+  layer=3,
+  desiredPxPerMM=null,
+}) {
 
   const {
     state: [canvasState, ],
@@ -58,7 +60,8 @@ export function PertrudingPartGrabber({
         canvas={canvasState.canvas}
         leftPlacementPoint={leftPlacementPoint}
         rightPlacementPoint={rightPlacementPoint}
-        layer={layer}/>}
+        layer={layer}
+        scaling={desiredPxPerMM?desiredPxPerMM/pxPerMm:1}/>}
     </>
   );
 }

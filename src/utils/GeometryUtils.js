@@ -137,6 +137,22 @@ const  findDistance = (point1, point2) => {
     return Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2));
 }
 
+const findDistanceFromLine = ({x: x1, y: y1}, {x: x2, y: y2}, {x: x0, y: y0}) => {
+    const abs = Math.abs((x2 - x1)*(y1 - y0) - (x1 - x0)*(y2 - y1));
+    const magnitude = findDistance({x: x1, y: y1}, {x: x2, y: y2});
+    
+    return abs/magnitude;
+}
+
+const findProjectionPointToLine = ({x: x1, y: y1}, {x: x2, y: y2}, {x: x0, y: y0}) => {
+    const magnitude = findDistance({x: x1, y: y1}, {x: x2, y: y2});
+    const dotProduct = (x2-x1)*(x0-x1) + (y2-y1)*(y0-y1);
+    return {
+        x: dotProduct/magnitude * ((x2 - x1)/magnitude) + x1,
+        y: dotProduct/magnitude * ((y2 - y1)/magnitude) + y1
+    }
+}
+
 export {
     findRectangle,
     findBBFromRectangle,
@@ -148,5 +164,7 @@ export {
     findBBWithMargins,
     findPxPerMm,
     findIntermediatePoint,
-    findDistance
+    findDistance,
+    findDistanceFromLine,
+    findProjectionPointToLine
 };

@@ -13,7 +13,10 @@ export function RectanglePartGrabber(
     strokeWidth,
     leftPlacementPoint=null,
     rightPlacementPoint=null,
-    layer=3}) {
+    layer=3,
+    overridePoints=null,
+    desiredPxPerMM=null,
+  }) {
 
   const {
     state: [canvasState, ],
@@ -30,11 +33,18 @@ export function RectanglePartGrabber(
     if (!points) {
       return;
     }
-    if (!points[anchorPoints.tl] || !points[anchorPoints.bl] || !points[anchorPoints.tr] || !points[anchorPoints.br]) {
-      return;
+    let leftOffsetPoint = null;
+    let rightOffsetPoint = null;
+    if (!overridePoints) {
+      if (!points[anchorPoints.tl] || !points[anchorPoints.bl] || !points[anchorPoints.tr] || !points[anchorPoints.br]) {
+        return;
+      }
+      leftOffsetPoint = findIntermediatePoint(points[anchorPoints.tl], points[anchorPoints.bl], leftOffset  * pxPerMm);
+      rightOffsetPoint = findIntermediatePoint(points[anchorPoints.tr], points[anchorPoints.br], rightOffset  * pxPerMm);
+    } else {
+      leftOffsetPoint = overridePoints.leftOffsetPoint;
+      rightOffsetPoint = overridePoints.rightOffsetPoint;
     }
-    const leftOffsetPoint = findIntermediatePoint(points[anchorPoints.tl], points[anchorPoints.bl], leftOffset  * pxPerMm);
-    const rightOffsetPoint = findIntermediatePoint(points[anchorPoints.tr], points[anchorPoints.br], rightOffset  * pxPerMm);
 
     const newShape = {
       shape : {
@@ -49,7 +59,7 @@ export function RectanglePartGrabber(
       color: 'blue'
     }
     setShape(newShape);
-  }, [leftOffset, rightOffset, width, anchorPoints, pxPerMm, strokeWidth, geometryState.geometryPoints])
+  }, [leftOffset, rightOffset, width, anchorPoints, pxPerMm, strokeWidth, geometryState.geometryPoints, overridePoints])
 
 
   return (
@@ -61,6 +71,7 @@ export function RectanglePartGrabber(
         leftPlacementPoint={leftPlacementPoint}
         rightPlacementPoint={rightPlacementPoint}
         layer={layer}
+        scaling={desiredPxPerMM?desiredPxPerMM/pxPerMm:1}
       />}
     </>
   );

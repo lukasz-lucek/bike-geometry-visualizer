@@ -2,7 +2,7 @@
 import React, {useEffect, useState} from 'react';
 import { useCanvasContext } from '../contexts/CanvasContext.js';
 import { useMeasurementsContext } from '../contexts/MeasurementsContext.js';
-import { findPxPerMm } from '../utils/GeometryUtils.js';
+import { findDistance, findDistanceFromLine, findProjectionPointToLine, findPxPerMm } from '../utils/GeometryUtils.js';
 import './BikeGeometryTable.css'; // Import the CSS file
 import BikeGeometryTableAngleRow from './BikeGeometryTableAngleRow.js';
 import BikeGeometryTableLineRow from './BikeGeometryTableLineRow.js';
@@ -61,6 +61,7 @@ const BikeGeometryTable = ({ points, wheelbase, children }) => {
     let chainstay=0;
     let bbDrop=0;
     let crankArm=0;
+    let seatpostSetback=0;
     
     let pxPerMm=0;
     let strokeWidth=5;
@@ -72,9 +73,10 @@ const BikeGeometryTable = ({ points, wheelbase, children }) => {
     let headAngleCenter=null;
     let headAngleStart=null;
     let seatAngleStart=null;
+    let seatMountProjection=null;
 
-    const rearWheelCenter = points["rearWheelCenter"];
-    const frontWheelCenter = points["frontWheelCenter"];
+    const rearWheelCenter = points.rearWheelCenter;
+    const frontWheelCenter = points.frontWheelCenter;
 
     if (rearWheelCenter && frontWheelCenter) {
       pxPerMm = findPxPerMm(rearWheelCenter, frontWheelCenter, wheelbase)
@@ -83,11 +85,12 @@ const BikeGeometryTable = ({ points, wheelbase, children }) => {
       wheelBaseEnd = {x: frontWheelCenter.x, y: rearWheelCenter.y}
 
 
-      const bottomBracketCenter = points["bottomBracketCenter"];
-      const headTubeTop = points["headTubeTop"];
-      const seatTubeTop = points["seatTubeTop"];
-      const headTubeBottom = points["headTubeBottom"];
-      const crankArmEnd = points["crankArmEnd"];
+      const bottomBracketCenter = points.bottomBracketCenter;
+      const headTubeTop = points.headTubeTop;
+      const seatTubeTop = points.seatTubeTop;
+      const headTubeBottom = points.headTubeBottom;
+      const crankArmEnd = points.crankArmEnd;
+      const seatMount = points.seatMount;
 
       if (bottomBracketCenter && headTubeTop) {
           stack = Math.abs(headTubeTop.y - bottomBracketCenter.y) / pxPerMm;
@@ -103,6 +106,12 @@ const BikeGeometryTable = ({ points, wheelbase, children }) => {
           seatAngleStart = {
             x: rearWheelCenter.x,
             y: bottomBracketCenter.y,
+          }
+
+          if (seatMount) {
+            // seatpostSetback = findDistanceFromLine(bottomBracketCenter, seatTubeTop, seatMount) / pxPerMm;
+            seatMountProjection = findProjectionPointToLine(bottomBracketCenter, seatTubeTop, seatMount);
+            seatpostSetback = findDistance(seatMount, seatMountProjection) / pxPerMm;
           }
           
           if (headTubeTop) {
@@ -149,6 +158,7 @@ const BikeGeometryTable = ({ points, wheelbase, children }) => {
         bbDrop: bbDrop,
         crankArm: crankArm,
         wheelbase: finalWheelbase,
+        seatpostSetback: seatpostSetback,
       },
       helpserPoints: {
         wheelBaseEnd,
@@ -158,6 +168,7 @@ const BikeGeometryTable = ({ points, wheelbase, children }) => {
         headAngleCenter,
         headAngleStart,
         seatAngleStart,
+        seatMountProjection,
       },
       pxPerMm: pxPerMm,
       strokeWidth: strokeWidth,
@@ -238,6 +249,13 @@ const BikeGeometryTable = ({ points, wheelbase, children }) => {
             endPoint={points["crankArmEnd"]}
             strokeWidth={state.strokeWidth}>
               Crank Arm
+          </BikeGeometryTableLineRow>
+          <BikeGeometryTableLineRow 
+            value={state.measures.seatpostSetback}
+            startPoint={state.helpserPoints.seatMountProjection}
+            endPoint={points["seatMount"]}
+            strokeWidth={state.strokeWidth}>
+              Seat Setback
           </BikeGeometryTableLineRow>
 
           <BikeGeometryTableAngleRow 

@@ -79,6 +79,7 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         strokeWidth = {0}
         leftPlacementPoint = {destinationPoints.rearWheelCenter}
         rightPlacementPoint = {destinationPoints.bottomBracketCenter}
+        desiredPxPerMM = {dPPMM}
         layer={7}/>
       }
 
@@ -97,6 +98,7 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         strokeWidth = {0}
         leftPlacementPoint = {destinationPoints.seatTubeTop}
         rightPlacementPoint = {destinationPoints.bottomBracketCenter}
+        desiredPxPerMM = {dPPMM}
         layer={9}/>
       }
 
@@ -115,6 +117,7 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         strokeWidth = {0}
         leftPlacementPoint = {destinationPoints.rearWheelCenter}
         rightPlacementPoint = {destinationPoints.seatStayRight}
+        desiredPxPerMM = {dPPMM}
         layer={7}/>
       }
 
@@ -133,6 +136,7 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         strokeWidth = {0}
         leftPlacementPoint = {destinationPoints.topTubeLeft}
         rightPlacementPoint = {destinationPoints.topTubeRight}
+        desiredPxPerMM = {dPPMM}
         layer={7}/>
       }
 
@@ -151,6 +155,7 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         strokeWidth = {0}
         leftPlacementPoint = {destinationPoints.bottomBracketCenter}
         rightPlacementPoint = {destinationPoints.bottomTubeRight}
+        desiredPxPerMM = {dPPMM}
         layer={7}/>
       }
 
@@ -169,6 +174,7 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         strokeWidth = {0}
         leftPlacementPoint = {destinationPoints.bottomBracketCenter}
         rightPlacementPoint = {destinationPoints.bottomTubeRight}
+        desiredPxPerMM = {dPPMM}
         layer={7}/>
       }
 
@@ -187,6 +193,7 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         strokeWidth = {0}
         leftPlacementPoint = {destinationPoints.headTubeTop}
         rightPlacementPoint = {destinationPoints.headTubeBottom}
+        desiredPxPerMM = {dPPMM}
         layer={7}/>
       }
 
@@ -205,6 +212,7 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         strokeWidth = {0}
         leftPlacementPoint = {destinationPoints.headTubeBottom}
         rightPlacementPoint = {destinationPoints.frontWheelCenter}
+        desiredPxPerMM = {dPPMM}
         layer={7}/>
       }
 
@@ -223,6 +231,7 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         strokeWidth = {0}
         leftPlacementPoint = {destinationPoints.bottomBracketCenter}
         rightPlacementPoint = {destinationPoints.crankArmEnd}
+        desiredPxPerMM = {dPPMM}
         layer={7}/>
       }
 
@@ -238,6 +247,7 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         strokeWidth = {0}
         leftPlacementPoint = {destinationPoints.headTubeTop}
         rightPlacementPoint = {destinationPoints.stemMount}
+        desiredPxPerMM = {dPPMM}
         layer={7}/>
       }
 
@@ -253,6 +263,7 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         strokeWidth = {0}
         leftPlacementPoint = {destinationPoints.seatTubeTop}
         rightPlacementPoint = {destinationPoints.seatpostEnd}
+        desiredPxPerMM = {dPPMM}
         layer={7}/>
       } 
     </div>
