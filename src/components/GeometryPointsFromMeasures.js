@@ -50,6 +50,7 @@ const GeometryPointsFromMeasures = ({ sizeMeasures, desiredPxPerMM=null}) => {
     let headTubeTop = null;
     let headTubeBottom = null;
     let seatStayRight= null;
+    let seatStayLeft=null;
     let topTubeLeft = null;
     let topTubeRight = null;
     let bottomTubeRight = null;
@@ -82,6 +83,17 @@ const GeometryPointsFromMeasures = ({ sizeMeasures, desiredPxPerMM=null}) => {
           seatStayRight = {
             x: seatStayRightPoint.x,
             y: seatStayRightPoint.y,
+            color: helperPointsColor,
+          }
+          const rwcl = {
+            x:rearWheelCenter.x,
+            y:rearWheelCenter.y-10,
+          }
+          const seatStayLeftPoint = findIntermediatePoint(rearWheelCenter, rwcl, geometryContext.geometryPoints.seatstay.leftOffset * dPPMM);
+          console.log("seatStayLeftPoint:", seatStayLeftPoint);
+          seatStayLeft = {
+            x: seatStayLeftPoint.x,
+            y: seatStayLeftPoint.y,
             color: helperPointsColor,
           }
         }
@@ -170,6 +182,7 @@ const GeometryPointsFromMeasures = ({ sizeMeasures, desiredPxPerMM=null}) => {
         headTubeTop: headTubeTop,
         headTubeBottom: headTubeBottom,
         seatStayRight: seatStayRight,
+        seatStayLeft: seatStayLeft,
         topTubeLeft: topTubeLeft,
         topTubeRight: topTubeRight,
         bottomTubeRight: bottomTubeRight,

@@ -102,7 +102,7 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         layer={9}/>
       }
 
-      {geometryState.geometryPoints.seatstay && destinationPoints.rearWheelCenter && destinationPoints.seatStayRight &&
+      {geometryState.geometryPoints.seatstay && destinationPoints.seatStayLeft && destinationPoints.seatStayRight &&
       <RectanglePartGrabber 
         leftOffset = {geometryState.geometryPoints.seatstay.leftOffset} 
         rightOffset = {geometryState.geometryPoints.seatstay.rightOffset} 
@@ -115,7 +115,7 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         }}
         pxPerMm = {pxPerMm}
         strokeWidth = {0}
-        leftPlacementPoint = {destinationPoints.rearWheelCenter}
+        leftPlacementPoint = {destinationPoints.seatStayLeft}
         rightPlacementPoint = {destinationPoints.seatStayRight}
         desiredPxPerMM = {dPPMM}
         layer={7}/>

@@ -13,7 +13,11 @@ export function RectanglePartGrabberControls({
     rightOffset : 0,
     width: 10,
   },
-  children}) {
+  children,
+  forceOffset={
+    left:false,
+    right:false,
+  }}) {
 
   const {
     state: [canvasState, ],
@@ -67,7 +71,7 @@ export function RectanglePartGrabberControls({
           </tr>
         </thead>
         <tbody>
-          {anchorPoints.tl != anchorPoints.bl &&
+          {(forceOffset.left || anchorPoints.tl != anchorPoints.bl) &&
           <tr onMouseEnter={() => {setLeftOffsetHighlight(true)}} onMouseLeave={() => {setLeftOffsetHighlight(false)}}>
             <td>L-Off</td>
             <td>{ geometryState.geometryPoints[partKey]?.leftOffset?.toFixed(0)}</td>
@@ -83,7 +87,7 @@ export function RectanglePartGrabberControls({
           </tr>
           }
 
-          {anchorPoints.tr != anchorPoints.br &&
+          {(forceOffset.right || anchorPoints.tr != anchorPoints.br) &&
           <tr onMouseEnter={() => {setRightOffsetHighlight(true)}} onMouseLeave={() => {setRightOffsetHighlight(false)}}>
             <td>R-Off</td>
             <td>{ geometryState.geometryPoints[partKey]?.rightOffset?.toFixed(0)}</td>

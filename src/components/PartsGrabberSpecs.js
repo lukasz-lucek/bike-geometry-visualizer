@@ -305,6 +305,10 @@ const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
             leftOffset : 0,
             rightOffset : 30,
             width: 30,
+          }}
+          forceOffset={{
+            left:true,
+            right:false,
           }}>
             Seatstay
           </RectanglePartGrabberControls>
@@ -396,6 +400,16 @@ const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
             }}>
             Stem
           </StemPartGrabberControls>
+
+          <CirclePartGrabberControls
+            partKey="seatpostYoke"
+            centerPoint="seatMount"
+            pxPerMm = {pxPerMm}
+            defaultPartSetup={{
+              radius: 30,
+            }}>
+            Seatpost Yoke
+          </CirclePartGrabberControls>
 
         </div>
 

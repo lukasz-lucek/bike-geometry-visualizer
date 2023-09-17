@@ -39,8 +39,24 @@ export function RectanglePartGrabber(
       if (!points[anchorPoints.tl] || !points[anchorPoints.bl] || !points[anchorPoints.tr] || !points[anchorPoints.br]) {
         return;
       }
-      leftOffsetPoint = findIntermediatePoint(points[anchorPoints.tl], points[anchorPoints.bl], leftOffset  * pxPerMm);
-      rightOffsetPoint = findIntermediatePoint(points[anchorPoints.tr], points[anchorPoints.br], rightOffset  * pxPerMm);
+      if (anchorPoints.tl == anchorPoints.bl) {
+        const ba = {
+          x:points[anchorPoints.bl].x,
+          y:points[anchorPoints.bl].y-10
+        };
+        leftOffsetPoint = findIntermediatePoint(points[anchorPoints.tl], ba, leftOffset  * pxPerMm);
+      } else {
+        leftOffsetPoint = findIntermediatePoint(points[anchorPoints.tl], points[anchorPoints.bl], leftOffset  * pxPerMm);
+      }
+      if (anchorPoints.tr == anchorPoints.br) {
+        const ba = {
+          x:points[anchorPoints.br].x,
+          y:points[anchorPoints.br].y-10
+        };
+        rightOffsetPoint = findIntermediatePoint(points[anchorPoints.tr], ba, leftOffset  * pxPerMm);
+      } else {
+        rightOffsetPoint = findIntermediatePoint(points[anchorPoints.tr], points[anchorPoints.br], rightOffset  * pxPerMm);
+      }
     } else {
       leftOffsetPoint = overridePoints.leftOffsetPoint;
       rightOffsetPoint = overridePoints.rightOffsetPoint;

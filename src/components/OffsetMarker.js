@@ -21,18 +21,26 @@ export function OffsetMarker({offset, topAnchor, bottomAnchor, pxPerMm, strokeWi
     if (!points) {
       return;
     }
-    if (!points[topAnchor] || !points[bottomAnchor]) {
+    const ta = points[topAnchor];
+    let ba = {
+      x:points[bottomAnchor].x,
+      y:points[bottomAnchor].y
+    };
+    if (!ta || !ba) {
       return;
     }
-    const offsetTop = points[topAnchor];
-    const offsetBottom = findIntermediatePoint(offsetTop, points[bottomAnchor], offset  * pxPerMm)
+    if (ta.x == ba.x && ta.y == ba.y) {
+      //force vertical offset
+      ba.y-=10;
+    }
+    const offsetBottom = findIntermediatePoint(ta, ba, offset  * pxPerMm)
 
     const newShape = {
       shape : {
         type: 'line',
         strokeWidth: strokeWidth,
-        x1: offsetTop.x,
-        y1: offsetTop.y,
+        x1: ta.x,
+        y1: ta.y,
         x2: offsetBottom.x,
         y2: offsetBottom.y,
       },
