@@ -1,5 +1,9 @@
 import { fabric } from 'fabric';
 
+const findAngleRad = ({x: x1, y: y1}, {x: x2, y: y2}) => {
+    return Math.atan2(y2-y1, x2-x1);
+}
+
 const findAngle = ({x: x1, y: y1}, {x: x2, y: y2}) => {
     return Math.atan2(y2-y1, x2-x1) * 180 / Math.PI;
 }
@@ -153,11 +157,20 @@ const findProjectionPointToLine = ({x: x1, y: y1}, {x: x2, y: y2}, {x: x0, y: y0
     }
 }
 
+const findPointFromPointAngleLength = ({x: x1, y: y1}, angle, length) => {
+    const andgleRad = angle * Math.PI / 180;
+    return {
+        x: x1 + Math.cos(andgleRad) * length,
+        y: y1 + Math.sin(andgleRad) * length,
+    }
+}
+
 export {
     findRectangle,
     findBBFromRectangle,
     findBB,
     findAngle,
+    findAngleRad,
     findBBFromACoords,
     findBBFromImage,
     findCircleBB,
@@ -166,5 +179,6 @@ export {
     findIntermediatePoint,
     findDistance,
     findDistanceFromLine,
-    findProjectionPointToLine
+    findProjectionPointToLine,
+    findPointFromPointAngleLength
 };

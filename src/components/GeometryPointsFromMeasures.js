@@ -1,7 +1,7 @@
 // src/components/BikeGeometryTable.js
 import React, {useEffect, useState} from 'react';
 import { useGeometryContext } from '../contexts/GeometryContext.js';
-import { findPxPerMm, findIntermediatePoint, findDistance} from '../utils/GeometryUtils.js';
+import { findPxPerMm, findIntermediatePoint, findDistance, findPointFromPointAngleLength} from '../utils/GeometryUtils.js';
 import BikeImageStitcher from './BikeImageStitcher.js';
 import GeometryPointVisualization from './GeometryPointsVisualization.js';
 
@@ -56,7 +56,9 @@ const GeometryPointsFromMeasures = ({ sizeMeasures, desiredPxPerMM=null}) => {
     let bottomTubeRight = null;
     let crankArmEnd = null;
     let seatpostEnd = null;
-    let stemMount = null;
+    let spacersEnd = null;
+    let stemStart = null;
+    let handlebarMount = null;
 
     const bb = sizeMeasures.bbDrop;
     const cs = sizeMeasures.chainstay;
@@ -162,11 +164,32 @@ const GeometryPointsFromMeasures = ({ sizeMeasures, desiredPxPerMM=null}) => {
           }
 
           if (geometryContext.geometryPoints.headstack) {
-            const stemMountPoint = findIntermediatePoint(headTubeTop, headTubeBottom, -geometryContext.geometryPoints.headstack.length * dPPMM);
-            stemMount = {
-              x: stemMountPoint.x,
-              y: stemMountPoint.y,
+            const spacersEndPoint = findIntermediatePoint(headTubeTop, headTubeBottom, -sizeMeasures.spacersStack * dPPMM);
+            spacersEnd = {
+              x: spacersEndPoint.x,
+              y: spacersEndPoint.y,
               color: helperPointsColor,
+            }
+            if (geometryContext.geometryPoints.stem && sizeMeasures.stemLength) {
+              const stemStartPoint = findIntermediatePoint(
+                headTubeTop,
+                headTubeBottom, 
+                -(sizeMeasures.spacersStack + geometryContext.geometryPoints.stem.width/2) * dPPMM);
+              stemStart = {
+                x: stemStartPoint.x,
+                y: stemStartPoint.y,
+                color: helperPointsColor,
+              }
+              if (sizeMeasures.stemLength) {
+                const trueAngle = sizeMeasures.stemAngle + sizeMeasures.headAngle - 90;
+                console.log("trueAngle: ", trueAngle);
+                const handlebarMountPoint = findPointFromPointAngleLength(stemStartPoint, trueAngle, sizeMeasures.stemLength * dPPMM);
+                handlebarMount = {
+                  x: handlebarMountPoint.x,
+                  y: handlebarMountPoint.y,
+                  color: helperPointsColor,
+                }
+              }
             }
           }
         }
@@ -188,7 +211,9 @@ const GeometryPointsFromMeasures = ({ sizeMeasures, desiredPxPerMM=null}) => {
         bottomTubeRight: bottomTubeRight,
         crankArmEnd: crankArmEnd,
         seatpostEnd: seatpostEnd,
-        stemMount: stemMount,
+        spacersEnd: spacersEnd,
+        stemStart: stemStart,
+        handlebarMount: handlebarMount,
       },
     });
   }, [sizeMeasures, desiredPxPerMM, geometryContext.geometryPoints]);

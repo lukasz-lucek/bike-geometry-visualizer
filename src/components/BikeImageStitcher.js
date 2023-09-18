@@ -1,7 +1,7 @@
 // src/components/BikeGeometryTable.js
 import React, {useEffect, useState} from 'react';
 import { useGeometryContext } from '../contexts/GeometryContext.js';
-import { findPxPerMm } from '../utils/GeometryUtils.js';
+import { findIntermediatePoint, findPxPerMm } from '../utils/GeometryUtils.js';
 import CirclePartGrabber from './CirclePartGrabber.js';
 import PertrudingPartGrabber from './PertrudingPartGrabber.js';
 import RectanglePartGrabber from './RectanglePartGrabber.js';
@@ -12,19 +12,29 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
   } = useGeometryContext();
 
   const [pxPerMm, setPxPerMm] = useState(null);
+  const [stemStartPoint, setStemStartPoint] = useState(null);
 
   const dPPMM = desiredPxPerMM != null ? desiredPxPerMM : pxPerMm;
 
   useEffect(() => {
-    if (!geometryState.geometryPoints ||
-        !geometryState.geometryPoints.rearWheelCenter ||
-        !geometryState.geometryPoints.frontWheelCenter ||
+    const points = geometryState.geometryPoints;
+    if (!points ||
+        !points.rearWheelCenter ||
+        !points.frontWheelCenter ||
         !geometryState.wheelbase)
     {
       return;
     }
-    const pPMm = findPxPerMm(geometryState.geometryPoints.rearWheelCenter, geometryState.geometryPoints.frontWheelCenter, geometryState.wheelbase);
+    const pPMm = findPxPerMm(points.rearWheelCenter, points.frontWheelCenter, geometryState.wheelbase);
     setPxPerMm(pPMm);
+
+    if (points.headTubeTop && points.headTubeBottom && points.headstack && points.stem) {
+      const startPoint = findIntermediatePoint(
+        points.headTubeTop,
+        points.headTubeBottom,
+        -(points.headstack.length + points.stem.width/2)  * pPMm);
+      setStemStartPoint(startPoint);
+    }
   }, [geometryState.geometryPoints, geometryState.wheelbase, destinationPoints]);
 
   return (
@@ -246,7 +256,7 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         pxPerMm = {pxPerMm}
         strokeWidth = {0}
         leftPlacementPoint = {destinationPoints.headTubeTop}
-        rightPlacementPoint = {destinationPoints.stemMount}
+        rightPlacementPoint = {destinationPoints.spacersEnd}
         desiredPxPerMM = {dPPMM}
         layer={7}/>
       }
@@ -266,6 +276,24 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         desiredPxPerMM = {dPPMM}
         layer={7}/>
       } 
+
+      {geometryState.geometryPoints.stem && destinationPoints.stemStart && destinationPoints.handlebarMount &&
+      <RectanglePartGrabber 
+        leftOffset = {0} 
+        rightOffset = {0} 
+        width = {geometryState.geometryPoints.stem.width}
+        anchorPoints={null}
+        overridePoints = {{
+          leftOffsetPoint : stemStartPoint,
+          rightOffsetPoint : geometryState.geometryPoints.handlebarMount,
+        }}
+        pxPerMm = {pxPerMm}
+        strokeWidth = {0}
+        leftPlacementPoint = {destinationPoints.stemStart}
+        rightPlacementPoint = {destinationPoints.handlebarMount}
+        desiredPxPerMM = {dPPMM}
+        layer={7}/>
+      }
     </div>
     }
     </>

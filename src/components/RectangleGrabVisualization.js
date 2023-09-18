@@ -13,7 +13,7 @@ export function RectangleGrabVisualization({canvas, shape, leftPlacementPoint=nu
   
     useEffect(() => {
         const sh = shape.shape;
-        const margin = 0;
+        const margin = 50;
         let scaleX = scaling;
         let scaleY = scaling;
         if (leftPlacementPoint && rightPlacementPoint) {
