@@ -29,7 +29,7 @@ const BikeGeometryTableAngleRow = ({ value, startPoint, middlePoint, endPoint, s
   return (
     <tr onMouseEnter={() => {setIsHighlighted(true)}} onMouseLeave={() => {setIsHighlighted(false)}}>
       <td>{children}</td>
-      <td>{value.toFixed(0)}</td>
+      <td>{value ? value.toFixed(0) : 0}</td>
       {isHighlighted && shape && <AngleMarker shape={shape}/>}
     </tr>
   );
