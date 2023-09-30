@@ -1,8 +1,9 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
+import { Point2d } from '../interfaces/Point2d';
 
 interface GeometryState {
   wheelbase: string,
-  geometryPoints: {},
+  geometryPoints: Map<string, Point2d>,
   selectedFile: null | string | ArrayBuffer,
   bikesList: string[],
 }
@@ -29,7 +30,7 @@ export const GeometryProvider = ({ children } : {children : ReactNode}) => {
   }
   const defaultState : GeometryState = {
     wheelbase: '',
-    geometryPoints: {},
+    geometryPoints: new Map<string, Point2d>(),
     selectedFile: null,
     bikesList: bikesList,
   }

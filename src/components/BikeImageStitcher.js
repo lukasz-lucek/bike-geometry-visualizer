@@ -1,7 +1,7 @@
 // src/components/BikeGeometryTable.js
 import React, {useEffect, useState} from 'react';
 import { useGeometryContext } from '../contexts/GeometryContext';
-import { findIntermediatePoint, findPxPerMm } from '../utils/GeometryUtils.js';
+import { findIntermediatePoint, findPxPerMm } from '../utils/GeometryUtils';
 import CirclePartGrabber from './CirclePartGrabber.js';
 import PertrudingPartGrabber from './PertrudingPartGrabber.js';
 import RectanglePartGrabber from './RectanglePartGrabber.js';

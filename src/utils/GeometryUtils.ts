@@ -1,14 +1,17 @@
 import { fabric } from 'fabric';
+import { Point } from 'fabric/fabric-impl';
+import { BoundingBox } from '../interfaces/BoundingBox';
+import { Point2d } from '../interfaces/Point2d';
 
-const findAngleRad = ({x: x1, y: y1}, {x: x2, y: y2}) => {
+const findAngleRad = ({x: x1, y: y1} : Point2d, {x: x2, y: y2} : Point2d) : number => {
     return Math.atan2(y2-y1, x2-x1);
 }
 
-const findAngle = ({x: x1, y: y1}, {x: x2, y: y2}) => {
+const findAngle = ({x: x1, y: y1} : Point2d, {x: x2, y: y2} : Point2d) : number => {
     return Math.atan2(y2-y1, x2-x1) * 180 / Math.PI;
 }
 
-const findRectangle = ({x: x1, y: y1}, {x: x2, y: y2}, width) => {
+const findRectangle = ({x: x1, y: y1} : Point2d, {x: x2, y: y2} : Point2d, width : number) : fabric.Rect => {
     const center = {
         x: (x1 + x2) / 2, 
         y: (y1 + y2) / 2
@@ -26,10 +29,16 @@ const findRectangle = ({x: x1, y: y1}, {x: x2, y: y2}, width) => {
     return rectangle;
 }
 
-const findBBFromACoords = (aCoords) => {
-    const keys   = Object.keys(aCoords);
-    const xes = keys.map(function(k) { return aCoords[k].x} );
-    const ys = keys.map(function(k) { return aCoords[k].y} );
+interface ACoords {
+    bl: Point2d;
+    br: Point2d;
+    tl: Point2d;
+    tr: Point2d;
+}
+
+const findBBFromACoords = ({bl, br, tl, tr} : ACoords) : BoundingBox => {
+    const xes = [bl.x, br.x, tl.x, tr.x];
+    const ys = [bl.y, br.y, tl.y, tr.y];
     const minX = Math.min.apply(null, xes);
     const maxX = Math.max.apply(null, xes);
     const minY = Math.min.apply(null, ys);
@@ -42,14 +51,14 @@ const findBBFromACoords = (aCoords) => {
     }
 }
 
-const findBBFromRectangle = (rect) => {
+const findBBFromRectangle = (rect : fabric.Rect) : BoundingBox | null => {
     if (!rect.aCoords) {
         return null;
     }
     return findBBFromACoords(rect.aCoords);
 }
 
-const findACoords = ({x1, y1}, {x2, y2}, width) => {
+const findACoords = ({x: x1, y: y1} : Point2d, {x: x2, y: y2} : Point2d, width : number) : ACoords => {
     const length = Math.sqrt(Math.pow(x1-x2,2) + Math.pow(y1-y2,2));
     const dw = width / 2;
     const dy = ((x2-x1) * dw) / length;
@@ -62,29 +71,33 @@ const findACoords = ({x1, y1}, {x2, y2}, width) => {
     }
 }
 
-const findACoordsFromImage = (image) => {
-    const angle = image.angle * Math.PI / 180;
+const findACoordsFromImage = (image : fabric.Image) : ACoords => {
+    const angle = (image.angle ? image.angle : 0) * Math.PI / 180;
     const sina = Math.sin(angle);
     const cosa = Math.cos(angle);
-    const dx1 = cosa * image.width;
-    const dy1 = sina * image.width;
-    const dx2 = sina * image.height;
-    const dy2 = cosa * image.height;
+    const width = image.width ? image.width : 0;
+    const height = image.height ? image.height : 0;
+    const dx1 = cosa * width;
+    const dy1 = sina * width;
+    const dx2 = sina * height;
+    const dy2 = cosa * height;
+    const left = image.left ? image.left : 0;
+    const top = image.top ? image.top : 0;
 
     return {
-        tl: {x: image.left, y: image.top},
-        bl: {x: image.left - dx2, y: image.top + dy2},
-        tr: {x: image.left + dx1, y: image.top + dy1},
-        br: {x: image.left + dx1 - dx2, y: image.top + dy1 + dy2}
+        tl: {x: left, y: top},
+        bl: {x: left - dx2, y: top + dy2},
+        tr: {x: left + dx1, y: top + dy1},
+        br: {x: left + dx1 - dx2, y: top + dy1 + dy2}
     }
 }
 
-const findBB = ({x1, y1}, {x2, y2}, width) => {
-    return findBBFromACoords(findACoords({x1: x1, y1: y1}, {x2: x2, y2: y2}, width));
+const findBB = ({x: x1, y: y1} : Point2d, {x: x2, y: y2} : Point2d, width : number) : BoundingBox => {
+    return findBBFromACoords(findACoords({x: x1, y: y1}, {x: x2, y: y2}, width));
 }
 
-const findBBWithMargins = ({x1, y1}, {x2, y2}, w, margin) => {
-    const {left, top, width, height} = findBB({x1: x1, y1: y1}, {x2: x2, y2: y2}, w);
+const findBBWithMargins = ({x: x1, y: y1} : Point2d, {x: x2, y: y2} : Point2d, w : number, margin : number) : BoundingBox => {
+    const {left, top, width, height} = findBB({x: x1, y: y1}, {x: x2, y: y2}, w);
     const leftProt = left - margin/2;
     const topProt = top - margin/2;
     const xCorrection = leftProt < 0 ? leftProt : 0;
@@ -97,7 +110,7 @@ const findBBWithMargins = ({x1, y1}, {x2, y2}, w, margin) => {
     }
 }
 
-const findCircleBB = (x, y, radius) => {
+const findCircleBB = (x: number, y: number, radius: number) : BoundingBox => {
     return {
         left: x - radius,
         top: y - radius,
@@ -106,11 +119,11 @@ const findCircleBB = (x, y, radius) => {
     } 
 }
 
-const findBBFromImage = (image) => {
+const findBBFromImage = (image : fabric.Image) : BoundingBox => {
     return findBBFromACoords(findACoordsFromImage(image));
 }
 
-const findPxPerMm = (point1, point2, distance) => {
+const findPxPerMm = (point1 : Point2d, point2 : Point2d, distance : number) : number | null => {
 
   if (point1 && point2) {
     const distancePx = Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2));
@@ -119,7 +132,7 @@ const findPxPerMm = (point1, point2, distance) => {
   return null;
 }
 
-const findIntermediatePoint = (point1, point2, offset) => {
+const findIntermediatePoint = (point1 : Point2d, point2 : Point2d, offset : number) : Point2d | null => {
     if (point1 && point2) {
         const distance = Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2));
         if (distance == 0) {
@@ -137,18 +150,18 @@ const findIntermediatePoint = (point1, point2, offset) => {
       return null;
 }
 
-const  findDistance = (point1, point2) => {
+const  findDistance = (point1 : Point2d, point2 : Point2d) : number => {
     return Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2));
 }
 
-const findDistanceFromLine = ({x: x1, y: y1}, {x: x2, y: y2}, {x: x0, y: y0}) => {
+const findDistanceFromLine = ({x: x1, y: y1} : Point2d, {x: x2, y: y2} : Point2d, {x: x0, y: y0} : Point2d) : number => {
     const abs = Math.abs((x2 - x1)*(y1 - y0) - (x1 - x0)*(y2 - y1));
     const magnitude = findDistance({x: x1, y: y1}, {x: x2, y: y2});
     
     return abs/magnitude;
 }
 
-const findProjectionPointToLine = ({x: x1, y: y1}, {x: x2, y: y2}, {x: x0, y: y0}) => {
+const findProjectionPointToLine = ({x: x1, y: y1} : Point2d, {x: x2, y: y2} : Point2d, {x: x0, y: y0} : Point2d) : Point2d=> {
     const magnitude = findDistance({x: x1, y: y1}, {x: x2, y: y2});
     const dotProduct = (x2-x1)*(x0-x1) + (y2-y1)*(y0-y1);
     return {
@@ -157,7 +170,7 @@ const findProjectionPointToLine = ({x: x1, y: y1}, {x: x2, y: y2}, {x: x0, y: y0
     }
 }
 
-const findPointFromPointAngleLength = ({x: x1, y: y1}, angle, length) => {
+const findPointFromPointAngleLength = ({x: x1, y: y1}: Point2d, angle : number, length : number) : Point2d => {
     const andgleRad = angle * Math.PI / 180;
     return {
         x: x1 + Math.cos(andgleRad) * length,

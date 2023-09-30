@@ -2,7 +2,7 @@ import React, { Children, useEffect, useState } from 'react';
 import { useCanvasContext } from '../contexts/CanvasContext';
 import { useGeometryContext } from '../contexts/GeometryContext';
 import { findIntermediatePoint } from '../utils/GeometryUtils';
-import OffsetMarker from './OffsetMarker';
+import OffsetMarker from './bikePartsGrabbers/OffsetMarker';
 import RectanglePartGrabber from './RectanglePartGrabber';
 
 export function StemPartGrabberControls({

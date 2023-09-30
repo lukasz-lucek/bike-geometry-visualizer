@@ -1,6 +1,6 @@
 // src/components/BikeGeometryTable.js
 import React from 'react';
-import { findPxPerMm } from '../utils/GeometryUtils.js';
+import { findPxPerMm } from '../utils/GeometryUtils';
 import CirclePartGrabberControls from './CirclePartsGrabberControls.js';
 import PertrudingPartGrabberControls from './PertrudingPartGrabberControls.js';
 import RectanglePartGrabberControls from './RectanglePartGrabberControls.js';

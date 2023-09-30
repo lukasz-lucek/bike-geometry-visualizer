@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import RectangleGrabVisualization from './RectangleGrabVisualization.js';
-import {findRectangle} from '../utils/GeometryUtils.js'
+import {findRectangle} from '../utils/GeometryUtils'
 
 export function RectangleMarker({canvas, shape, leftPlacementPoint=null, rightPlacementPoint=null, layer=3, scaling=1}) {
 

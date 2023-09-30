@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useCanvasContext } from '../contexts/CanvasContext';
 import { useGeometryContext } from '../contexts/GeometryContext';
-import { findIntermediatePoint } from '../utils/GeometryUtils';
 import PertrudingPartGrabber from './PertrudingPartGrabber';
 import RectanglePartGrabber from './RectanglePartGrabber';
 
