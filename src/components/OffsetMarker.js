@@ -22,10 +22,8 @@ export function OffsetMarker({offset, topAnchor, bottomAnchor, pxPerMm, strokeWi
       return;
     }
     const ta = points[topAnchor];
-    let ba = {
-      x:points[bottomAnchor].x,
-      y:points[bottomAnchor].y
-    };
+    let ba = points[bottomAnchor];
+
     if (!ta || !ba) {
       return;
     }

@@ -61,6 +61,9 @@ export function RectanglePartGrabber(
       leftOffsetPoint = overridePoints.leftOffsetPoint;
       rightOffsetPoint = overridePoints.rightOffsetPoint;
     }
+    if (!leftOffsetPoint || !rightOffsetPoint) {
+      return;
+    }
 
     const newShape = {
       shape : {
