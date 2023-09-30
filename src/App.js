@@ -4,7 +4,7 @@ import ToolSelection from './components/ToolSelection.js'; // Import the ToolSel
 import ToolOptionsArea from './components/ToolOptionsArea.js'; // Import the ToolOptionsArea component
 import Workspace from './components/Workspace.js'; // Import the Workspace component
 import { CanvasProvider } from './contexts/CanvasContext'; // Update the import path
-import GeometryProvider from './contexts/GeometryContext.js';
+import GeometryProvider from './contexts/GeometryContext';
 import MeasurementsProvider from './contexts/MeasurementsContext';
 
 

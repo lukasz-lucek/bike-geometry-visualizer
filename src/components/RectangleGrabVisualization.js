@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { fabric } from 'fabric';
 import {findAngle, findBBWithMargins, findBBFromImage, findDistance} from '../utils/GeometryUtils.js'
-import { useGeometryContext } from '../contexts/GeometryContext.js';
+import { useGeometryContext } from '../contexts/GeometryContext';
 
 export function RectangleGrabVisualization({canvas, shape, leftPlacementPoint=null, rightPlacementPoint=null, layer=3, scaling=1}) {
 

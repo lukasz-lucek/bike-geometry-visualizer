@@ -1,10 +1,10 @@
 // src/components/ImageUploadOption.js
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useCanvasContext } from '../contexts/CanvasContext'; // Import the useCanvasContext hook
 import BikeGeometryTable from '../components/BikeGeometryTable.js';
 import '../App.css';
 import PartsGrabberSpecs from './PartsGrabberSpecs.js';
-import { useGeometryContext } from '../contexts/GeometryContext.js';
+import { useGeometryContext } from '../contexts/GeometryContext';
 import BackgroundImage from "../components/BackgroundImage.js"
 import GeometryPointVisualization from './GeometryPointsVisualization.js';
 import PointPickerControls from './PointPickerControls.js';

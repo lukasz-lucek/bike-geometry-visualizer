@@ -19,11 +19,7 @@ export const useCanvasContext = () => {
   return context;
 };
 
-interface CanvasProviderProps {
-  children: ReactNode;
-}
-
-export const CanvasProvider: React.FC<CanvasProviderProps> = ({ children }) => {
+export const CanvasProvider = ({ children }: {children : ReactNode}) => {
   const defaultState: CanvasState = {
     canvas : null,
   };
@@ -34,12 +30,10 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({ children }) => {
     setState({...state,...newPartialState});
   }
 
-  const contextValue: CanvasContextType = {
-    state: [state, updateState],
-  };
-
   return (
-    <CanvasContext.Provider value={contextValue}>
+    <CanvasContext.Provider value={{
+      state: [state, updateState],
+      }}>
       {children}
     </CanvasContext.Provider>
   );

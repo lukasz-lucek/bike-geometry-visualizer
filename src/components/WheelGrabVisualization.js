@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { fabric } from 'fabric';
 import {findCircleBB} from '../utils/GeometryUtils.js'
-import { useGeometryContext } from '../contexts/GeometryContext.js';
+import { useGeometryContext } from '../contexts/GeometryContext';
 
 export function WheelGrabVisualization({canvas, shape, placementPoint=null, scale=1, layer=3}) {
 

@@ -1,9 +1,8 @@
 // src/components/FrameGeometryInput.js
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useCanvasContext } from '../contexts/CanvasContext';
-import BikeGeometryTable from '../components/BikeGeometryTable.js';
 import SizesTable from '../components/SizesTable.js';
-import { useGeometryContext } from '../contexts/GeometryContext.js';
+import { useGeometryContext } from '../contexts/GeometryContext';
 import BackgroundImage from './BackgroundImage.js';
 
 const FrameGeometryInput = () => {
