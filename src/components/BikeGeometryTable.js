@@ -4,7 +4,7 @@ import { useCanvasContext } from '../contexts/CanvasContext';
 import { useMeasurementsContext } from '../contexts/MeasurementsContext.js';
 import { findAngle, findAngleRad, findDistance, findDistanceFromLine, findIntermediatePoint, findProjectionPointToLine, findPxPerMm } from '../utils/GeometryUtils.js';
 import './BikeGeometryTable.css'; // Import the CSS file
-import BikeGeometryTableAngleRow from './BikeGeometryTableAngleRow.js';
+import BikeGeometryTableAngleRow from './bikeGeometryTable/BikeGeometryTableAngleRow';
 import BikeGeometryTableLineRow from './BikeGeometryTableLineRow.js';
 
 const BikeGeometryTable = ({ points, wheelbase, children }) => {
