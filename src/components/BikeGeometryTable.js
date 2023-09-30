@@ -1,10 +1,10 @@
 // src/components/BikeGeometryTable.js
 import React, {useEffect, useState} from 'react';
-import { useCanvasContext } from '../contexts/CanvasContext.js';
+import { useCanvasContext } from '../contexts/CanvasContext';
 import { useMeasurementsContext } from '../contexts/MeasurementsContext.js';
 import { findAngle, findAngleRad, findDistance, findDistanceFromLine, findIntermediatePoint, findProjectionPointToLine, findPxPerMm } from '../utils/GeometryUtils.js';
 import './BikeGeometryTable.css'; // Import the CSS file
-import BikeGeometryTableAngleRow from './BikeGeometryTableAngleRow';
+import BikeGeometryTableAngleRow from './BikeGeometryTableAngleRow.js';
 import BikeGeometryTableLineRow from './BikeGeometryTableLineRow.js';
 
 const BikeGeometryTable = ({ points, wheelbase, children }) => {

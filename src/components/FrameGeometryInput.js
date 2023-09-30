@@ -1,6 +1,6 @@
 // src/components/FrameGeometryInput.js
 import React, { useEffect, useState } from 'react';
-import { useCanvasContext } from '../contexts/CanvasContext.js';
+import { useCanvasContext } from '../contexts/CanvasContext';
 import BikeGeometryTable from '../components/BikeGeometryTable.js';
 import SizesTable from '../components/SizesTable.js';
 import { useGeometryContext } from '../contexts/GeometryContext.js';
@@ -21,10 +21,6 @@ const FrameGeometryInput = () => {
 
   const [showShadowImage, setShowShadowImage] = useState(true);
 
-
-  useEffect(() => {
-    canvasState.canvas.clear();
-  }, []);
   return (
     <div className="frame-input">
       {/* <BikeGeometryTable points={geometryState.geometryPoints} wheelbase={geometryState.wheelbase} updatePoints={updatePoints}>

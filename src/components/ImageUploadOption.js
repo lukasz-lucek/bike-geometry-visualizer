@@ -1,6 +1,6 @@
 // src/components/ImageUploadOption.js
 import React, { useState, useEffect } from 'react';
-import { useCanvasContext } from '../contexts/CanvasContext.js'; // Import the useCanvasContext hook
+import { useCanvasContext } from '../contexts/CanvasContext'; // Import the useCanvasContext hook
 import '../App.css';
 import { useGeometryContext } from '../contexts/GeometryContext.js';
 import BackgroundImage from "../components/BackgroundImage.js"

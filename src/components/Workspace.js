@@ -1,6 +1,6 @@
 // src/components/Workspace.js
 import React, { useRef, useEffect, useState} from 'react';
-import { useCanvasContext } from '../contexts/CanvasContext.js';
+import { useCanvasContext } from '../contexts/CanvasContext';
 import { Canvas } from '../components/Canvas.js';
 import PointPickerControls from './PointPickerControls.js'; // Import the ImageUploadOption component
 

@@ -54,7 +54,9 @@ const PointPickerControls = forwardRef(({canvas}, ref) => {
     if (!state.pickerEnabled) {
       removeMouseUpHandlers();
     }
-    canvas.renderAll();
+    if (canvas) {
+      canvas.renderAll();
+    }
   }, [state.pickerEnabled, canvas]);
   
   return (
