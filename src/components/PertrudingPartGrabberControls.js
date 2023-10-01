@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useCanvasContext } from '../contexts/CanvasContext';
 import { useGeometryContext } from '../contexts/GeometryContext';
-import PertrudingPartGrabber from './PertrudingPartGrabber';
-import RectanglePartGrabber from './RectanglePartGrabber';
+import PertrudingPartGrabber from './grabbers/PertrudingPartGrabber';
 
 export function PertrudingPartGrabberControls({
   partKey,

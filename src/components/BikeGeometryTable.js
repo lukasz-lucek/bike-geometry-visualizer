@@ -1,6 +1,5 @@
 // src/components/BikeGeometryTable.js
 import React, {useEffect, useState} from 'react';
-import { useCanvasContext } from '../contexts/CanvasContext';
 import { useMeasurementsContext } from '../contexts/MeasurementsContext';
 import { findAngle, findAngleRad, findDistance, findDistanceFromLine, findIntermediatePoint, findProjectionPointToLine, findPxPerMm } from '../utils/GeometryUtils';
 import BikeGeometryTableAngleRow from './bikeGeometryTable/BikeGeometryTableAngleRow';
@@ -10,10 +9,6 @@ import './bikeGeometryTable/BikeGeometryTable.css'; // Import the CSS file
 const BikeGeometryTable = ({ points, wheelbase, children }) => {
 
   const {
-    state: [contextState, ],
-  } = useCanvasContext(); 
-
-  const {
     state: [state, setState],
   } = useMeasurementsContext(); 
 
@@ -21,32 +16,6 @@ const BikeGeometryTable = ({ points, wheelbase, children }) => {
     const newState = {...state, ...newPartialState};
     setState( newState );
   }
-
-  const defaultState = {
-    highlightedElement : null,
-    measures: {
-      stack: 0,
-      reach: 0,
-      topTube: 0,
-      seatTubeCT: 0,
-      headAngle: 0,
-      seatAngle: 0,
-      headTube: 0,
-      chainstay: 0,
-      bbDrop: 0,
-      crankArm: 0,
-      wheelbase: 0,
-    },
-    helpserPoints: {
-
-    },
-    pxPerMm: 0,
-    strokeWidth: 5,
-  }
-
-  // const [state, setState] = useState(defaultState);
-
-  const visualizationColor = "red";
 
   useEffect(() => {
     const finalWheelbase=wheelbase ? Number(wheelbase) : 0;

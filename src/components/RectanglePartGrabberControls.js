@@ -1,8 +1,7 @@
-import React, { Children, useEffect, useState } from 'react';
-import { useCanvasContext } from '../contexts/CanvasContext';
+import React, { useEffect, useState } from 'react';
 import { useGeometryContext } from '../contexts/GeometryContext';
-import OffsetMarker from './bikePartsGrabbers/OffsetMarker';
-import RectanglePartGrabber from './RectanglePartGrabber';
+import OffsetGrabber from './grabbers/OffsetGrabber';
+import RectanglePartGrabber from './grabbers/RectanglePartGrabber';
 
 export function RectanglePartGrabberControls({
   partKey,
@@ -18,10 +17,6 @@ export function RectanglePartGrabberControls({
     left:false,
     right:false,
   }}) {
-
-  const {
-    state: [canvasState, ],
-  } = useCanvasContext(); 
 
   const singleStep = 5;
 
@@ -78,7 +73,7 @@ export function RectanglePartGrabberControls({
             <td><button onClick={() => {updateLeftOffset(singleStep)}}>+</button></td>
             <td><button onClick={() => {updateLeftOffset(-singleStep)}}>-</button></td>
             {leftOffsetHighlight &&
-              <OffsetMarker 
+              <OffsetGrabber 
                 offset = {geometryState.geometryPoints[partKey]?.leftOffset} 
                 topAnchor = {anchorPoints.tl} 
                 bottomAnchor = {anchorPoints.bl}
@@ -94,7 +89,7 @@ export function RectanglePartGrabberControls({
             <td><button onClick={() => {updateRightOffset(singleStep)}}>+</button></td>
             <td><button onClick={() => {updateRightOffset(-singleStep)}}>-</button></td>
             {rightOffsetHighlight &&
-              <OffsetMarker 
+              <OffsetGrabber 
                 offset = {geometryState.geometryPoints[partKey]?.rightOffset} 
                 topAnchor = {anchorPoints.tr} 
                 bottomAnchor = {anchorPoints.br}

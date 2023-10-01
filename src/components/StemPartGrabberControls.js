@@ -2,8 +2,7 @@ import React, { Children, useEffect, useState } from 'react';
 import { useCanvasContext } from '../contexts/CanvasContext';
 import { useGeometryContext } from '../contexts/GeometryContext';
 import { findIntermediatePoint } from '../utils/GeometryUtils';
-import OffsetMarker from './bikePartsGrabbers/OffsetMarker';
-import RectanglePartGrabber from './RectanglePartGrabber';
+import RectanglePartGrabber from './grabbers/RectanglePartGrabber';
 
 export function StemPartGrabberControls({
   partKey,
@@ -67,7 +66,7 @@ export function StemPartGrabberControls({
                 leftOffset = {0} 
                 rightOffset = {0} 
                 width = {geometryState.geometryPoints[partKey]?.width}
-                anchorPoints = {null}
+                anchorPoints = {{tl: null, bl: null, tr: null, br: null}}
                 overridePoints = {{
                   leftOffsetPoint : stemStartPoint,
                   rightOffsetPoint : geometryState.geometryPoints[anchorPoints.tr]

@@ -1,69 +1,88 @@
 import React, { useState, useEffect } from 'react';
 import { fabric } from 'fabric';
-import {findAngle, findBBWithMargins, findBBFromImage, findDistance} from '../utils/GeometryUtils'
-import { useGeometryContext } from '../contexts/GeometryContext';
+import {findAngle, findBBWithMargins, findBBFromImage, findDistance} from '../../utils/GeometryUtils'
+import { useGeometryContext } from '../../contexts/GeometryContext';
+import { useCanvasContext } from '../../contexts/CanvasContext';
+import { Point2d } from '../../interfaces/Point2d';
 
-export function RectangleGrabVisualization({canvas, shape, leftPlacementPoint=null, rightPlacementPoint=null, layer=3, scaling=1}) {
+export interface Rectangle {
+    p1: Point2d,
+    p2: Point2d,
+    width: number,
+}
+
+interface RectangleGrabVisualizationProps {
+    rectangle: Rectangle,
+    leftPlacementPoint: Point2d | null,
+    rightPlacementPoint: Point2d | null,
+    layer: number,
+    scaling: number
+}
+
+export function RectangleGrabVisualization(
+    {
+        rectangle,
+        leftPlacementPoint=null,
+        rightPlacementPoint=null,
+        layer=3,
+        scaling=1
+    } : RectangleGrabVisualizationProps) {
 
     const {
         state: [geometryState, ],
     } = useGeometryContext();
 
-    const [loadedImage, setLoadedImage] = useState(null);
+    const {
+        state: [canvasState, ],
+    } = useCanvasContext();
+
+    const [loadedImage, setLoadedImage] = useState<fabric.Image | null>(null);
   
     useEffect(() => {
-        const sh = shape.shape;
         const margin = 50;
         let scaleX = scaling;
         let scaleY = scaling;
+        const orgDistance = findDistance(rectangle.p1, rectangle.p2);
         if (leftPlacementPoint && rightPlacementPoint) {
-            const orgDistance = findDistance({x: sh.x1, y: sh.y1}, {x: sh.x2, y: sh.y2});
             const newDistance = findDistance(leftPlacementPoint, rightPlacementPoint);
             scaleX = newDistance / orgDistance;
         }
         if (geometryState.selectedFile) {
-            const bound = findBBWithMargins({x1: sh.x1, y1: sh.y1},{x2: sh.x2, y2: sh.y2},sh.width, margin);
+            const bound = findBBWithMargins(rectangle.p1,rectangle.p2,rectangle.width, margin);
             if (bound) {
 
-                // const rect = new fabric.Rect({
-                //     ...bound,
-                //     fill: 'transparent',
-                //     stroke: 'green',
-                //     strokeWidth: 1,
-                // });
-                // canvas.insertAt(rect, 5);
-
-                const angle = findAngle({x: sh.x1, y: sh.y1},{x: sh.x2, y: sh.y2})
+                const angle = findAngle(rectangle.p1,rectangle.p2)
                 fabric.Image.fromURL(geometryState.selectedFile, (img) => {
                     img.rotate(-angle);
                     const bound2 = findBBFromImage (img);
-                    const length = Math.sqrt(Math.pow(sh.x1-sh.x2,2) + Math.pow(sh.y1-sh.y2,2));
 
-                    fabric.Image.fromURL(img.toDataURL(), (cimg) => {
+                    fabric.Image.fromURL(img.toDataURL({}), (cimg) => {
                         if (leftPlacementPoint && rightPlacementPoint) {
+                            const cimgWidth = cimg.width ? cimg.width : 0;
+                            const cimgHeight = cimg.height ? cimg.height : 0;
                             const landingAngle = findAngle(leftPlacementPoint, rightPlacementPoint);
                             const landingPoint = {
                                 x: (leftPlacementPoint.x + rightPlacementPoint.x)/2,
                                 y: (leftPlacementPoint.y + rightPlacementPoint.y)/2,
                             }
-                            fabric.Image.fromURL(cimg.toDataURL(), (movedImage) => {
+                            fabric.Image.fromURL(cimg.toDataURL({}), (movedImage) => {
                                 movedImage.rotate(landingAngle);
                                 setLoadedImage(movedImage);
                             },{
-                                top: landingPoint.y - scaleY*cimg.height/2,
-                                left: landingPoint.x - scaleX*cimg.width/2,
+                                top: landingPoint.y - scaleY*cimgHeight/2,
+                                left: landingPoint.x - scaleX*cimgWidth/2,
                             });
                         } else {
                             setLoadedImage(cimg);
                         }
                     },
                     {
-                        width: length+margin,
-                        height: sh.width,
+                        width: orgDistance+margin,
+                        height: rectangle.width,
                         scaleX: scaleX,
                         scaleY: scaleY,
-                        cropY: (bound2.height - sh.width) / 2,
-                        cropX: (bound2.width - length - margin) / 2,
+                        cropY: (bound2.height - rectangle.width) / 2,
+                        cropX: (bound2.width - orgDistance - margin) / 2,
                     })
                 },
                 {
@@ -80,15 +99,15 @@ export function RectangleGrabVisualization({canvas, shape, leftPlacementPoint=nu
             }
         }
 
-    }, [canvas, shape, geometryState.selectedFile]);
+    }, [canvasState.canvas, rectangle, geometryState.selectedFile]);
 
     useEffect(() => {
         if (loadedImage) {
-            canvas.insertAt(loadedImage, layer);
-            canvas.renderAll();
+            canvasState.canvas?.insertAt(loadedImage, layer, false);
+            canvasState.canvas?.renderAll();
             return () => {
-                canvas.remove(loadedImage);
-                canvas.renderAll();
+                canvasState.canvas?.remove(loadedImage);
+                canvasState.canvas?.renderAll();
             }
         }
     }, [loadedImage]);

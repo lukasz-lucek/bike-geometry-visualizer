@@ -1,18 +1,42 @@
-// src/components/BikeGeometryTable.js
 import React, {useEffect, useState} from 'react';
-import { useGeometryContext } from '../contexts/GeometryContext';
-import { findIntermediatePoint, findPxPerMm } from '../utils/GeometryUtils';
-import CirclePartGrabber from './CirclePartGrabber.js';
-import PertrudingPartGrabber from './PertrudingPartGrabber.js';
-import RectanglePartGrabber from './RectanglePartGrabber.js';
+import { useGeometryContext } from '../../contexts/GeometryContext';
+import { Point2d } from '../../interfaces/Point2d';
+import { findIntermediatePoint, findPxPerMm } from '../../utils/GeometryUtils';
+import CirclePartGrabber from '../grabbers/CirclePartGrabber';
+import PertrudingPartGrabber from '../grabbers/PertrudingPartGrabber';
+import RectanglePartGrabber from '../grabbers/RectanglePartGrabber';
 
-const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
+export interface DestinationGeometryPoints {
+  rearWheelCenter: Point2d;
+  frontWheelCenter: Point2d;
+  bottomBracketCenter: Point2d;
+  seatTubeTop: Point2d;
+  headTubeTop: Point2d;
+  headTubeBottom: Point2d;
+  seatStayRight: Point2d;
+  seatStayLeft: Point2d;
+  topTubeLeft: Point2d;
+  topTubeRight: Point2d;
+  bottomTubeRight: Point2d;
+  crankArmEnd: Point2d;
+  seatpostEnd: Point2d;
+  spacersEnd: Point2d;
+  stemStart: Point2d;
+  handlebarMount: Point2d;
+}
+
+interface BikeImageStitcherProps {
+  destinationPoints : DestinationGeometryPoints;
+  desiredPxPerMM: number | null;
+}
+
+const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null} : BikeImageStitcherProps) => {
   const {
     state: [geometryState, ],
   } = useGeometryContext();
 
-  const [pxPerMm, setPxPerMm] = useState(null);
-  const [stemStartPoint, setStemStartPoint] = useState(null);
+  const [pxPerMm, setPxPerMm] = useState<number | null>(null);
+  const [stemStartPoint, setStemStartPoint] = useState<Point2d | null>(null);
 
   const dPPMM = desiredPxPerMM != null ? desiredPxPerMM : pxPerMm;
 
@@ -26,6 +50,9 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
       return;
     }
     const pPMm = findPxPerMm(points.rearWheelCenter, points.frontWheelCenter, geometryState.wheelbase);
+    if (!pPMm) {
+      return;
+    }
     setPxPerMm(pPMm);
 
     if (points.headTubeTop && points.headTubeBottom && points.headstack && points.stem) {
@@ -44,7 +71,7 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
       {geometryState.geometryPoints.rearWheel && destinationPoints.rearWheelCenter &&
       <CirclePartGrabber
         radius = {geometryState.geometryPoints.rearWheel.radius}
-        centerPoint = {"rearWheelCenter"}
+        centerPoint = {geometryState.geometryPoints.rearWheelCenter}
         pxPerMm = {pxPerMm}
         strokeWidth = {0}
         placementPoint = {destinationPoints.rearWheelCenter}
@@ -55,7 +82,7 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
       {geometryState.geometryPoints.frontWheel && destinationPoints.frontWheelCenter &&
       <CirclePartGrabber
         radius = {geometryState.geometryPoints.frontWheel.radius}
-        centerPoint = {"frontWheelCenter"}
+        centerPoint = {geometryState.geometryPoints.frontWheelCenter}
         pxPerMm = {pxPerMm}
         strokeWidth = {0}
         placementPoint = {destinationPoints.frontWheelCenter}
@@ -66,7 +93,7 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
       {geometryState.geometryPoints.chainring && destinationPoints.bottomBracketCenter &&
       <CirclePartGrabber
         radius = {geometryState.geometryPoints.chainring.radius}
-        centerPoint = {"bottomBracketCenter"}
+        centerPoint = {geometryState.geometryPoints.bottomBracketCenter}
         pxPerMm = {pxPerMm}
         strokeWidth = {0}
         placementPoint = {destinationPoints.bottomBracketCenter}
@@ -80,10 +107,10 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         rightOffset = {geometryState.geometryPoints.chainstay.rightOffset} 
         width = {geometryState.geometryPoints.chainstay.width}
         anchorPoints = {{
-          tl: "rearWheelCenter",
-          bl: "rearWheelCenter",
-          tr: "bottomBracketCenter",
-          br: "bottomBracketCenter",
+          tl: geometryState.geometryPoints.rearWheelCenter,
+          bl: geometryState.geometryPoints.rearWheelCenter,
+          tr: geometryState.geometryPoints.bottomBracketCenter,
+          br: geometryState.geometryPoints.bottomBracketCenter,
         }}
         pxPerMm = {pxPerMm}
         strokeWidth = {0}
@@ -99,10 +126,10 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         rightOffset = {geometryState.geometryPoints.seatTube.rightOffset} 
         width = {geometryState.geometryPoints.seatTube.width}
         anchorPoints = {{
-          tl: "seatTubeTop",
-          bl: "seatTubeTop",
-          tr: "bottomBracketCenter",
-          br: "bottomBracketCenter"
+          tl: geometryState.geometryPoints.seatTubeTop,
+          bl: geometryState.geometryPoints.seatTubeTop,
+          tr: geometryState.geometryPoints.bottomBracketCenter,
+          br: geometryState.geometryPoints.bottomBracketCenter
         }}
         pxPerMm = {pxPerMm}
         strokeWidth = {0}
@@ -118,10 +145,10 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         rightOffset = {geometryState.geometryPoints.seatstay.rightOffset} 
         width = {geometryState.geometryPoints.seatstay.width}
         anchorPoints={{
-          tl: "rearWheelCenter",
-          bl: "rearWheelCenter",
-          tr: "seatTubeTop",
-          br: "bottomBracketCenter"
+          tl: geometryState.geometryPoints.rearWheelCenter,
+          bl: geometryState.geometryPoints.rearWheelCenter,
+          tr: geometryState.geometryPoints.seatTubeTop,
+          br: geometryState.geometryPoints.bottomBracketCenter
         }}
         pxPerMm = {pxPerMm}
         strokeWidth = {0}
@@ -137,10 +164,10 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         rightOffset = {geometryState.geometryPoints.topTube.rightOffset} 
         width = {geometryState.geometryPoints.topTube.width}
         anchorPoints={{
-          tl: "seatTubeTop",
-          bl: "bottomBracketCenter",
-          tr: "headTubeTop",
-          br: "headTubeBottom"
+          tl: geometryState.geometryPoints.seatTubeTop,
+          bl: geometryState.geometryPoints.bottomBracketCenter,
+          tr: geometryState.geometryPoints.headTubeTop,
+          br: geometryState.geometryPoints.headTubeBottom
         }}
         pxPerMm = {pxPerMm}
         strokeWidth = {0}
@@ -156,10 +183,10 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         rightOffset = {geometryState.geometryPoints.bottomTube.rightOffset} 
         width = {geometryState.geometryPoints.bottomTube.width}
         anchorPoints={{
-          tl: "bottomBracketCenter",
-          bl: "bottomBracketCenter",
-          tr: "headTubeBottom",
-          br: "headTubeTop"
+          tl: geometryState.geometryPoints.bottomBracketCenter,
+          bl: geometryState.geometryPoints.bottomBracketCenter,
+          tr: geometryState.geometryPoints.headTubeBottom,
+          br: geometryState.geometryPoints.headTubeTop
         }}
         pxPerMm = {pxPerMm}
         strokeWidth = {0}
@@ -175,10 +202,10 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         rightOffset = {geometryState.geometryPoints.bottomTube.rightOffset} 
         width = {geometryState.geometryPoints.bottomTube.width}
         anchorPoints={{
-          tl: "bottomBracketCenter",
-          bl: "bottomBracketCenter",
-          tr: "headTubeBottom",
-          br: "headTubeTop"
+          tl: geometryState.geometryPoints.bottomBracketCenter,
+          bl: geometryState.geometryPoints.bottomBracketCenter,
+          tr: geometryState.geometryPoints.headTubeBottom,
+          br: geometryState.geometryPoints.headTubeTop
         }}
         pxPerMm = {pxPerMm}
         strokeWidth = {0}
@@ -194,10 +221,10 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         rightOffset = {geometryState.geometryPoints.headTube.rightOffset} 
         width = {geometryState.geometryPoints.headTube.width}
         anchorPoints={{
-          tl: "headTubeTop",
-          bl: "headTubeTop",
-          tr: "headTubeBottom",
-          br: "headTubeBottom"
+          tl: geometryState.geometryPoints.headTubeTop,
+          bl: geometryState.geometryPoints.headTubeTop,
+          tr: geometryState.geometryPoints.headTubeBottom,
+          br: geometryState.geometryPoints.headTubeBottom
         }}
         pxPerMm = {pxPerMm}
         strokeWidth = {0}
@@ -213,10 +240,10 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         rightOffset = {geometryState.geometryPoints.fork.rightOffset} 
         width = {geometryState.geometryPoints.fork.width}
         anchorPoints={{
-          tl: "headTubeBottom",
-          bl: "headTubeBottom",
-          tr: "frontWheelCenter",
-          br: "frontWheelCenter"
+          tl: geometryState.geometryPoints.headTubeBottom,
+          bl: geometryState.geometryPoints.headTubeBottom,
+          tr: geometryState.geometryPoints.frontWheelCenter,
+          br: geometryState.geometryPoints.frontWheelCenter
         }}
         pxPerMm = {pxPerMm}
         strokeWidth = {0}
@@ -232,10 +259,10 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         rightOffset = {geometryState.geometryPoints.crankArm.rightOffset} 
         width = {geometryState.geometryPoints.crankArm.width}
         anchorPoints={{
-          tl: "bottomBracketCenter",
-          bl: "bottomBracketCenter",
-          tr: "crankArmEnd",
-          br: "crankArmEnd"
+          tl: geometryState.geometryPoints.bottomBracketCenter,
+          bl: geometryState.geometryPoints.bottomBracketCenter,
+          tr: geometryState.geometryPoints.crankArmEnd,
+          br: geometryState.geometryPoints.crankArmEnd
         }}
         pxPerMm = {pxPerMm}
         strokeWidth = {0}
@@ -250,8 +277,8 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         width = {geometryState.geometryPoints.headstack.width}
         length = {geometryState.geometryPoints.headstack.length}
         anchorPoints={{
-          tl: "headTubeTop",
-          bl: "headTubeBottom",
+          tl: geometryState.geometryPoints.headTubeTop,
+          bl: geometryState.geometryPoints.headTubeBottom,
         }}
         pxPerMm = {pxPerMm}
         strokeWidth = {0}
@@ -266,8 +293,8 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         width = {geometryState.geometryPoints.seatpost.width}
         length = {geometryState.geometryPoints.seatpost.length}
         anchorPoints={{
-          tl: "seatTubeTop",
-          bl: "bottomBracketCenter",
+          tl: geometryState.geometryPoints.seatTubeTop,
+          bl: geometryState.geometryPoints.bottomBracketCenter,
         }}
         pxPerMm = {pxPerMm}
         strokeWidth = {0}
@@ -282,10 +309,11 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null}) => {
         leftOffset = {0} 
         rightOffset = {0} 
         width = {geometryState.geometryPoints.stem.width}
-        anchorPoints={null}
-        overridePoints = {{
-          leftOffsetPoint : stemStartPoint,
-          rightOffsetPoint : geometryState.geometryPoints.handlebarMount,
+        anchorPoints={{
+          tl: stemStartPoint,
+          bl: stemStartPoint,
+          tr: geometryState.geometryPoints.handlebarMount,
+          br: geometryState.geometryPoints.handlebarMount
         }}
         pxPerMm = {pxPerMm}
         strokeWidth = {0}

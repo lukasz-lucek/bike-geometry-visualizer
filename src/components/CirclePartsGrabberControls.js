@@ -1,7 +1,7 @@
 import React, { Children, useEffect, useState } from 'react';
 import { useCanvasContext } from '../contexts/CanvasContext';
 import { useGeometryContext } from '../contexts/GeometryContext';
-import { CirclePartGrabber } from './CirclePartGrabber';
+import { CirclePartGrabber } from './grabbers/CirclePartGrabber';
 
 export function CirclePartGrabberControls({
   partKey,

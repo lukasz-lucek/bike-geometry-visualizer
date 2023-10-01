@@ -1,10 +1,75 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
-import { Point2d } from '../interfaces/Point2d';
+import { FixedCircle } from '../interfaces/FixedCircle';
+import { ColorPoint2d } from '../interfaces/Point2d';
+import { FixedRectangle, OffsetFixedRectangle, SemiFixedRectangle } from '../interfaces/Rectangles';
+
+interface GeometryPoints {
+  rearWheelCenter:  ColorPoint2d | null,
+  frontWheelCenter: ColorPoint2d | null,
+  headTubeTop: ColorPoint2d | null,
+  headTubeBottom: ColorPoint2d | null,
+  bottomBracketCenter: ColorPoint2d | null,
+  seatTubeTop: ColorPoint2d | null,
+  crankArmEnd: ColorPoint2d | null,
+  handlebarMount: ColorPoint2d | null,
+  seatMount: ColorPoint2d | null,
+
+
+  crankArm: OffsetFixedRectangle | null,
+  seatstay: OffsetFixedRectangle | null,
+  chainstay: OffsetFixedRectangle | null,
+  fork: OffsetFixedRectangle | null,
+  seatTube: OffsetFixedRectangle | null,
+  headTube: OffsetFixedRectangle | null,
+  bottomTube: OffsetFixedRectangle | null,
+  topTube: OffsetFixedRectangle | null,
+
+  seatpost: SemiFixedRectangle | null,
+  headstack: SemiFixedRectangle | null,
+
+  stem: FixedRectangle | null,
+
+  rearWheel: FixedCircle | null,
+  frontWheel: FixedCircle | null,
+  chainring: FixedCircle | null,
+  seatpostYoke: FixedCircle | null,
+}
+
+const defaultGeometryPoints : GeometryPoints = {
+  rearWheelCenter : null,
+  frontWheelCenter : null,
+  headTubeTop : null,
+  headTubeBottom : null,
+  bottomBracketCenter : null,
+  seatTubeTop : null,
+  crankArmEnd : null,
+  handlebarMount : null,
+  seatMount : null,
+
+  crankArm : null,
+  seatstay : null,
+  chainstay : null,
+  fork : null,
+  seatTube : null,
+  headTube : null,
+  bottomTube : null,
+  topTube : null,
+
+  seatpost: null,
+  headstack : null,
+
+  stem: null,
+
+  rearWheel: null,
+  frontWheel: null,
+  chainring: null,
+  seatpostYoke: null,
+}
 
 interface GeometryState {
-  wheelbase: string,
-  geometryPoints: Map<string, Point2d>,
-  selectedFile: null | string | ArrayBuffer,
+  wheelbase: number | null,
+  geometryPoints: GeometryPoints,
+  selectedFile: null | string,
   bikesList: string[],
 }
 
@@ -29,8 +94,8 @@ export const GeometryProvider = ({ children } : {children : ReactNode}) => {
     bikesList = Object.keys(JSON.parse(storage));
   }
   const defaultState : GeometryState = {
-    wheelbase: '',
-    geometryPoints: new Map<string, Point2d>(),
+    wheelbase: null,
+    geometryPoints: defaultGeometryPoints,
     selectedFile: null,
     bikesList: bikesList,
   }
