@@ -22,9 +22,6 @@ const FrameGeometryInput = () => {
 
   return (
     <div className="frame-input">
-      {/* <BikeGeometryTable points={geometryState.geometryPoints} wheelbase={geometryState.wheelbase} updatePoints={updatePoints}>
-        Original geometry from image
-      </BikeGeometryTable> */}
       <SizesTable state={geometryState} updateState={updateGeometryState}/>
       <p><input type="checkbox" checked={showShadowImage} onChange={() => {setShowShadowImage(!showShadowImage);}}/><label>Show Shadow Image</label></p>
 

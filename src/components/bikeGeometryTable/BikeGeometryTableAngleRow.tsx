@@ -6,9 +6,9 @@ import {AngleMarker, Angle} from '../drawing/AngleMarker';
 
 export interface TableAngleRowPropsType {
   value: number,
-  startPoint: Point2d,
-  middlePoint: Point2d,
-  endPoint: Point2d,
+  startPoint: Point2d | null,
+  middlePoint: Point2d | null,
+  endPoint: Point2d | null,
   strokeWidth: number,
   children: ReactNode,
 }

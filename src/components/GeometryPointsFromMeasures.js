@@ -1,4 +1,3 @@
-// src/components/BikeGeometryTable.js
 import React, {useEffect, useState} from 'react';
 import { useGeometryContext } from '../contexts/GeometryContext';
 import { findPxPerMm, findIntermediatePoint, findPointFromPointAngleLength} from '../utils/GeometryUtils';

@@ -1,7 +1,7 @@
 // src/components/ImageUploadOption.js
 import React, { useState, useRef } from 'react';
 import { useCanvasContext } from '../contexts/CanvasContext'; // Import the useCanvasContext hook
-import BikeGeometryTable from '../components/BikeGeometryTable.js';
+import BikeGeometryTable from './bikeGeometryTable/BikeGeometryTable';
 import '../App.css';
 import PartsGrabberTable from './grabberControls/PartsGrabberTable';
 import { useGeometryContext } from '../contexts/GeometryContext';

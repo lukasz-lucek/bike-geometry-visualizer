@@ -1,18 +1,27 @@
 // src/components/BikeGeometryTable.js
-import React, {useEffect, useState} from 'react';
-import { useMeasurementsContext } from '../contexts/MeasurementsContext';
-import { findAngle, findAngleRad, findDistance, findDistanceFromLine, findIntermediatePoint, findProjectionPointToLine, findPxPerMm } from '../utils/GeometryUtils';
-import BikeGeometryTableAngleRow from './bikeGeometryTable/BikeGeometryTableAngleRow';
-import BikeGeometryTableLineRow from './bikeGeometryTable/BikeGeometryTableLineRow';
-import './bikeGeometryTable/BikeGeometryTable.css'; // Import the CSS file
+import React, {ReactNode, useEffect, useState} from 'react';
+import { MeasurementsState, useMeasurementsContext } from '../../contexts/MeasurementsContext';
+import { findAngle, findAngleRad, findDistance, findIntermediatePoint, findProjectionPointToLine, findPxPerMm } from '../../utils/GeometryUtils';
+import BikeGeometryTableAngleRow from './BikeGeometryTableAngleRow';
+import BikeGeometryTableLineRow from './BikeGeometryTableLineRow';
+import './BikeGeometryTable.css'; // Import the CSS file
+import { useGeometryContext } from '../../contexts/GeometryContext';
+import { Point2d } from '../../interfaces/Point2d';
 
-const BikeGeometryTable = ({ points, wheelbase, children }) => {
+const BikeGeometryTable = ({ children } : {children : ReactNode}) => {
+
+  const {
+    state: [geometryState, ],
+  } = useGeometryContext();
+
+  const points = geometryState.geometryPoints;
+  const wheelbase = geometryState.wheelbase;
 
   const {
     state: [state, setState],
   } = useMeasurementsContext(); 
 
-  const updateState = (newPartialState) => {
+  const updateState = (newPartialState : Partial<MeasurementsState>) => {
     const newState = {...state, ...newPartialState};
     setState( newState );
   }
@@ -54,7 +63,7 @@ const BikeGeometryTable = ({ points, wheelbase, children }) => {
     const frontWheelCenter = points.frontWheelCenter;
 
     if (rearWheelCenter && frontWheelCenter) {
-      pxPerMm = findPxPerMm(rearWheelCenter, frontWheelCenter, wheelbase)
+      pxPerMm = findPxPerMm(rearWheelCenter, frontWheelCenter, wheelbase) ?? 0;
       strokeWidth = strokeWidth*pxPerMm;
 
       wheelBaseEnd = {x: frontWheelCenter.x, y: rearWheelCenter.y}
@@ -105,7 +114,7 @@ const BikeGeometryTable = ({ points, wheelbase, children }) => {
 
           const stemWidth = points.stem?.width;
           if (stemWidth && points.handlebarMount) {
-            stemStartPoint = findIntermediatePoint(headTubeTop, headTubeBottom, -(spacersStack+stemWidth/2) * pxPerMm);
+            stemStartPoint = findIntermediatePoint(headTubeTop, headTubeBottom, -(spacersStack+stemWidth/2) * pxPerMm) as Point2d;
             stemLength = findDistance(stemStartPoint, points.handlebarMount) / pxPerMm;
 
             stemAngle = findAngle(stemStartPoint, points.handlebarMount) - headAngle + 90;
@@ -118,7 +127,7 @@ const BikeGeometryTable = ({ points, wheelbase, children }) => {
             y: frontWheelCenter.y,
           }
           headAngleStart = {
-            x: bottomBracketCenter.x,
+            x: (bottomBracketCenter as Point2d).x,
             y: frontWheelCenter.y,
           }
       }

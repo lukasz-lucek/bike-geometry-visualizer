@@ -5,8 +5,8 @@ import {LineMarker, Line} from '../drawing/LineMarker';
 
 export interface TableLineRowPropsType {
   value: number,
-  startPoint: Point2d,
-  endPoint: Point2d,
+  startPoint: Point2d | null,
+  endPoint: Point2d | null,
   strokeWidth: number,
   children: ReactNode,
 }
