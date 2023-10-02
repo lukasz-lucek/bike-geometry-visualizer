@@ -16,10 +16,10 @@ interface RectanglePartGrabberProps {
   }
   pxPerMm : number,
   strokeWidth : number,
-  leftPlacementPoint : Point2d | null,
-  rightPlacementPoint : Point2d | null,
-  desiredPxPerMM: number | null,
-  layer : number,
+  leftPlacementPoint? : Point2d | null,
+  rightPlacementPoint? : Point2d | null,
+  desiredPxPerMM?: number | null,
+  layer? : number,
 }
 
 export function RectanglePartGrabber(

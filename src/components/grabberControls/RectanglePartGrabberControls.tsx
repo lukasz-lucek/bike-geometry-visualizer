@@ -1,7 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import { useGeometryContext } from '../contexts/GeometryContext';
-import OffsetGrabber from './grabbers/OffsetGrabber';
-import RectanglePartGrabber from './grabbers/RectanglePartGrabber';
+import React, { ReactNode, useEffect, useState } from 'react';
+import { GeometryPoints, useGeometryContext } from '../../contexts/GeometryContext';
+import { Point2d } from '../../interfaces/Point2d';
+import { OffsetFixedRectangle } from '../../interfaces/Rectangles';
+import OffsetGrabber from '../grabbers/OffsetGrabber';
+import RectanglePartGrabber from '../grabbers/RectanglePartGrabber';
+
+interface RectanglePartGrabberControlsProps {
+  partKey : keyof GeometryPoints,
+  anchorPoints : {
+    tl: Point2d | null;
+    bl: Point2d | null;
+    tr: Point2d | null;
+    br: Point2d | null;
+  };
+  pxPerMm : number,
+  defaultPartSetup? : {
+    leftOffset : number,
+    rightOffset : number,
+    width: number,
+  };
+  children? : ReactNode;
+  forceOffset? : {
+    left: Boolean;
+    right: Boolean;
+  };
+}
 
 export function RectanglePartGrabberControls({
   partKey,
@@ -16,7 +39,7 @@ export function RectanglePartGrabberControls({
   forceOffset={
     left:false,
     right:false,
-  }}) {
+  }} : RectanglePartGrabberControlsProps) {
 
   const singleStep = 5;
 
@@ -28,7 +51,9 @@ export function RectanglePartGrabberControls({
     state: [geometryState, updateGeometryState],
   } = useGeometryContext();
 
-  const updatePoints = (newPartialPoints) => {
+  const part = (geometryState.geometryPoints[partKey] as OffsetFixedRectangle);
+
+  const updatePoints = (newPartialPoints : Partial<GeometryPoints>) => {
     updateGeometryState({geometryPoints: {...geometryState.geometryPoints, ...newPartialPoints}});
   }
 
@@ -39,20 +64,20 @@ export function RectanglePartGrabberControls({
     }
   }, [geometryState.geometryPoints, defaultPartSetup]);
 
-  const updateLeftOffset = (val) => {
-    let curPartSetup = geometryState.geometryPoints[partKey];
+  const updateLeftOffset = (val : number) => {
+    let curPartSetup = geometryState.geometryPoints[partKey] as OffsetFixedRectangle;
     curPartSetup.leftOffset += val;
     updatePoints(Object.fromEntries([[partKey, curPartSetup]]));
   }
 
-  const updateRightOffset = (val) => {
-    let curPartSetup = geometryState.geometryPoints[partKey];
+  const updateRightOffset = (val : number) => {
+    let curPartSetup = geometryState.geometryPoints[partKey] as OffsetFixedRectangle;
     curPartSetup.rightOffset += val;
     updatePoints(Object.fromEntries([[partKey, curPartSetup]]));
   }
 
-  const updateWidth = (val) => {
-    let curPartSetup = geometryState.geometryPoints[partKey];
+  const updateWidth = (val : number) => {
+    let curPartSetup = geometryState.geometryPoints[partKey] as OffsetFixedRectangle;
     curPartSetup.width += val;
     updatePoints(Object.fromEntries([[partKey, curPartSetup]]));
   }
@@ -69,12 +94,12 @@ export function RectanglePartGrabberControls({
           {(forceOffset.left || anchorPoints.tl != anchorPoints.bl) &&
           <tr onMouseEnter={() => {setLeftOffsetHighlight(true)}} onMouseLeave={() => {setLeftOffsetHighlight(false)}}>
             <td>L-Off</td>
-            <td>{ geometryState.geometryPoints[partKey]?.leftOffset?.toFixed(0)}</td>
+            <td>{ part?.leftOffset?.toFixed(0)}</td>
             <td><button onClick={() => {updateLeftOffset(singleStep)}}>+</button></td>
             <td><button onClick={() => {updateLeftOffset(-singleStep)}}>-</button></td>
             {leftOffsetHighlight &&
               <OffsetGrabber 
-                offset = {geometryState.geometryPoints[partKey]?.leftOffset} 
+                offset = {part?.leftOffset} 
                 topAnchor = {anchorPoints.tl} 
                 bottomAnchor = {anchorPoints.bl}
                 pxPerMm = {pxPerMm}
@@ -85,12 +110,12 @@ export function RectanglePartGrabberControls({
           {(forceOffset.right || anchorPoints.tr != anchorPoints.br) &&
           <tr onMouseEnter={() => {setRightOffsetHighlight(true)}} onMouseLeave={() => {setRightOffsetHighlight(false)}}>
             <td>R-Off</td>
-            <td>{ geometryState.geometryPoints[partKey]?.rightOffset?.toFixed(0)}</td>
+            <td>{ part?.rightOffset?.toFixed(0)}</td>
             <td><button onClick={() => {updateRightOffset(singleStep)}}>+</button></td>
             <td><button onClick={() => {updateRightOffset(-singleStep)}}>-</button></td>
             {rightOffsetHighlight &&
               <OffsetGrabber 
-                offset = {geometryState.geometryPoints[partKey]?.rightOffset} 
+                offset = {part?.rightOffset} 
                 topAnchor = {anchorPoints.tr} 
                 bottomAnchor = {anchorPoints.br}
                 pxPerMm = {pxPerMm}
@@ -100,14 +125,14 @@ export function RectanglePartGrabberControls({
 
           <tr onMouseEnter={() => {setPartHighlight(true)}} onMouseLeave={() => {setPartHighlight(false)}}>
             <td>Width</td>
-            <td>{ geometryState.geometryPoints[partKey]?.width?.toFixed(0)}</td>
+            <td>{ part?.width?.toFixed(0)}</td>
             <td><button onClick={() => {updateWidth(singleStep)}}>+</button></td>
             <td><button onClick={() => {updateWidth(-singleStep)}}>-</button></td>
             {(partHighlight || leftOffsetHighlight || rightOffsetHighlight) &&
               <RectanglePartGrabber 
-                leftOffset = {geometryState.geometryPoints[partKey]?.leftOffset} 
-                rightOffset = {geometryState.geometryPoints[partKey]?.rightOffset} 
-                width = {geometryState.geometryPoints[partKey]?.width}
+                leftOffset = {part?.leftOffset} 
+                rightOffset = {part?.rightOffset} 
+                width = {part?.width}
                 anchorPoints = {anchorPoints}
                 pxPerMm = {pxPerMm}
                 strokeWidth = {1}/>}

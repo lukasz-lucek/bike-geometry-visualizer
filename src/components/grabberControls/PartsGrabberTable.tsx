@@ -1,24 +1,29 @@
 // src/components/BikeGeometryTable.js
 import React from 'react';
-import { findPxPerMm } from '../utils/GeometryUtils';
-import CirclePartGrabberControls from './CirclePartsGrabberControls.js';
-import PertrudingPartGrabberControls from './PertrudingPartGrabberControls.js';
-import RectanglePartGrabberControls from './RectanglePartGrabberControls.js';
-import StemPartGrabberControls from './StemPartGrabberControls.js';
+import { useGeometryContext } from '../../contexts/GeometryContext';
+import { findPxPerMm } from '../../utils/GeometryUtils';
+import CirclePartGrabberControls from './CirclePartsGrabberControls';
+import PertrudingPartGrabberControls from './PertrudingPartGrabberControls';
+import RectanglePartGrabberControls from './RectanglePartGrabberControls';
+import StemPartGrabberControls from './StemPartGrabberControls';
 
-const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
+const PartsGrabberTable = () => {
+  const {
+    state: [geometryState, ],
+  } = useGeometryContext();
 
-  const pxPerMm = findPxPerMm(points["rearWheelCenter"], points["frontWheelCenter"], wheelbase)
+  const points = geometryState.geometryPoints;
+  const pxPerMm = findPxPerMm(points.rearWheelCenter, points.frontWheelCenter, geometryState.wheelbase) ?? 0;
 
   return (
     <div>
       <div className="bike-geometry-table">
         <div>
           <RectanglePartGrabberControls partKey="topTube" anchorPoints={{
-            tl: "seatTubeTop",
-            bl: "bottomBracketCenter",
-            tr: "headTubeTop",
-            br: "headTubeBottom"
+            tl: points.seatTubeTop,
+            bl: points.bottomBracketCenter,
+            tr: points.headTubeTop,
+            br: points.headTubeBottom
           }}
           pxPerMm = {pxPerMm}
           defaultPartSetup={{
@@ -30,10 +35,10 @@ const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
           </RectanglePartGrabberControls>
 
           <RectanglePartGrabberControls partKey="bottomTube" anchorPoints={{
-            tl: "bottomBracketCenter",
-            bl: "bottomBracketCenter",
-            tr: "headTubeBottom",
-            br: "headTubeTop"
+            tl: points.bottomBracketCenter,
+            bl: points.bottomBracketCenter,
+            tr: points.headTubeBottom,
+            br: points.headTubeTop
           }}
           pxPerMm = {pxPerMm}
           defaultPartSetup={{
@@ -45,10 +50,10 @@ const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
           </RectanglePartGrabberControls>
 
           <RectanglePartGrabberControls partKey="headTube" anchorPoints={{
-            tl: "headTubeTop",
-            bl: "headTubeTop",
-            tr: "headTubeBottom",
-            br: "headTubeBottom"
+            tl: points.headTubeTop,
+            bl: points.headTubeTop,
+            tr: points.headTubeBottom,
+            br: points.headTubeBottom
           }}
           pxPerMm = {pxPerMm}
           defaultPartSetup={{
@@ -60,10 +65,10 @@ const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
           </RectanglePartGrabberControls>
 
           <RectanglePartGrabberControls partKey="seatTube" anchorPoints={{
-            tl: "seatTubeTop",
-            bl: "seatTubeTop",
-            tr: "bottomBracketCenter",
-            br: "bottomBracketCenter"
+            tl: points.seatTubeTop,
+            bl: points.seatTubeTop,
+            tr: points.bottomBracketCenter,
+            br: points.bottomBracketCenter
           }}
           pxPerMm = {pxPerMm}
           defaultPartSetup={{
@@ -75,10 +80,10 @@ const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
           </RectanglePartGrabberControls>
 
           <RectanglePartGrabberControls partKey="fork" anchorPoints={{
-            tl: "headTubeBottom",
-            bl: "headTubeBottom",
-            tr: "frontWheelCenter",
-            br: "frontWheelCenter"
+            tl: points.headTubeBottom,
+            bl: points.headTubeBottom,
+            tr: points.frontWheelCenter,
+            br: points.frontWheelCenter
           }}
           pxPerMm = {pxPerMm}
           defaultPartSetup={{
@@ -90,10 +95,10 @@ const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
           </RectanglePartGrabberControls>
 
           <RectanglePartGrabberControls partKey="chainstay" anchorPoints={{
-            tl: "rearWheelCenter",
-            bl: "rearWheelCenter",
-            tr: "bottomBracketCenter",
-            br: "bottomBracketCenter"
+            tl: points.rearWheelCenter,
+            bl: points.rearWheelCenter,
+            tr: points.bottomBracketCenter,
+            br: points.bottomBracketCenter
           }}
           pxPerMm = {pxPerMm}
           defaultPartSetup={{
@@ -105,10 +110,10 @@ const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
           </RectanglePartGrabberControls>
 
           <RectanglePartGrabberControls partKey="seatstay" anchorPoints={{
-            tl: "rearWheelCenter",
-            bl: "rearWheelCenter",
-            tr: "seatTubeTop",
-            br: "bottomBracketCenter"
+            tl: points.rearWheelCenter,
+            bl: points.rearWheelCenter,
+            tr: points.seatTubeTop,
+            br: points.bottomBracketCenter
           }}
           pxPerMm = {pxPerMm}
           defaultPartSetup={{
@@ -125,10 +130,10 @@ const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
         </div>
         <div>
           <RectanglePartGrabberControls partKey="crankArm" anchorPoints={{
-            tl: "bottomBracketCenter",
-            bl: "bottomBracketCenter",
-            tr: "crankArmEnd",
-            br: "crankArmEnd"
+            tl: points.bottomBracketCenter,
+            bl: points.bottomBracketCenter,
+            tr: points.crankArmEnd,
+            br: points.crankArmEnd
           }}
           pxPerMm = {pxPerMm}
           defaultPartSetup={{
@@ -140,7 +145,7 @@ const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
           </RectanglePartGrabberControls>
           <CirclePartGrabberControls
             partKey="rearWheel"
-            centerPoint="rearWheelCenter"
+            centerPoint={geometryState.geometryPoints.rearWheelCenter}
             pxPerMm = {pxPerMm}
             defaultPartSetup={{
               radius: 350,
@@ -149,7 +154,7 @@ const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
           </CirclePartGrabberControls>
           <CirclePartGrabberControls
             partKey="frontWheel"
-            centerPoint="frontWheelCenter"
+            centerPoint={geometryState.geometryPoints.frontWheelCenter}
             pxPerMm = {pxPerMm}
             defaultPartSetup={{
               radius: 350,
@@ -158,7 +163,7 @@ const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
           </CirclePartGrabberControls>
           <CirclePartGrabberControls
             partKey="chainring"
-            centerPoint="bottomBracketCenter"
+            centerPoint={geometryState.geometryPoints.bottomBracketCenter}
             pxPerMm = {pxPerMm}
             defaultPartSetup={{
               radius: 100,
@@ -168,8 +173,8 @@ const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
           <PertrudingPartGrabberControls
             partKey="seatpost"
             anchorPoints={{
-              tl: "seatTubeTop",
-              bl: "bottomBracketCenter"
+              tl: geometryState.geometryPoints.seatTubeTop,
+              bl: geometryState.geometryPoints.bottomBracketCenter
             }}
             pxPerMm = {pxPerMm}
             lengthName = "length"
@@ -183,8 +188,8 @@ const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
           <PertrudingPartGrabberControls
             partKey="headstack"
             anchorPoints={{
-              tl: "headTubeTop",
-              bl: "headTubeBottom"
+              tl: geometryState.geometryPoints.headTubeTop,
+              bl: geometryState.geometryPoints.headTubeBottom
             }}
             pxPerMm = {pxPerMm}
             lengthName = "height"
@@ -199,10 +204,10 @@ const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
           <StemPartGrabberControls
             partKey="stem"
             anchorPoints={{
-              tl: "headTubeTop",
-              bl: "headTubeBottom",
-              tr: "handlebarMount",
-              offset: "headstack"
+              tl: geometryState.geometryPoints.headTubeTop,
+              bl: geometryState.geometryPoints.headTubeBottom,
+              tr: geometryState.geometryPoints.handlebarMount,
+              offset: geometryState.geometryPoints.headstack
             }}
             pxPerMm = {pxPerMm}
             defaultPartSetup={{
@@ -213,7 +218,7 @@ const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
 
           <CirclePartGrabberControls
             partKey="seatpostYoke"
-            centerPoint="seatMount"
+            centerPoint={geometryState.geometryPoints.seatMount}
             pxPerMm = {pxPerMm}
             defaultPartSetup={{
               radius: 30,
@@ -227,4 +232,4 @@ const PartsGrabberSpecs = ({ points, wheelbase, updatePoints }) => {
   );
 };
 
-export default PartsGrabberSpecs;
+export default PartsGrabberTable;

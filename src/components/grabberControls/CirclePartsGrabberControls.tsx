@@ -1,7 +1,19 @@
-import React, { Children, useEffect, useState } from 'react';
-import { useCanvasContext } from '../contexts/CanvasContext';
-import { useGeometryContext } from '../contexts/GeometryContext';
-import { CirclePartGrabber } from './grabbers/CirclePartGrabber';
+import React, { Children, ReactNode, useEffect, useState } from 'react';
+import { useCanvasContext } from '../../contexts/CanvasContext';
+import { GeometryPoints, useGeometryContext } from '../../contexts/GeometryContext';
+import { FixedCircle } from '../../interfaces/FixedCircle';
+import { Point2d } from '../../interfaces/Point2d';
+import { CirclePartGrabber } from '../grabbers/CirclePartGrabber';
+
+interface CirclePartGrabberControlsProps {
+  partKey : keyof GeometryPoints;
+  centerPoint : Point2d | null;
+  pxPerMm: number;
+  defaultPartSetup : {
+    radius: number;
+  }
+  children : ReactNode;
+}
 
 export function CirclePartGrabberControls({
   partKey,
@@ -10,11 +22,7 @@ export function CirclePartGrabberControls({
   defaultPartSetup={
     radius : 100
   },
-  children}) {
-
-  const {
-    state: [canvasState, ],
-  } = useCanvasContext(); 
+  children} : CirclePartGrabberControlsProps) {
 
   const singleStep = 5;
 
@@ -24,7 +32,7 @@ export function CirclePartGrabberControls({
     state: [geometryState, updateGeometryState],
   } = useGeometryContext();
 
-  const updatePoints = (newPartialPoints) => {
+  const updatePoints = (newPartialPoints : Partial<GeometryPoints>) => {
     updateGeometryState({geometryPoints: {...geometryState.geometryPoints, ...newPartialPoints}});
   }
 
@@ -35,8 +43,8 @@ export function CirclePartGrabberControls({
     }
   }, [geometryState.geometryPoints, defaultPartSetup]);
 
-  const updateRadius = (val) => {
-    let curPartSetup = geometryState.geometryPoints[partKey];
+  const updateRadius = (val : number) => {
+    let curPartSetup = geometryState.geometryPoints[partKey] as FixedCircle;
     curPartSetup.radius += val;
     updatePoints(Object.fromEntries([[partKey, curPartSetup]]));
   }
@@ -53,12 +61,12 @@ export function CirclePartGrabberControls({
 
           <tr onMouseEnter={() => {setPartHighlight(true)}} onMouseLeave={() => {setPartHighlight(false)}}>
             <td>Radius</td>
-            <td>{ geometryState.geometryPoints[partKey]?.radius?.toFixed(0)}</td>
+            <td>{ (geometryState.geometryPoints[partKey] as FixedCircle)?.radius?.toFixed(0)}</td>
             <td><button onClick={() => {updateRadius(singleStep)}}>+</button></td>
             <td><button onClick={() => {updateRadius(-singleStep)}}>-</button></td>
             {partHighlight &&
               <CirclePartGrabber
-                radius = {geometryState.geometryPoints[partKey]?.radius}
+                radius = {(geometryState.geometryPoints[partKey] as FixedCircle)?.radius}
                 centerPoint = {centerPoint}
                 pxPerMm = {pxPerMm}
                 strokeWidth = {1}/>}

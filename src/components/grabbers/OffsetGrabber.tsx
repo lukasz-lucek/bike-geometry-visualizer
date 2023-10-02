@@ -6,8 +6,8 @@ import LineMarker, { Line } from '../drawing/LineMarker';
 
 export interface TableAngleRowPropsType {
   offset: number,
-  topAnchor: Point2d,
-  bottomAnchor: Point2d,
+  topAnchor: Point2d | null,
+  bottomAnchor: Point2d | null,
   pxPerMm: number,
   strokeWidth: number,
 }

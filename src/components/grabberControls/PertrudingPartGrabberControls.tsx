@@ -1,7 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { useCanvasContext } from '../contexts/CanvasContext';
-import { useGeometryContext } from '../contexts/GeometryContext';
-import PertrudingPartGrabber from './grabbers/PertrudingPartGrabber';
+import React, { ReactNode, useEffect, useState } from 'react';
+import { useCanvasContext } from '../../contexts/CanvasContext';
+import { GeometryPoints, useGeometryContext } from '../../contexts/GeometryContext';
+import { Point2d } from '../../interfaces/Point2d';
+import { SemiFixedRectangle } from '../../interfaces/Rectangles';
+import PertrudingPartGrabber from '../grabbers/PertrudingPartGrabber';
+
+interface PertrudingPartGrabberControlsProps {
+  partKey : keyof GeometryPoints;
+  anchorPoints : {
+    tl: Point2d | null;
+    bl: Point2d | null;
+  }
+  pxPerMm: number;
+  lengthName: string,
+  widthName: string,
+  defaultPartSetup : {
+    length: number;
+    width: number;
+  }
+  children : ReactNode;
+}
 
 export function PertrudingPartGrabberControls({
   partKey,
@@ -14,7 +32,7 @@ export function PertrudingPartGrabberControls({
     width : 30,
   },
   children
-}) {
+} : PertrudingPartGrabberControlsProps) {
 
   const {
     state: [canvasState, ],
@@ -28,7 +46,7 @@ export function PertrudingPartGrabberControls({
     state: [geometryState, updateGeometryState],
   } = useGeometryContext();
 
-  const updatePoints = (newPartialPoints) => {
+  const updatePoints = (newPartialPoints : Partial<GeometryPoints>) => {
     updateGeometryState({geometryPoints: {...geometryState.geometryPoints, ...newPartialPoints}});
   }
 
@@ -39,14 +57,14 @@ export function PertrudingPartGrabberControls({
     }
   }, [geometryState.geometryPoints]);
 
-  const updateLength = (val) => {
-    let curPartSetup = geometryState.geometryPoints[partKey];
+  const updateLength = (val : number) => {
+    let curPartSetup = geometryState.geometryPoints[partKey] as SemiFixedRectangle;
     curPartSetup.length += val;
     updatePoints(Object.fromEntries([[partKey, curPartSetup]]));
   }
 
-  const updateWidth = (val) => {
-    let curPartSetup = geometryState.geometryPoints[partKey];
+  const updateWidth = (val : number) => {
+    let curPartSetup = geometryState.geometryPoints[partKey] as SemiFixedRectangle;
     curPartSetup.width += val;
     updatePoints(Object.fromEntries([[partKey, curPartSetup]]));
   }
@@ -62,22 +80,22 @@ export function PertrudingPartGrabberControls({
         <tbody>
           <tr onMouseEnter={() => {setPartHighlight(true)}} onMouseLeave={() => {setPartHighlight(false)}}>
             <td>{lengthName ? lengthName : "Length"}</td>
-            <td>{ geometryState.geometryPoints && geometryState.geometryPoints[partKey]?.length?.toFixed(0)}</td>
+            <td>{ geometryState.geometryPoints && (geometryState.geometryPoints[partKey] as SemiFixedRectangle)?.length?.toFixed(0)}</td>
             <td><button onClick={() => {updateLength(singleStep)}}>+</button></td>
             <td><button onClick={() => {updateLength(-singleStep)}}>-</button></td>
           </tr>
 
           <tr onMouseEnter={() => {setPartHighlight(true)}} onMouseLeave={() => {setPartHighlight(false)}}>
             <td>{widthName ? widthName : "Width"}</td>
-            <td>{ geometryState.geometryPoints && geometryState.geometryPoints[partKey]?.width?.toFixed(0)}</td>
+            <td>{ geometryState.geometryPoints && (geometryState.geometryPoints[partKey] as SemiFixedRectangle)?.width?.toFixed(0)}</td>
             <td><button onClick={() => {updateWidth(singleStep)}}>+</button></td>
             <td><button onClick={() => {updateWidth(-singleStep)}}>-</button></td>
           </tr>
 
           {partHighlight &&
               <PertrudingPartGrabber 
-                width = {geometryState.geometryPoints[partKey]?.width}
-                length = {geometryState.geometryPoints[partKey]?.length}
+                width = {(geometryState.geometryPoints[partKey] as SemiFixedRectangle)?.width}
+                length = {(geometryState.geometryPoints[partKey] as SemiFixedRectangle)?.length}
                 anchorPoints = {anchorPoints}
                 pxPerMm = {pxPerMm}
                 strokeWidth = {1}/>}

@@ -8,9 +8,9 @@ interface CirclePartGrabberProps {
   centerPoint : Point2d | null;
   pxPerMm : number,
   strokeWidth : number,
-  placementPoint : Point2d | null,
-  desiredPxPerMM: number | null,
-  layer : number,
+  placementPoint? : Point2d | null,
+  desiredPxPerMM? : number | null,
+  layer? : number,
 }
 
 export function CirclePartGrabber(
@@ -40,7 +40,7 @@ export function CirclePartGrabber(
         endAngle: 360,
       },
       strokeWidth: strokeWidth,
-      color: Color('blue')
+      color: Color('red')
     }
     setCircleMarker(newCircleMarker);
     if (desiredPxPerMM != null) {

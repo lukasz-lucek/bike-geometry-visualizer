@@ -3,7 +3,7 @@ import { FixedCircle } from '../interfaces/FixedCircle';
 import { ColorPoint2d } from '../interfaces/Point2d';
 import { FixedRectangle, OffsetFixedRectangle, SemiFixedRectangle } from '../interfaces/Rectangles';
 
-interface GeometryPoints {
+export interface GeometryPoints {
   rearWheelCenter:  ColorPoint2d | null,
   frontWheelCenter: ColorPoint2d | null,
   headTubeTop: ColorPoint2d | null,

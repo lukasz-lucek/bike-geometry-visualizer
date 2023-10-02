@@ -14,10 +14,10 @@ interface PertrudingPartGrabberProps {
   }
   pxPerMm : number,
   strokeWidth : number,
-  leftPlacementPoint : Point2d | null,
-  rightPlacementPoint : Point2d | null,
-  layer : number,
-  desiredPxPerMM: number | null,
+  leftPlacementPoint? : Point2d | null,
+  rightPlacementPoint? : Point2d | null,
+  layer? : number,
+  desiredPxPerMM?: number | null,
 }
 
 export function PertrudingPartGrabber({

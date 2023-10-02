@@ -3,7 +3,7 @@ import React, { useState, useRef } from 'react';
 import { useCanvasContext } from '../contexts/CanvasContext'; // Import the useCanvasContext hook
 import BikeGeometryTable from '../components/BikeGeometryTable.js';
 import '../App.css';
-import PartsGrabberSpecs from './PartsGrabberSpecs.js';
+import PartsGrabberTable from './grabberControls/PartsGrabberTable';
 import { useGeometryContext } from '../contexts/GeometryContext';
 import BackgroundImage from "../components/BackgroundImage.js"
 import GeometryPointVisualization from './GeometryPointsVisualization.js';
@@ -176,7 +176,7 @@ const ImageGeometryGrabber = () => {
         <BikeGeometryTable points={geometryState.geometryPoints} wheelbase={geometryState.wheelbase} updatePoints={updatePoints}>
           Bike Geometry Specifications
         </BikeGeometryTable>
-        <PartsGrabberSpecs points={geometryState.geometryPoints} wheelbase={geometryState.wheelbase} updatePoints={updatePoints}/>
+        <PartsGrabberTable points={geometryState.geometryPoints} wheelbase={geometryState.wheelbase} updatePoints={updatePoints}/>
         {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'}/>}
         <GeometryPointVisualization pointsSet={geometryState.geometryPoints}/>
         {canvasState.canvas && <PointPickerControls ref={pointPickerControlsRef} canvas={canvasState.canvas}/>}

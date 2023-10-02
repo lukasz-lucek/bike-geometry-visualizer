@@ -123,9 +123,9 @@ const findBBFromImage = (image : fabric.Image) : BoundingBox => {
     return findBBFromACoords(findACoordsFromImage(image));
 }
 
-const findPxPerMm = (point1 : Point2d, point2 : Point2d, distance : number) : number | null => {
+const findPxPerMm = (point1 : Point2d | null, point2 : Point2d | null, distance : number | null) : number | null => {
 
-  if (point1 && point2) {
+  if (point1 && point2 && distance && distance != 0) {
     const distancePx = Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2));
     return distancePx / distance;
   }
