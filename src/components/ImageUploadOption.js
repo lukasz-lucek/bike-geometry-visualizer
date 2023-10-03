@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useCanvasContext } from '../contexts/CanvasContext'; // Import the useCanvasContext hook
 import '../App.css';
 import { useGeometryContext } from '../contexts/GeometryContext';
-import BackgroundImage from "../components/BackgroundImage.js"
+import BackgroundImage from "./drawing/BackgroundImage"
 
 const ImageUploadOption = () => {
   const defaultState = {

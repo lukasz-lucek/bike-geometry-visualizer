@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useCanvasContext } from '../contexts/CanvasContext';
 import SizesTable from '../components/SizesTable.js';
 import { useGeometryContext } from '../contexts/GeometryContext';
-import BackgroundImage from './BackgroundImage.js';
+import BackgroundImage from './drawing/BackgroundImage';
 
 const FrameGeometryInput = () => {
   const {

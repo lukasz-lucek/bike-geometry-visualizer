@@ -5,7 +5,7 @@ import BikeGeometryTable from './bikeGeometryTable/BikeGeometryTable';
 import '../App.css';
 import PartsGrabberTable from './grabberControls/PartsGrabberTable';
 import { useGeometryContext } from '../contexts/GeometryContext';
-import BackgroundImage from "../components/BackgroundImage.js"
+import BackgroundImage from "./drawing/BackgroundImage"
 import GeometryPointVisualization from './GeometryPointsVisualization.js';
 import PointPickerControls from './PointPickerControls.js';
 
