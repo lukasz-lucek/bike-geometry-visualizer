@@ -1,8 +1,13 @@
 import React, { useRef, useEffect } from 'react';
 import { fabric } from 'fabric';
+import { useCanvasContext } from '../../contexts/CanvasContext';
 
-export function Canvas({setCanvas, children}) {
+export function Canvas() {
   const canvasRef = useRef(null);
+
+  const {
+    state: [, updateCanvasState],
+  } = useCanvasContext();
 
   useEffect(() => {
     console.log("CREATING NEW CANVAS!!!")
@@ -24,17 +29,18 @@ export function Canvas({setCanvas, children}) {
       fabricCanvas.renderAll();
     })
     fabricCanvas.renderAll();
-    setCanvas(fabricCanvas);
+    updateCanvasState({
+      canvas: fabricCanvas,
+    });
 
     return () => {
         fabricCanvas.dispose();
     };
-  }, [setCanvas]);
+  }, []);
 
   return (
     <>
         <canvas ref={canvasRef} width="1200" height="920"/>
-        {children}
     </>
   );
 }

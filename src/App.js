@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import './App.css';
 import ToolSelection from './components/ToolSelection.js'; // Import the ToolSelection component
 import ToolOptionsArea from './components/ToolOptionsArea.js'; // Import the ToolOptionsArea component
-import Workspace from './components/Workspace.js'; // Import the Workspace component
 import { CanvasProvider } from './contexts/CanvasContext'; // Update the import path
 import GeometryProvider from './contexts/GeometryContext';
 import MeasurementsProvider from './contexts/MeasurementsContext';
+import { Canvas } from './components/drawing/Canvas';
 
 
 
@@ -28,7 +28,7 @@ const App = () => {
               <ToolOptionsArea selectedTool={selectedTool} />
             </div>
             <div className="workspace">
-              <Workspace />
+              <Canvas/>
             </div>
           </div>
         </MeasurementsProvider>
