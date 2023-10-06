@@ -1,5 +1,5 @@
 import React from 'react';
-import GeometrySaver from './GeometrySaver';
+import GeometrySaver from './storage/GeometrySaver';
 
 const ToolSelection = ({ selectedTool, handleToolSelect }) => {
   const tools = [

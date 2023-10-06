@@ -66,11 +66,12 @@ const defaultGeometryPoints : GeometryPoints = {
   seatpostYoke: null,
 }
 
-interface GeometryState {
+export interface GeometryState {
   wheelbase: number | null,
   geometryPoints: GeometryPoints,
   selectedFile: null | string,
   bikesList: string[],
+  sizesTable: {}
 }
 
 interface GeometryContextType {
@@ -98,6 +99,7 @@ export const GeometryProvider = ({ children } : {children : ReactNode}) => {
     geometryPoints: defaultGeometryPoints,
     selectedFile: null,
     bikesList: bikesList,
+    sizesTable: {}
   }
 
   const [state, setState] = useState(defaultState);

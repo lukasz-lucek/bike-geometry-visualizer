@@ -1,11 +1,17 @@
 // src/components/DropdownActions.js
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 
-const DropdownActions = ({ items, onLoad, onRemove }) => {
+interface DropdownActionsProps {
+  items : string[];
+  onLoad : (s: string) => void;
+  onRemove : (s : string) => void;
+}
+
+const DropdownActions = ({ items, onLoad, onRemove } : DropdownActionsProps) => {
   const [selectedItem, setSelectedItem] = useState('');
   const [buttonsEnabled, setButtonsEnabled] = useState(false);
 
-  const handleDropdownChange = (event) => {
+  const handleDropdownChange = (event : ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = event.target.value;
     setSelectedItem(selectedValue);
     setButtonsEnabled(true);
