@@ -1,26 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { fabric } from 'fabric';
-import { useCanvasContext } from '../contexts/CanvasContext';
+import { useCanvasContext } from '../../contexts/CanvasContext';
+import { ColorPoint2d } from '../../interfaces/Point2d';
 
-export function PointMarker({shape}) {
+export function PointMarker({shape} : {shape: ColorPoint2d}) {
   const {
     state: [canvasState, ],
   } = useCanvasContext();
   
   useEffect(() => {
     const canvas = canvasState.canvas;
+    if (!canvas) {
+      return;
+    }
     const circle = new fabric.Circle({
       radius: 13,
       fill: 'transparent', // Set the fill to transparent
-      stroke: shape.color, // Set the stroke color
+      stroke: shape.color.toString(), // Set the stroke color
       strokeWidth: 3, // Set the stroke width
       selectable: false,
       evented: false,
-      left: shape.shape.x - 13,
-      top: shape.shape.y - 13,
+      left: shape.x - 13,
+      top: shape.y - 13,
     });
 
-    canvas.insertAt(circle, 1);
+    canvas.insertAt(circle, 1, false);
     canvas.renderAll();
 
     return () => {

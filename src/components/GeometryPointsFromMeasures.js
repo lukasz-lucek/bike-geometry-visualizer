@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { useGeometryContext } from '../contexts/GeometryContext';
 import { findPxPerMm, findIntermediatePoint, findPointFromPointAngleLength} from '../utils/GeometryUtils';
 import BikeImageStitcher from './stitchers/BikeImageStitcher';
-import GeometryPointVisualization from './GeometryPointsVisualization.js';
+import GeometryPointVisualization from './drawing/GeometryPointsVisualization';
 
 const GeometryPointsFromMeasures = ({ sizeMeasures, desiredPxPerMM=null}) => {
   
@@ -91,7 +91,6 @@ const GeometryPointsFromMeasures = ({ sizeMeasures, desiredPxPerMM=null}) => {
             y:rearWheelCenter.y-10,
           }
           const seatStayLeftPoint = findIntermediatePoint(rearWheelCenter, rwcl, geometryContext.geometryPoints.seatstay.leftOffset * dPPMM);
-          console.log("seatStayLeftPoint:", seatStayLeftPoint);
           seatStayLeft = {
             x: seatStayLeftPoint.x,
             y: seatStayLeftPoint.y,
@@ -181,7 +180,6 @@ const GeometryPointsFromMeasures = ({ sizeMeasures, desiredPxPerMM=null}) => {
               }
               if (sizeMeasures.stemLength) {
                 const trueAngle = sizeMeasures.stemAngle + sizeMeasures.headAngle - 90;
-                console.log("trueAngle: ", trueAngle);
                 const handlebarMountPoint = findPointFromPointAngleLength(stemStartPoint, trueAngle, sizeMeasures.stemLength * dPPMM);
                 handlebarMount = {
                   x: handlebarMountPoint.x,
