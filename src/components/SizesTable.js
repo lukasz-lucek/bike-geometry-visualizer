@@ -1,7 +1,7 @@
 // src/components/FrameGeometryInput.js
 import React, { useEffect, useState } from 'react';
 import { useMeasurementsContext } from '../contexts/MeasurementsContext';
-import GeometryPointsFromMeasures from './GeometryPointsFromMeasures';
+import GeometryPointsFromMeasures from './stitchers/GeometryPointsFromMeasures';
 
 const SizesTable = ({state, updateState }) => {
   const [sizeName, setSizeName] = useState('');

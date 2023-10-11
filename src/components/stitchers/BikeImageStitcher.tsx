@@ -1,28 +1,28 @@
 import React, {useEffect, useState} from 'react';
 import { useGeometryContext } from '../../contexts/GeometryContext';
-import { Point2d } from '../../interfaces/Point2d';
+import { ColorPoint2d, Point2d } from '../../interfaces/Point2d';
 import { findIntermediatePoint, findPxPerMm } from '../../utils/GeometryUtils';
 import CirclePartGrabber from '../grabbers/CirclePartGrabber';
 import PertrudingPartGrabber from '../grabbers/PertrudingPartGrabber';
 import RectanglePartGrabber from '../grabbers/RectanglePartGrabber';
 
 export interface DestinationGeometryPoints {
-  rearWheelCenter: Point2d;
-  frontWheelCenter: Point2d;
-  bottomBracketCenter: Point2d;
-  seatTubeTop: Point2d;
-  headTubeTop: Point2d;
-  headTubeBottom: Point2d;
-  seatStayRight: Point2d;
-  seatStayLeft: Point2d;
-  topTubeLeft: Point2d;
-  topTubeRight: Point2d;
-  bottomTubeRight: Point2d;
-  crankArmEnd: Point2d;
-  seatpostEnd: Point2d;
-  spacersEnd: Point2d;
-  stemStart: Point2d;
-  handlebarMount: Point2d;
+  rearWheelCenter: ColorPoint2d | null;
+  frontWheelCenter: ColorPoint2d | null;
+  bottomBracketCenter: ColorPoint2d | null;
+  seatTubeTop: ColorPoint2d | null;
+  headTubeTop: ColorPoint2d | null;
+  headTubeBottom: ColorPoint2d | null;
+  seatStayRight: ColorPoint2d | null;
+  seatStayLeft: ColorPoint2d | null;
+  topTubeLeft: ColorPoint2d | null;
+  topTubeRight: ColorPoint2d | null;
+  bottomTubeRight: ColorPoint2d | null;
+  crankArmEnd: ColorPoint2d | null;
+  seatpostEnd: ColorPoint2d | null;
+  spacersEnd: ColorPoint2d | null;
+  stemStart: ColorPoint2d | null;
+  handlebarMount: ColorPoint2d | null;
 }
 
 interface BikeImageStitcherProps {

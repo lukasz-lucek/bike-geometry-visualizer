@@ -1,32 +1,76 @@
 import React, {useEffect, useState} from 'react';
-import { useGeometryContext } from '../contexts/GeometryContext';
-import { findPxPerMm, findIntermediatePoint, findPointFromPointAngleLength} from '../utils/GeometryUtils';
-import BikeImageStitcher from './stitchers/BikeImageStitcher';
-import GeometryPointVisualization from './drawing/GeometryPointsVisualization';
+import { GeometryPoints, useGeometryContext } from '../../contexts/GeometryContext';
+import { findPxPerMm, findIntermediatePoint, findPointFromPointAngleLength} from '../../utils/GeometryUtils';
+import BikeImageStitcher, { DestinationGeometryPoints } from './BikeImageStitcher';
+import GeometryPointVisualization from '../drawing/GeometryPointsVisualization';
+import Color from 'color';
+import { ColorPoint2d } from '../../interfaces/Point2d';
 
-const GeometryPointsFromMeasures = ({ sizeMeasures, desiredPxPerMM=null}) => {
+export interface SizeMeasures {
+  wheelbase : number;
+  bbDrop: number;
+  chainstay: number;
+  seatAngle: number;
+  seatTubeCT: number;
+  crankArm: number;
+  stack: number;
+  reach: number;
+  headAngle: number;
+  headTube: number;
+  spacersStack: number;
+  stemLength: number;
+  stemAngle: number;
+}
+
+const GeometryPointsFromMeasures = ({
+  sizeMeasures,
+  desiredPxPerMM=null
+} : {
+  sizeMeasures : SizeMeasures;
+  desiredPxPerMM : number | null;
+}) => {
   
   const {
     state: [geometryContext, ],
   } = useGeometryContext();
 
-  const [state, updateState] = useState();
+  const [state, updateState] = useState<DestinationGeometryPoints>({
+    rearWheelCenter: null,
+    frontWheelCenter: null,
+    bottomBracketCenter: null,
+    seatTubeTop: null,
+    headTubeTop: null,
+    headTubeBottom: null,
+    seatStayRight: null,
+    seatStayLeft: null,
+    topTubeLeft: null,
+    topTubeRight: null,
+    bottomTubeRight: null,
+    crankArmEnd: null,
+    seatpostEnd: null,
+    spacersEnd: null,
+    stemStart: null,
+    handlebarMount: null,
+  });
 
   useEffect(() => {
     const orgRearWheelCenter = geometryContext.geometryPoints?.rearWheelCenter;
     const orgFrontWheelCenter = geometryContext.geometryPoints?.frontWheelCenter;
     const orgWheelbase = geometryContext.wheelbase;
 
-    const pointsColor = "red";
-    const helperPointsColor = "blue";
+    const pointsColor = Color("red");
+    const helperPointsColor = Color("blue");
 
     if (!orgRearWheelCenter || !orgFrontWheelCenter || !orgWheelbase) {
       return;
     }
     const pxPerMm = findPxPerMm(orgRearWheelCenter, orgFrontWheelCenter, orgWheelbase);
-    let dPPMM = desiredPxPerMM;
-    if (!desiredPxPerMM) {
-      dPPMM = pxPerMm;
+    if (!pxPerMm) {
+      return;
+    }
+    let dPPMM = pxPerMm;
+    if (desiredPxPerMM) {
+      dPPMM = desiredPxPerMM;
     }
 
     const rearWheelCenter = {
@@ -44,20 +88,20 @@ const GeometryPointsFromMeasures = ({ sizeMeasures, desiredPxPerMM=null}) => {
       }
     }
 
-    let bottomBracketCenter = null;
-    let seatTubeTop = null;
-    let headTubeTop = null;
-    let headTubeBottom = null;
-    let seatStayRight= null;
-    let seatStayLeft=null;
-    let topTubeLeft = null;
-    let topTubeRight = null;
-    let bottomTubeRight = null;
-    let crankArmEnd = null;
-    let seatpostEnd = null;
-    let spacersEnd = null;
-    let stemStart = null;
-    let handlebarMount = null;
+    let bottomBracketCenter : ColorPoint2d | null = null;
+    let seatTubeTop : ColorPoint2d | null = null;
+    let headTubeTop : ColorPoint2d | null = null;
+    let headTubeBottom : ColorPoint2d | null = null;
+    let seatStayRight : ColorPoint2d | null = null;
+    let seatStayLeft : ColorPoint2d | null = null;
+    let topTubeLeft : ColorPoint2d | null = null;
+    let topTubeRight : ColorPoint2d | null = null;
+    let bottomTubeRight : ColorPoint2d | null = null;
+    let crankArmEnd : ColorPoint2d | null = null;
+    let seatpostEnd : ColorPoint2d | null = null;
+    let spacersEnd : ColorPoint2d | null = null;
+    let stemStart : ColorPoint2d | null = null;
+    let handlebarMount : ColorPoint2d | null = null;
 
     const bb = sizeMeasures.bbDrop;
     const cs = sizeMeasures.chainstay;
@@ -82,8 +126,8 @@ const GeometryPointsFromMeasures = ({ sizeMeasures, desiredPxPerMM=null}) => {
         if (geometryContext.geometryPoints.seatstay) {
           const seatStayRightPoint = findIntermediatePoint(seatTubeTop, bottomBracketCenter, geometryContext.geometryPoints.seatstay.rightOffset * dPPMM);
           seatStayRight = {
-            x: seatStayRightPoint.x,
-            y: seatStayRightPoint.y,
+            x: seatStayRightPoint!.x,
+            y: seatStayRightPoint!.y,
             color: helperPointsColor,
           }
           const rwcl = {
@@ -92,16 +136,16 @@ const GeometryPointsFromMeasures = ({ sizeMeasures, desiredPxPerMM=null}) => {
           }
           const seatStayLeftPoint = findIntermediatePoint(rearWheelCenter, rwcl, geometryContext.geometryPoints.seatstay.leftOffset * dPPMM);
           seatStayLeft = {
-            x: seatStayLeftPoint.x,
-            y: seatStayLeftPoint.y,
+            x: seatStayLeftPoint!.x,
+            y: seatStayLeftPoint!.y,
             color: helperPointsColor,
           }
         }
         if (geometryContext.geometryPoints.topTube) {
           const topTubeLeftPoint = findIntermediatePoint(seatTubeTop, bottomBracketCenter, geometryContext.geometryPoints.topTube.leftOffset * dPPMM);
           topTubeLeft = {
-            x: topTubeLeftPoint.x,
-            y: topTubeLeftPoint.y,
+            x: topTubeLeftPoint!.x,
+            y: topTubeLeftPoint!.y,
             color: helperPointsColor,
           }
         }
@@ -109,8 +153,8 @@ const GeometryPointsFromMeasures = ({ sizeMeasures, desiredPxPerMM=null}) => {
         if (geometryContext.geometryPoints.crankArmEnd) {
           const crankArmEndPoint = findIntermediatePoint(bottomBracketCenter, seatTubeTop, - sizeMeasures.crankArm * dPPMM);
           crankArmEnd = {
-            x: crankArmEndPoint.x,
-            y: crankArmEndPoint.y,
+            x: crankArmEndPoint!.x,
+            y: crankArmEndPoint!.y,
             color: helperPointsColor,
           }
         }
@@ -118,8 +162,8 @@ const GeometryPointsFromMeasures = ({ sizeMeasures, desiredPxPerMM=null}) => {
         if (geometryContext.geometryPoints.seatpost) {
           const seatpostEndPoint = findIntermediatePoint(seatTubeTop, bottomBracketCenter, - geometryContext.geometryPoints.seatpost.length * dPPMM);
           seatpostEnd = {
-            x: seatpostEndPoint.x,
-            y: seatpostEndPoint.y,
+            x: seatpostEndPoint!.x,
+            y: seatpostEndPoint!.y,
             color: helperPointsColor,
           }
         }
@@ -146,8 +190,8 @@ const GeometryPointsFromMeasures = ({ sizeMeasures, desiredPxPerMM=null}) => {
           if (geometryContext.geometryPoints.topTube) {
             const topTubeRightPoint = findIntermediatePoint(headTubeTop, headTubeBottom, geometryContext.geometryPoints.topTube.rightOffset * dPPMM);
             topTubeRight = {
-              x: topTubeRightPoint.x,
-              y: topTubeRightPoint.y,
+              x: topTubeRightPoint!.x,
+              y: topTubeRightPoint!.y,
               color: helperPointsColor,
             }
           }
@@ -155,8 +199,8 @@ const GeometryPointsFromMeasures = ({ sizeMeasures, desiredPxPerMM=null}) => {
           if (geometryContext.geometryPoints.bottomTube) {
             const bottomTubeRightPoint = findIntermediatePoint(headTubeBottom, headTubeTop, geometryContext.geometryPoints.bottomTube.rightOffset * dPPMM);
             bottomTubeRight = {
-              x: bottomTubeRightPoint.x,
-              y: bottomTubeRightPoint.y,
+              x: bottomTubeRightPoint!.x,
+              y: bottomTubeRightPoint!.y,
               color: helperPointsColor,
             }
           }
@@ -164,8 +208,8 @@ const GeometryPointsFromMeasures = ({ sizeMeasures, desiredPxPerMM=null}) => {
           if (geometryContext.geometryPoints.headstack) {
             const spacersEndPoint = findIntermediatePoint(headTubeTop, headTubeBottom, -sizeMeasures.spacersStack * dPPMM);
             spacersEnd = {
-              x: spacersEndPoint.x,
-              y: spacersEndPoint.y,
+              x: spacersEndPoint!.x,
+              y: spacersEndPoint!.y,
               color: helperPointsColor,
             }
             if (geometryContext.geometryPoints.stem && sizeMeasures.stemLength) {
@@ -174,13 +218,13 @@ const GeometryPointsFromMeasures = ({ sizeMeasures, desiredPxPerMM=null}) => {
                 headTubeBottom, 
                 -(sizeMeasures.spacersStack + geometryContext.geometryPoints.stem.width/2) * dPPMM);
               stemStart = {
-                x: stemStartPoint.x,
-                y: stemStartPoint.y,
+                x: stemStartPoint!.x,
+                y: stemStartPoint!.y,
                 color: helperPointsColor,
               }
               if (sizeMeasures.stemLength) {
                 const trueAngle = sizeMeasures.stemAngle + sizeMeasures.headAngle - 90;
-                const handlebarMountPoint = findPointFromPointAngleLength(stemStartPoint, trueAngle, sizeMeasures.stemLength * dPPMM);
+                const handlebarMountPoint = findPointFromPointAngleLength(stemStartPoint!, trueAngle, sizeMeasures.stemLength * dPPMM);
                 handlebarMount = {
                   x: handlebarMountPoint.x,
                   y: handlebarMountPoint.y,
@@ -194,34 +238,33 @@ const GeometryPointsFromMeasures = ({ sizeMeasures, desiredPxPerMM=null}) => {
     }
 
     updateState({
-      sizeGeometryPoints: {
-        rearWheelCenter: rearWheelCenter,
-        frontWheelCenter: frontWheelCenter,
-        bottomBracketCenter: bottomBracketCenter,
-        seatTubeTop: seatTubeTop,
-        headTubeTop: headTubeTop,
-        headTubeBottom: headTubeBottom,
-        seatStayRight: seatStayRight,
-        seatStayLeft: seatStayLeft,
-        topTubeLeft: topTubeLeft,
-        topTubeRight: topTubeRight,
-        bottomTubeRight: bottomTubeRight,
-        crankArmEnd: crankArmEnd,
-        seatpostEnd: seatpostEnd,
-        spacersEnd: spacersEnd,
-        stemStart: stemStart,
-        handlebarMount: handlebarMount,
-      },
+      rearWheelCenter: rearWheelCenter,
+      frontWheelCenter: frontWheelCenter,
+      bottomBracketCenter: bottomBracketCenter,
+      seatTubeTop: seatTubeTop,
+      headTubeTop: headTubeTop,
+      headTubeBottom: headTubeBottom,
+      seatStayRight: seatStayRight,
+      seatStayLeft: seatStayLeft,
+      topTubeLeft: topTubeLeft,
+      topTubeRight: topTubeRight,
+      bottomTubeRight: bottomTubeRight,
+      crankArmEnd: crankArmEnd,
+      seatpostEnd: seatpostEnd,
+      spacersEnd: spacersEnd,
+      stemStart: stemStart,
+      handlebarMount: handlebarMount,
     });
   }, [sizeMeasures, desiredPxPerMM, geometryContext.geometryPoints]);
 
   return (
     <>
-      {state && state.sizeGeometryPoints &&
-        <GeometryPointVisualization pointsSet={state.sizeGeometryPoints}/>
+      {state &&
+        //TODO fix the unkonwn cast
+        <GeometryPointVisualization pointsSet={state as unknown as GeometryPoints}/>
       }
-      {state && state.sizeGeometryPoints &&
-        <BikeImageStitcher destinationPoints={state.sizeGeometryPoints} desiredPxPerMM={desiredPxPerMM}/>
+      {state &&
+        <BikeImageStitcher destinationPoints={state} desiredPxPerMM={desiredPxPerMM}/>
       }
       {/* {state && state.sizeGeometryPoints && <GeometryPointVisualization pointsSet={geometryContext.geometryPoints}/>} */}
     </>
