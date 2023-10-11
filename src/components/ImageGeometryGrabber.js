@@ -7,7 +7,7 @@ import PartsGrabberTable from './grabberControls/PartsGrabberTable';
 import { useGeometryContext } from '../contexts/GeometryContext';
 import BackgroundImage from "./drawing/BackgroundImage"
 import GeometryPointVisualization from './drawing/GeometryPointsVisualization';
-import PointPickerControls from './PointPickerControls.js';
+import PointPickerControls from './drawing/PointPickerControls';
 
 const ImageGeometryGrabber = () => {
   const defaultState = {
