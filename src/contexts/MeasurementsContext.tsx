@@ -2,24 +2,26 @@ import React, { createContext, useContext, useState } from 'react';
 import { ReactNode } from 'react';
 import { Point2d } from '../interfaces/Point2d';
 
+export interface Measures {
+  stack: number;
+  reach: number;
+  topTube: number;
+  seatTubeCT: number;
+  headAngle: number;
+  seatAngle: number;
+  headTube: number;
+  chainstay: number;
+  bbDrop: number;
+  crankArm: number;
+  wheelbase: number;
+  seatpostSetback: number;
+  spacersStack: number;
+  stemLength: number;
+  stemAngle: number;
+}
+
 export interface MeasurementsState {
-  measures: {
-    stack: number;
-    reach: number;
-    topTube: number;
-    seatTubeCT: number;
-    headAngle: number;
-    seatAngle: number;
-    headTube: number;
-    chainstay: number;
-    bbDrop: number;
-    crankArm: number;
-    wheelbase: number;
-    seatpostSetback: number;
-    spacersStack: number;
-    stemLength: number;
-    stemAngle: number;
-  },
+  measures: Measures,
   helpserPoints: {
     wheelBaseEnd : Point2d | null;
     bbTop : Point2d | null;

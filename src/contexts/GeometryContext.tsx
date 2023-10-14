@@ -2,6 +2,7 @@ import React, { createContext, ReactNode, useContext, useState } from 'react';
 import { FixedCircle } from '../interfaces/FixedCircle';
 import { ColorPoint2d } from '../interfaces/Point2d';
 import { FixedRectangle, OffsetFixedRectangle, SemiFixedRectangle } from '../interfaces/Rectangles';
+import { Measures } from './MeasurementsContext';
 
 export interface GeometryPoints {
   rearWheelCenter:  ColorPoint2d | null,
@@ -35,6 +36,7 @@ export interface GeometryPoints {
   seatpostYoke: FixedCircle | null,
 }
 
+//TODO - divide by type
 const defaultGeometryPoints : GeometryPoints = {
   rearWheelCenter : null,
   frontWheelCenter : null,
@@ -67,11 +69,20 @@ const defaultGeometryPoints : GeometryPoints = {
 }
 
 export interface GeometryState {
-  wheelbase: number | null,
-  geometryPoints: GeometryPoints,
-  selectedFile: null | string,
-  bikesList: string[],
-  sizesTable: {}
+  wheelbase: number | null;
+  geometryPoints: GeometryPoints;
+  selectedFile: null | string;
+  bikesList: string[];
+  sizesTable: Map<string, Measures>;
+}
+
+//workaround for saving data - no maps in local storage
+export interface GeometryStateForSaving {
+  wheelbase: number | null;
+  geometryPoints: GeometryPoints;
+  selectedFile: null | string;
+  bikesList: string[];
+  sizesTable: {};
 }
 
 interface GeometryContextType {
@@ -99,7 +110,7 @@ export const GeometryProvider = ({ children } : {children : ReactNode}) => {
     geometryPoints: defaultGeometryPoints,
     selectedFile: null,
     bikesList: bikesList,
-    sizesTable: {}
+    sizesTable: new Map(),
   }
 
   const [state, setState] = useState(defaultState);

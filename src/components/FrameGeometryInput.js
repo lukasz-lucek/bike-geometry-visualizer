@@ -1,18 +1,14 @@
 // src/components/FrameGeometryInput.js
 import React, { useState } from 'react';
 import { useCanvasContext } from '../contexts/CanvasContext';
-import SizesTable from '../components/SizesTable.js';
+import SizesTable from './sizesTable/SizesTable';
 import { useGeometryContext } from '../contexts/GeometryContext';
 import BackgroundImage from './drawing/BackgroundImage';
 
 const FrameGeometryInput = () => {
   const {
-    state: [geometryState, updateGeometryState],
+    state: [geometryState, ],
   } = useGeometryContext();
-
-  const updatePoints = (newPartialPoints) => {
-    updateGeometryState({geometryPoints: {...geometryState.geometryPoints, ...newPartialPoints}});
-  }
 
   const { 
     state: [canvasState, ],
@@ -22,7 +18,7 @@ const FrameGeometryInput = () => {
 
   return (
     <div className="frame-input">
-      <SizesTable state={geometryState} updateState={updateGeometryState}/>
+      <SizesTable/>
       <p><input type="checkbox" checked={showShadowImage} onChange={() => {setShowShadowImage(!showShadowImage);}}/><label>Show Shadow Image</label></p>
 
       {geometryState.selectedFile && showShadowImage && <BackgroundImage key={'BackgroundImage'} isGrayedOut={true} desiredPxPerMM={1}/>}

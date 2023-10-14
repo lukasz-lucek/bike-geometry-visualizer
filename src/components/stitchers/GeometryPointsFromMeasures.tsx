@@ -5,28 +5,13 @@ import BikeImageStitcher, { DestinationGeometryPoints } from './BikeImageStitche
 import GeometryPointVisualization from '../drawing/GeometryPointsVisualization';
 import Color from 'color';
 import { ColorPoint2d } from '../../interfaces/Point2d';
-
-export interface SizeMeasures {
-  wheelbase : number;
-  bbDrop: number;
-  chainstay: number;
-  seatAngle: number;
-  seatTubeCT: number;
-  crankArm: number;
-  stack: number;
-  reach: number;
-  headAngle: number;
-  headTube: number;
-  spacersStack: number;
-  stemLength: number;
-  stemAngle: number;
-}
+import { Measures } from '../../contexts/MeasurementsContext';
 
 const GeometryPointsFromMeasures = ({
   sizeMeasures,
   desiredPxPerMM=null
 } : {
-  sizeMeasures : SizeMeasures;
+  sizeMeasures : Measures;
   desiredPxPerMM : number | null;
 }) => {
   

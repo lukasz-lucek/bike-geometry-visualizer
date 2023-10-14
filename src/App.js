@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
-import ToolSelection from './components/ToolSelection.js'; // Import the ToolSelection component
+import ToolSelection from './components/basicOptions/ToolSelection'; // Import the ToolSelection component
 import ToolOptionsArea from './components/ToolOptionsArea.js'; // Import the ToolOptionsArea component
 import { CanvasProvider } from './contexts/CanvasContext'; // Update the import path
 import GeometryProvider from './contexts/GeometryContext';

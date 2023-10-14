@@ -1,7 +1,13 @@
 import React from 'react';
-import GeometrySaver from './storage/GeometrySaver';
+import GeometrySaver from '../storage/GeometrySaver';
 
-const ToolSelection = ({ selectedTool, handleToolSelect }) => {
+const ToolSelection = ({
+  selectedTool,
+  handleToolSelect
+} : {
+  selectedTool: string;
+  handleToolSelect: (val: string) => void;
+}) => {
   const tools = [
     { name: 'imageUpload', label: 'Image Upload Tool' },
     { name: 'imageGeometryGrabber', label: 'Image Geometry Grabbing' },

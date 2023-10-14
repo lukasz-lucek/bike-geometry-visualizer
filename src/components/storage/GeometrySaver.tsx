@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { GeometryState, useGeometryContext } from '../../contexts/GeometryContext';
+import { GeometryState, GeometryStateForSaving, useGeometryContext } from '../../contexts/GeometryContext';
 import DropdownActions from './DropdownActions';
 
 const GeometrySaver = () => {
@@ -12,7 +12,7 @@ const GeometrySaver = () => {
 
   const saveGeometry = () => {
     if (bikeDataName != '') {
-      let knownGeometries : Map<string, GeometryState> = new Map();
+      let knownGeometries : Map<string, GeometryStateForSaving> = new Map();
       const knownGeometriesRaw = localStorage.getItem('knownGeometries');
       if (knownGeometriesRaw) {
         knownGeometries = new Map(Object.entries(JSON.parse(knownGeometriesRaw)));
@@ -24,7 +24,8 @@ const GeometrySaver = () => {
         selectedFile : state.selectedFile,
         geometryPoints : state.geometryPoints,
         wheelbase: state.wheelbase,
-        sizesTable: state.sizesTable,
+        // workaround for inablility to save maps to local storage
+        sizesTable: Object.fromEntries(state.sizesTable),
         bikesList: [],
       });
       localStorage.setItem('knownGeometries', JSON.stringify(Object.fromEntries(knownGeometries)));
@@ -48,6 +49,11 @@ const GeometrySaver = () => {
     if (geometryData == null || geometryData.selectedFile == null || geometryData.geometryPoints == null) {
       console.error("Broken data in local storage - cannot load");
       return;
+    }
+    // workaround for reading a map from local storage
+    if (!(geometryData.sizesTable as any instanceof Map)) {
+      console.log("trying to read old data of sizesTable");
+      geometryData.sizesTable = new Map(Object.entries(geometryData.sizesTable));
     }
     updateState({
       selectedFile: geometryData.selectedFile,
