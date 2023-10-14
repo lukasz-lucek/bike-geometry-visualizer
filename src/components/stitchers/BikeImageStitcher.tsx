@@ -101,11 +101,11 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null} : BikeImageS
         layer={5}/>
       }
 
-      {geometryState.geometryPoints.chainstay && destinationPoints.bottomBracketCenter && destinationPoints.rearWheelCenter &&
+      {geometryState.offsetFixedRectangles.chainstay && destinationPoints.bottomBracketCenter && destinationPoints.rearWheelCenter &&
       <RectanglePartGrabber 
-        leftOffset = {geometryState.geometryPoints.chainstay.leftOffset} 
-        rightOffset = {geometryState.geometryPoints.chainstay.rightOffset} 
-        width = {geometryState.geometryPoints.chainstay.width}
+        leftOffset = {geometryState.offsetFixedRectangles.chainstay.leftOffset} 
+        rightOffset = {geometryState.offsetFixedRectangles.chainstay.rightOffset} 
+        width = {geometryState.offsetFixedRectangles.chainstay.width}
         anchorPoints = {{
           tl: geometryState.geometryPoints.rearWheelCenter,
           bl: geometryState.geometryPoints.rearWheelCenter,
@@ -120,11 +120,11 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null} : BikeImageS
         layer={7}/>
       }
 
-      {geometryState.geometryPoints.seatTube && destinationPoints.bottomBracketCenter && destinationPoints.seatTubeTop &&
+      {geometryState.offsetFixedRectangles.seatTube && destinationPoints.bottomBracketCenter && destinationPoints.seatTubeTop &&
       <RectanglePartGrabber 
-        leftOffset = {geometryState.geometryPoints.seatTube.leftOffset} 
-        rightOffset = {geometryState.geometryPoints.seatTube.rightOffset} 
-        width = {geometryState.geometryPoints.seatTube.width}
+        leftOffset = {geometryState.offsetFixedRectangles.seatTube.leftOffset} 
+        rightOffset = {geometryState.offsetFixedRectangles.seatTube.rightOffset} 
+        width = {geometryState.offsetFixedRectangles.seatTube.width}
         anchorPoints = {{
           tl: geometryState.geometryPoints.seatTubeTop,
           bl: geometryState.geometryPoints.seatTubeTop,
@@ -139,11 +139,11 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null} : BikeImageS
         layer={9}/>
       }
 
-      {geometryState.geometryPoints.seatstay && destinationPoints.seatStayLeft && destinationPoints.seatStayRight &&
+      {geometryState.offsetFixedRectangles.seatstay && destinationPoints.seatStayLeft && destinationPoints.seatStayRight &&
       <RectanglePartGrabber 
-        leftOffset = {geometryState.geometryPoints.seatstay.leftOffset} 
-        rightOffset = {geometryState.geometryPoints.seatstay.rightOffset} 
-        width = {geometryState.geometryPoints.seatstay.width}
+        leftOffset = {geometryState.offsetFixedRectangles.seatstay.leftOffset} 
+        rightOffset = {geometryState.offsetFixedRectangles.seatstay.rightOffset} 
+        width = {geometryState.offsetFixedRectangles.seatstay.width}
         anchorPoints={{
           tl: geometryState.geometryPoints.rearWheelCenter,
           bl: geometryState.geometryPoints.rearWheelCenter,
@@ -158,11 +158,11 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null} : BikeImageS
         layer={7}/>
       }
 
-      {geometryState.geometryPoints.topTube && destinationPoints.topTubeLeft && destinationPoints.topTubeRight &&
+      {geometryState.offsetFixedRectangles.topTube && destinationPoints.topTubeLeft && destinationPoints.topTubeRight &&
       <RectanglePartGrabber 
-        leftOffset = {geometryState.geometryPoints.topTube.leftOffset} 
-        rightOffset = {geometryState.geometryPoints.topTube.rightOffset} 
-        width = {geometryState.geometryPoints.topTube.width}
+        leftOffset = {geometryState.offsetFixedRectangles.topTube.leftOffset} 
+        rightOffset = {geometryState.offsetFixedRectangles.topTube.rightOffset} 
+        width = {geometryState.offsetFixedRectangles.topTube.width}
         anchorPoints={{
           tl: geometryState.geometryPoints.seatTubeTop,
           bl: geometryState.geometryPoints.bottomBracketCenter,
@@ -177,11 +177,11 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null} : BikeImageS
         layer={7}/>
       }
 
-      {geometryState.geometryPoints.bottomTube && destinationPoints.bottomBracketCenter && destinationPoints.bottomTubeRight &&
+      {geometryState.offsetFixedRectangles.bottomTube && destinationPoints.bottomBracketCenter && destinationPoints.bottomTubeRight &&
       <RectanglePartGrabber 
-        leftOffset = {geometryState.geometryPoints.bottomTube.leftOffset} 
-        rightOffset = {geometryState.geometryPoints.bottomTube.rightOffset} 
-        width = {geometryState.geometryPoints.bottomTube.width}
+        leftOffset = {geometryState.offsetFixedRectangles.bottomTube.leftOffset} 
+        rightOffset = {geometryState.offsetFixedRectangles.bottomTube.rightOffset} 
+        width = {geometryState.offsetFixedRectangles.bottomTube.width}
         anchorPoints={{
           tl: geometryState.geometryPoints.bottomBracketCenter,
           bl: geometryState.geometryPoints.bottomBracketCenter,
@@ -196,11 +196,11 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null} : BikeImageS
         layer={7}/>
       }
 
-      {geometryState.geometryPoints.bottomTube && destinationPoints.bottomBracketCenter && destinationPoints.bottomTubeRight &&
+      {geometryState.offsetFixedRectangles.bottomTube && destinationPoints.bottomBracketCenter && destinationPoints.bottomTubeRight &&
       <RectanglePartGrabber 
-        leftOffset = {geometryState.geometryPoints.bottomTube.leftOffset} 
-        rightOffset = {geometryState.geometryPoints.bottomTube.rightOffset} 
-        width = {geometryState.geometryPoints.bottomTube.width}
+        leftOffset = {geometryState.offsetFixedRectangles.bottomTube.leftOffset} 
+        rightOffset = {geometryState.offsetFixedRectangles.bottomTube.rightOffset} 
+        width = {geometryState.offsetFixedRectangles.bottomTube.width}
         anchorPoints={{
           tl: geometryState.geometryPoints.bottomBracketCenter,
           bl: geometryState.geometryPoints.bottomBracketCenter,
@@ -215,11 +215,11 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null} : BikeImageS
         layer={7}/>
       }
 
-      {geometryState.geometryPoints.headTube && destinationPoints.headTubeTop && destinationPoints.headTubeBottom &&
+      {geometryState.offsetFixedRectangles.headTube && destinationPoints.headTubeTop && destinationPoints.headTubeBottom &&
       <RectanglePartGrabber 
-        leftOffset = {geometryState.geometryPoints.headTube.leftOffset} 
-        rightOffset = {geometryState.geometryPoints.headTube.rightOffset} 
-        width = {geometryState.geometryPoints.headTube.width}
+        leftOffset = {geometryState.offsetFixedRectangles.headTube.leftOffset} 
+        rightOffset = {geometryState.offsetFixedRectangles.headTube.rightOffset} 
+        width = {geometryState.offsetFixedRectangles.headTube.width}
         anchorPoints={{
           tl: geometryState.geometryPoints.headTubeTop,
           bl: geometryState.geometryPoints.headTubeTop,
@@ -234,11 +234,11 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null} : BikeImageS
         layer={7}/>
       }
 
-      {geometryState.geometryPoints.fork && destinationPoints.frontWheelCenter && destinationPoints.headTubeBottom &&
+      {geometryState.offsetFixedRectangles.fork && destinationPoints.frontWheelCenter && destinationPoints.headTubeBottom &&
       <RectanglePartGrabber 
-        leftOffset = {geometryState.geometryPoints.fork.leftOffset} 
-        rightOffset = {geometryState.geometryPoints.fork.rightOffset} 
-        width = {geometryState.geometryPoints.fork.width}
+        leftOffset = {geometryState.offsetFixedRectangles.fork.leftOffset} 
+        rightOffset = {geometryState.offsetFixedRectangles.fork.rightOffset} 
+        width = {geometryState.offsetFixedRectangles.fork.width}
         anchorPoints={{
           tl: geometryState.geometryPoints.headTubeBottom,
           bl: geometryState.geometryPoints.headTubeBottom,
@@ -253,11 +253,11 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null} : BikeImageS
         layer={7}/>
       }
 
-      {geometryState.geometryPoints.crankArm && destinationPoints.bottomBracketCenter && destinationPoints.crankArmEnd &&
+      {geometryState.offsetFixedRectangles.crankArm && destinationPoints.bottomBracketCenter && destinationPoints.crankArmEnd &&
       <RectanglePartGrabber 
-        leftOffset = {geometryState.geometryPoints.crankArm.leftOffset} 
-        rightOffset = {geometryState.geometryPoints.crankArm.rightOffset} 
-        width = {geometryState.geometryPoints.crankArm.width}
+        leftOffset = {geometryState.offsetFixedRectangles.crankArm.leftOffset} 
+        rightOffset = {geometryState.offsetFixedRectangles.crankArm.rightOffset} 
+        width = {geometryState.offsetFixedRectangles.crankArm.width}
         anchorPoints={{
           tl: geometryState.geometryPoints.bottomBracketCenter,
           bl: geometryState.geometryPoints.bottomBracketCenter,

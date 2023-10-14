@@ -23,6 +23,7 @@ const GeometrySaver = () => {
       knownGeometries.set(bikeDataName,  {
         selectedFile : state.selectedFile,
         geometryPoints : state.geometryPoints,
+        offsetFixedRectangles: state.offsetFixedRectangles,
         wheelbase: state.wheelbase,
         // workaround for inablility to save maps to local storage
         sizesTable: Object.fromEntries(state.sizesTable),

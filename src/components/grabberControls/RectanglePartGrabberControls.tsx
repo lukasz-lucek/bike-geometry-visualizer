@@ -1,12 +1,12 @@
 import React, { ReactNode, useEffect, useState } from 'react';
-import { GeometryPoints, useGeometryContext } from '../../contexts/GeometryContext';
+import { GeometryOffsetFixedRectangles, GeometryPoints, useGeometryContext } from '../../contexts/GeometryContext';
 import { Point2d } from '../../interfaces/Point2d';
 import { OffsetFixedRectangle } from '../../interfaces/Rectangles';
 import OffsetGrabber from '../grabbers/OffsetGrabber';
 import RectanglePartGrabber from '../grabbers/RectanglePartGrabber';
 
 interface RectanglePartGrabberControlsProps {
-  partKey : keyof GeometryPoints,
+  partKey : keyof GeometryOffsetFixedRectangles,
   anchorPoints : {
     tl: Point2d | null;
     bl: Point2d | null;
@@ -51,33 +51,42 @@ export function RectanglePartGrabberControls({
     state: [geometryState, updateGeometryState],
   } = useGeometryContext();
 
-  const part = (geometryState.geometryPoints[partKey] as OffsetFixedRectangle);
+  const part = geometryState.offsetFixedRectangles[partKey];
 
-  const updatePoints = (newPartialPoints : Partial<GeometryPoints>) => {
-    updateGeometryState({geometryPoints: {...geometryState.geometryPoints, ...newPartialPoints}});
+  const updatePoints = (newPartialPoints : Partial<GeometryOffsetFixedRectangles>) => {
+    updateGeometryState({offsetFixedRectangles: {...geometryState.offsetFixedRectangles, ...newPartialPoints}});
   }
 
   useEffect(() => {
-    const points = geometryState.geometryPoints;
+    const points = geometryState.offsetFixedRectangles;
     if (!points[partKey]) {
       updatePoints(Object.fromEntries([[partKey, defaultPartSetup]]));
     }
-  }, [geometryState.geometryPoints, defaultPartSetup]);
+  }, [geometryState.offsetFixedRectangles, defaultPartSetup]);
 
   const updateLeftOffset = (val : number) => {
-    let curPartSetup = geometryState.geometryPoints[partKey] as OffsetFixedRectangle;
+    let curPartSetup = geometryState.offsetFixedRectangles[partKey];
+    if (!curPartSetup) {
+      return;
+    }
     curPartSetup.leftOffset += val;
     updatePoints(Object.fromEntries([[partKey, curPartSetup]]));
   }
 
   const updateRightOffset = (val : number) => {
-    let curPartSetup = geometryState.geometryPoints[partKey] as OffsetFixedRectangle;
+    let curPartSetup = geometryState.offsetFixedRectangles[partKey];
+    if (!curPartSetup) {
+      return;
+    }
     curPartSetup.rightOffset += val;
     updatePoints(Object.fromEntries([[partKey, curPartSetup]]));
   }
 
   const updateWidth = (val : number) => {
-    let curPartSetup = geometryState.geometryPoints[partKey] as OffsetFixedRectangle;
+    let curPartSetup = geometryState.offsetFixedRectangles[partKey];
+    if (!curPartSetup) {
+      return;
+    }
     curPartSetup.width += val;
     updatePoints(Object.fromEntries([[partKey, curPartSetup]]));
   }
@@ -99,7 +108,7 @@ export function RectanglePartGrabberControls({
             <td><button onClick={() => {updateLeftOffset(-singleStep)}}>-</button></td>
             {leftOffsetHighlight &&
               <OffsetGrabber 
-                offset = {part?.leftOffset} 
+                offset = {part?.leftOffset!} 
                 topAnchor = {anchorPoints.tl} 
                 bottomAnchor = {anchorPoints.bl}
                 pxPerMm = {pxPerMm}
@@ -115,7 +124,7 @@ export function RectanglePartGrabberControls({
             <td><button onClick={() => {updateRightOffset(-singleStep)}}>-</button></td>
             {rightOffsetHighlight &&
               <OffsetGrabber 
-                offset = {part?.rightOffset} 
+                offset = {part?.rightOffset!} 
                 topAnchor = {anchorPoints.tr} 
                 bottomAnchor = {anchorPoints.br}
                 pxPerMm = {pxPerMm}
@@ -130,9 +139,9 @@ export function RectanglePartGrabberControls({
             <td><button onClick={() => {updateWidth(-singleStep)}}>-</button></td>
             {(partHighlight || leftOffsetHighlight || rightOffsetHighlight) &&
               <RectanglePartGrabber 
-                leftOffset = {part?.leftOffset} 
-                rightOffset = {part?.rightOffset} 
-                width = {part?.width}
+                leftOffset = {part?.leftOffset!} 
+                rightOffset = {part?.rightOffset!} 
+                width = {part?.width!}
                 anchorPoints = {anchorPoints}
                 pxPerMm = {pxPerMm}
                 strokeWidth = {1}/>}

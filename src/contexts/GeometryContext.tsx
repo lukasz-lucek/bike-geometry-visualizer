@@ -17,14 +17,14 @@ export interface GeometryPoints {
   seatMount: ColorPoint2d | null,
 
 
-  crankArm: OffsetFixedRectangle | null,
-  seatstay: OffsetFixedRectangle | null,
-  chainstay: OffsetFixedRectangle | null,
-  fork: OffsetFixedRectangle | null,
-  seatTube: OffsetFixedRectangle | null,
-  headTube: OffsetFixedRectangle | null,
-  bottomTube: OffsetFixedRectangle | null,
-  topTube: OffsetFixedRectangle | null,
+  // crankArm: OffsetFixedRectangle | null,
+  // seatstay: OffsetFixedRectangle | null,
+  // chainstay: OffsetFixedRectangle | null,
+  // fork: OffsetFixedRectangle | null,
+  // seatTube: OffsetFixedRectangle | null,
+  // headTube: OffsetFixedRectangle | null,
+  // bottomTube: OffsetFixedRectangle | null,
+  // topTube: OffsetFixedRectangle | null,
 
   seatpost: SemiFixedRectangle | null,
   headstack: SemiFixedRectangle | null,
@@ -35,6 +35,17 @@ export interface GeometryPoints {
   frontWheel: FixedCircle | null,
   chainring: FixedCircle | null,
   seatpostYoke: FixedCircle | null,
+}
+
+export interface GeometryOffsetFixedRectangles {
+  crankArm: OffsetFixedRectangle | null,
+  seatstay: OffsetFixedRectangle | null,
+  chainstay: OffsetFixedRectangle | null,
+  fork: OffsetFixedRectangle | null,
+  seatTube: OffsetFixedRectangle | null,
+  headTube: OffsetFixedRectangle | null,
+  bottomTube: OffsetFixedRectangle | null,
+  topTube: OffsetFixedRectangle | null,
 }
 
 const defaultGeometryPoints : GeometryPoints = {
@@ -48,14 +59,14 @@ const defaultGeometryPoints : GeometryPoints = {
   handlebarMount : null,
   seatMount : null,
 
-  crankArm : null,
-  seatstay : null,
-  chainstay : null,
-  fork : null,
-  seatTube : null,
-  headTube : null,
-  bottomTube : null,
-  topTube : null,
+  // crankArm : null,
+  // seatstay : null,
+  // chainstay : null,
+  // fork : null,
+  // seatTube : null,
+  // headTube : null,
+  // bottomTube : null,
+  // topTube : null,
 
   seatpost: null,
   headstack : null,
@@ -68,9 +79,21 @@ const defaultGeometryPoints : GeometryPoints = {
   seatpostYoke: null,
 }
 
+const defaultOffsetFixedRectangles : GeometryOffsetFixedRectangles = {
+  crankArm : null,
+  seatstay : null,
+  chainstay : null,
+  fork : null,
+  seatTube : null,
+  headTube : null,
+  bottomTube : null,
+  topTube : null,
+}
+
 export interface GeometryState {
   wheelbase: number | null;
   geometryPoints: GeometryPoints;
+  offsetFixedRectangles: GeometryOffsetFixedRectangles;
   selectedFile: null | string;
   bikesList: string[];
   sizesTable: Map<string, Measures>;
@@ -80,6 +103,7 @@ export interface GeometryState {
 export interface GeometryStateForSaving {
   wheelbase: number | null;
   geometryPoints: GeometryPoints;
+  offsetFixedRectangles: GeometryOffsetFixedRectangles;
   selectedFile: null | string;
   bikesList: string[];
   sizesTable: {};
@@ -108,6 +132,7 @@ export const GeometryProvider = ({ children } : {children : ReactNode}) => {
   const defaultState : GeometryState = {
     wheelbase: null,
     geometryPoints: defaultGeometryPoints,
+    offsetFixedRectangles: defaultOffsetFixedRectangles,
     selectedFile: null,
     bikesList: bikesList,
     sizesTable: new Map(),

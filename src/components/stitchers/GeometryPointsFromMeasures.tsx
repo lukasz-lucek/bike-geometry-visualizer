@@ -108,8 +108,8 @@ const GeometryPointsFromMeasures = ({
           y: bottomBracketCenter.y - dPPMM * (Math.sin(seatAngleRadians) * seatTubeCT),
           color: pointsColor,
         }
-        if (geometryContext.geometryPoints.seatstay) {
-          const seatStayRightPoint = findIntermediatePoint(seatTubeTop, bottomBracketCenter, geometryContext.geometryPoints.seatstay.rightOffset * dPPMM);
+        if (geometryContext.offsetFixedRectangles.seatstay) {
+          const seatStayRightPoint = findIntermediatePoint(seatTubeTop, bottomBracketCenter, geometryContext.offsetFixedRectangles.seatstay.rightOffset * dPPMM);
           seatStayRight = {
             x: seatStayRightPoint!.x,
             y: seatStayRightPoint!.y,
@@ -119,15 +119,15 @@ const GeometryPointsFromMeasures = ({
             x:rearWheelCenter.x,
             y:rearWheelCenter.y-10,
           }
-          const seatStayLeftPoint = findIntermediatePoint(rearWheelCenter, rwcl, geometryContext.geometryPoints.seatstay.leftOffset * dPPMM);
+          const seatStayLeftPoint = findIntermediatePoint(rearWheelCenter, rwcl, geometryContext.offsetFixedRectangles.seatstay.leftOffset * dPPMM);
           seatStayLeft = {
             x: seatStayLeftPoint!.x,
             y: seatStayLeftPoint!.y,
             color: helperPointsColor,
           }
         }
-        if (geometryContext.geometryPoints.topTube) {
-          const topTubeLeftPoint = findIntermediatePoint(seatTubeTop, bottomBracketCenter, geometryContext.geometryPoints.topTube.leftOffset * dPPMM);
+        if (geometryContext.offsetFixedRectangles.topTube) {
+          const topTubeLeftPoint = findIntermediatePoint(seatTubeTop, bottomBracketCenter, geometryContext.offsetFixedRectangles.topTube.leftOffset * dPPMM);
           topTubeLeft = {
             x: topTubeLeftPoint!.x,
             y: topTubeLeftPoint!.y,
@@ -172,8 +172,8 @@ const GeometryPointsFromMeasures = ({
             color: pointsColor,
           }
 
-          if (geometryContext.geometryPoints.topTube) {
-            const topTubeRightPoint = findIntermediatePoint(headTubeTop, headTubeBottom, geometryContext.geometryPoints.topTube.rightOffset * dPPMM);
+          if (geometryContext.offsetFixedRectangles.topTube) {
+            const topTubeRightPoint = findIntermediatePoint(headTubeTop, headTubeBottom, geometryContext.offsetFixedRectangles.topTube.rightOffset * dPPMM);
             topTubeRight = {
               x: topTubeRightPoint!.x,
               y: topTubeRightPoint!.y,
@@ -181,8 +181,8 @@ const GeometryPointsFromMeasures = ({
             }
           }
 
-          if (geometryContext.geometryPoints.bottomTube) {
-            const bottomTubeRightPoint = findIntermediatePoint(headTubeBottom, headTubeTop, geometryContext.geometryPoints.bottomTube.rightOffset * dPPMM);
+          if (geometryContext.offsetFixedRectangles.bottomTube) {
+            const bottomTubeRightPoint = findIntermediatePoint(headTubeBottom, headTubeTop, geometryContext.offsetFixedRectangles.bottomTube.rightOffset * dPPMM);
             bottomTubeRight = {
               x: bottomTubeRightPoint!.x,
               y: bottomTubeRightPoint!.y,
