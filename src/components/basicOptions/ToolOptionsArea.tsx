@@ -1,10 +1,10 @@
 // src/components/ToolOptionsArea.js
 import React from 'react';
-import ImageUploadOption from './basicOptions/ImageUploadOption'; // Import the ImageUploadOption component
-import FrameGeometryInput from './basicOptions/FrameGeometryInput'; // Import the ImageUploadOption component
+import ImageUploadOption from './ImageUploadOption'; // Import the ImageUploadOption component
+import FrameGeometryInput from './FrameGeometryInput'; // Import the ImageUploadOption component
 import ImageGeometryGrabber from './ImageGeometryGrabber';
 
-const ToolOptionsArea = ({ selectedTool }) => {
+const ToolOptionsArea = ({ selectedTool } : {selectedTool : string}) => {
   const renderToolOptions = () => {
     switch (selectedTool) {
       case 'imageUpload':

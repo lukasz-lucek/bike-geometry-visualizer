@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import ToolSelection from './components/basicOptions/ToolSelection'; // Import the ToolSelection component
-import ToolOptionsArea from './components/ToolOptionsArea.js'; // Import the ToolOptionsArea component
+import ToolOptionsArea from './components/basicOptions/ToolOptionsArea'; // Import the ToolOptionsArea component
 import { CanvasProvider } from './contexts/CanvasContext'; // Update the import path
 import GeometryProvider from './contexts/GeometryContext';
 import MeasurementsProvider from './contexts/MeasurementsContext';
@@ -12,7 +12,7 @@ import { Canvas } from './components/drawing/Canvas';
 const App = () => {
   const [selectedTool, setSelectedTool] = useState('');
 
-  const handleToolSelect = (toolName) => {
+  const handleToolSelect = (toolName : string) => {
     setSelectedTool(toolName);
   };
 

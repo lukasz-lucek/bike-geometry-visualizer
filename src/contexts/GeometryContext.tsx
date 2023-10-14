@@ -4,6 +4,7 @@ import { ColorPoint2d } from '../interfaces/Point2d';
 import { FixedRectangle, OffsetFixedRectangle, SemiFixedRectangle } from '../interfaces/Rectangles';
 import { Measures } from './MeasurementsContext';
 
+//TODO - divide by type
 export interface GeometryPoints {
   rearWheelCenter:  ColorPoint2d | null,
   frontWheelCenter: ColorPoint2d | null,
@@ -36,7 +37,6 @@ export interface GeometryPoints {
   seatpostYoke: FixedCircle | null,
 }
 
-//TODO - divide by type
 const defaultGeometryPoints : GeometryPoints = {
   rearWheelCenter : null,
   frontWheelCenter : null,

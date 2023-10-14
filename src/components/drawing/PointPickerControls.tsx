@@ -1,10 +1,16 @@
 // src/components/Visualizer.js
+import { rejects } from 'assert';
 import Color from 'color';
-import React, { forwardRef, useImperativeHandle, useEffect, useState} from 'react';
+import React, { forwardRef, useImperativeHandle, useEffect, useState, Ref} from 'react';
 import { useCanvasContext } from '../../contexts/CanvasContext';
+import { Point2d } from '../../interfaces/Point2d';
 import PointPicker from "./PointPicker"
 
-const PointPickerControls = forwardRef(({}, ref) => {
+export interface PointPickerControlsRef {
+  enablePointPicker : (color : Color) => Promise<Point2d>;
+}
+
+const PointPickerControls = forwardRef(({}, ref : Ref<PointPickerControlsRef>) => {
 
   const {
     state: [canvasState, ],
@@ -41,15 +47,19 @@ const PointPickerControls = forwardRef(({}, ref) => {
 
   useImperativeHandle(ref, () => ({
     enablePointPicker (color : Color) {
-      return new Promise( (resolve, ) => {
+      return new Promise( (resolve, reject) => {
           canvasState.canvas?.on("mouse:up", function (e) {
           if (e.isClick && e.target != null) {
-              resolve(
-                  {
-                    x: e.transform?.offsetX, 
-                    y: e.transform?.offsetY
-                  }
-              );
+              if (!e.transform || !e.transform.offsetX || ! e.transform?.offsetY) {
+                reject();
+              } else {
+                resolve(
+                    {
+                      x: e.transform?.offsetX, 
+                      y: e.transform?.offsetY
+                    }
+                );
+              }
               updateState ( {
                   pickerEnabled : false,
               });
