@@ -1,18 +1,13 @@
 // src/components/FrameGeometryInput.js
 import React, { useState } from 'react';
-import { useCanvasContext } from '../contexts/CanvasContext';
-import SizesTable from './sizesTable/SizesTable';
-import { useGeometryContext } from '../contexts/GeometryContext';
-import BackgroundImage from './drawing/BackgroundImage';
+import SizesTable from '../sizesTable/SizesTable';
+import { useGeometryContext } from '../../contexts/GeometryContext';
+import BackgroundImage from '../drawing/BackgroundImage';
 
 const FrameGeometryInput = () => {
   const {
     state: [geometryState, ],
   } = useGeometryContext();
-
-  const { 
-    state: [canvasState, ],
-  } = useCanvasContext();
 
   const [showShadowImage, setShowShadowImage] = useState(true);
 
