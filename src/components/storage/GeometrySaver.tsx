@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { GeometryState, GeometryStateForSaving, useGeometryContext } from '../../contexts/GeometryContext';
+import { defaultFixedCircles, defaultFixedRectangles, defaultOffsetFixedRectangles, defaultSemiFixedRectangles, GeometryState, GeometryStateForSaving, useGeometryContext } from '../../contexts/GeometryContext';
 import DropdownActions from './DropdownActions';
 
 const GeometrySaver = () => {
@@ -24,6 +24,9 @@ const GeometrySaver = () => {
         selectedFile : state.selectedFile,
         geometryPoints : state.geometryPoints,
         offsetFixedRectangles: state.offsetFixedRectangles,
+        semiFixedRectangles: state.semiFixedRectangles,
+        fixedRectangles: state.fixedRectangles,
+        fixedCircles: state.fixedCircles,
         wheelbase: state.wheelbase,
         // workaround for inablility to save maps to local storage
         sizesTable: Object.fromEntries(state.sizesTable),
@@ -59,6 +62,10 @@ const GeometrySaver = () => {
     updateState({
       selectedFile: geometryData.selectedFile,
       geometryPoints: geometryData.geometryPoints,
+      offsetFixedRectangles: geometryData.offsetFixedRectangles || defaultOffsetFixedRectangles,
+      semiFixedRectangles: geometryData.semiFixedRectangles || defaultSemiFixedRectangles,
+      fixedRectangles: geometryData.fixedRectangles || defaultFixedRectangles,
+      fixedCircles: geometryData.fixedCircles || defaultFixedCircles,
       wheelbase: geometryData.wheelbase,
       sizesTable: geometryData.sizesTable,
     });

@@ -42,6 +42,8 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null} : BikeImageS
 
   useEffect(() => {
     const points = geometryState.geometryPoints;
+    const semiFixedRectangles = geometryState.semiFixedRectangles;
+    const fixedRectangles = geometryState.fixedRectangles;
     if (!points ||
         !points.rearWheelCenter ||
         !points.frontWheelCenter ||
@@ -55,11 +57,11 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null} : BikeImageS
     }
     setPxPerMm(pPMm);
 
-    if (points.headTubeTop && points.headTubeBottom && points.headstack && points.stem) {
+    if (points.headTubeTop && points.headTubeBottom && semiFixedRectangles.headstack && fixedRectangles.stem) {
       const startPoint = findIntermediatePoint(
         points.headTubeTop,
         points.headTubeBottom,
-        -(points.headstack.length + points.stem.width/2)  * pPMm);
+        -(semiFixedRectangles.headstack.length + fixedRectangles.stem.width/2)  * pPMm);
       setStemStartPoint(startPoint);
     }
   }, [geometryState.geometryPoints, geometryState.wheelbase, destinationPoints]);
@@ -68,9 +70,9 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null} : BikeImageS
     <>
     {pxPerMm &&
     <div>
-      {geometryState.geometryPoints.rearWheel && destinationPoints.rearWheelCenter &&
+      {geometryState.fixedCircles.rearWheel && destinationPoints.rearWheelCenter &&
       <CirclePartGrabber
-        radius = {geometryState.geometryPoints.rearWheel.radius}
+        radius = {geometryState.fixedCircles.rearWheel.radius}
         centerPoint = {geometryState.geometryPoints.rearWheelCenter}
         pxPerMm = {pxPerMm}
         strokeWidth = {0}
@@ -79,9 +81,9 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null} : BikeImageS
         layer={3}/>
       }
       
-      {geometryState.geometryPoints.frontWheel && destinationPoints.frontWheelCenter &&
+      {geometryState.fixedCircles.frontWheel && destinationPoints.frontWheelCenter &&
       <CirclePartGrabber
-        radius = {geometryState.geometryPoints.frontWheel.radius}
+        radius = {geometryState.fixedCircles.frontWheel.radius}
         centerPoint = {geometryState.geometryPoints.frontWheelCenter}
         pxPerMm = {pxPerMm}
         strokeWidth = {0}
@@ -90,9 +92,9 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null} : BikeImageS
         layer={3}/>
       }
 
-      {geometryState.geometryPoints.chainring && destinationPoints.bottomBracketCenter &&
+      {geometryState.fixedCircles.chainring && destinationPoints.bottomBracketCenter &&
       <CirclePartGrabber
-        radius = {geometryState.geometryPoints.chainring.radius}
+        radius = {geometryState.fixedCircles.chainring.radius}
         centerPoint = {geometryState.geometryPoints.bottomBracketCenter}
         pxPerMm = {pxPerMm}
         strokeWidth = {0}
@@ -272,10 +274,10 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null} : BikeImageS
         layer={7}/>
       }
 
-      {geometryState.geometryPoints.headstack && destinationPoints.headTubeTop && destinationPoints.headTubeBottom &&
+      {geometryState.semiFixedRectangles.headstack && destinationPoints.headTubeTop && destinationPoints.headTubeBottom &&
       <PertrudingPartGrabber 
-        width = {geometryState.geometryPoints.headstack.width}
-        length = {geometryState.geometryPoints.headstack.length}
+        width = {geometryState.semiFixedRectangles.headstack.width}
+        length = {geometryState.semiFixedRectangles.headstack.length}
         anchorPoints={{
           tl: geometryState.geometryPoints.headTubeTop,
           bl: geometryState.geometryPoints.headTubeBottom,
@@ -288,10 +290,10 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null} : BikeImageS
         layer={7}/>
       }
 
-      {geometryState.geometryPoints.seatpost && destinationPoints.seatTubeTop && destinationPoints.bottomBracketCenter &&
+      {geometryState.semiFixedRectangles.seatpost && destinationPoints.seatTubeTop && destinationPoints.bottomBracketCenter &&
       <PertrudingPartGrabber 
-        width = {geometryState.geometryPoints.seatpost.width}
-        length = {geometryState.geometryPoints.seatpost.length}
+        width = {geometryState.semiFixedRectangles.seatpost.width}
+        length = {geometryState.semiFixedRectangles.seatpost.length}
         anchorPoints={{
           tl: geometryState.geometryPoints.seatTubeTop,
           bl: geometryState.geometryPoints.bottomBracketCenter,
@@ -304,11 +306,11 @@ const BikeImageStitcher = ({destinationPoints, desiredPxPerMM=null} : BikeImageS
         layer={7}/>
       } 
 
-      {geometryState.geometryPoints.stem && destinationPoints.stemStart && destinationPoints.handlebarMount &&
+      {geometryState.fixedRectangles.stem && destinationPoints.stemStart && destinationPoints.handlebarMount &&
       <RectanglePartGrabber 
         leftOffset = {0} 
         rightOffset = {0} 
-        width = {geometryState.geometryPoints.stem.width}
+        width = {geometryState.fixedRectangles.stem.width}
         anchorPoints={{
           tl: stemStartPoint,
           bl: stemStartPoint,

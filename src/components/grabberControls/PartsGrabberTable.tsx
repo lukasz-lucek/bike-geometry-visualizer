@@ -207,7 +207,7 @@ const PartsGrabberTable = () => {
               tl: geometryState.geometryPoints.headTubeTop,
               bl: geometryState.geometryPoints.headTubeBottom,
               tr: geometryState.geometryPoints.handlebarMount,
-              offset: geometryState.geometryPoints.headstack
+              offset: geometryState.semiFixedRectangles.headstack
             }}
             pxPerMm = {pxPerMm}
             defaultPartSetup={{

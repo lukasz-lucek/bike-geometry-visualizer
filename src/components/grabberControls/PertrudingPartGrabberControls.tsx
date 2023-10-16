@@ -1,12 +1,12 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useCanvasContext } from '../../contexts/CanvasContext';
-import { GeometryPoints, useGeometryContext } from '../../contexts/GeometryContext';
+import { GeometryOffsetFixedRectangles, GeometryPoints, GeometrySemiFixedRectangles, useGeometryContext } from '../../contexts/GeometryContext';
 import { Point2d } from '../../interfaces/Point2d';
 import { SemiFixedRectangle } from '../../interfaces/Rectangles';
 import PertrudingPartGrabber from '../grabbers/PertrudingPartGrabber';
 
 interface PertrudingPartGrabberControlsProps {
-  partKey : keyof GeometryPoints;
+  partKey : keyof GeometrySemiFixedRectangles;
   anchorPoints : {
     tl: Point2d | null;
     bl: Point2d | null;
@@ -46,25 +46,31 @@ export function PertrudingPartGrabberControls({
     state: [geometryState, updateGeometryState],
   } = useGeometryContext();
 
-  const updatePoints = (newPartialPoints : Partial<GeometryPoints>) => {
-    updateGeometryState({geometryPoints: {...geometryState.geometryPoints, ...newPartialPoints}});
+  const updatePoints = (newPartialPoints : Partial<GeometryOffsetFixedRectangles>) => {
+    updateGeometryState({semiFixedRectangles: {...geometryState.semiFixedRectangles, ...newPartialPoints}});
   }
 
   useEffect(() => {
-    const points = geometryState.geometryPoints;
-    if (!points[partKey]) {
+    const semiFixedRectangles = geometryState.semiFixedRectangles;
+    if (!semiFixedRectangles[partKey]) {
       updatePoints(Object.fromEntries([[partKey, defaultPartSetup]]));
     }
   }, [geometryState.geometryPoints]);
 
   const updateLength = (val : number) => {
-    let curPartSetup = geometryState.geometryPoints[partKey] as SemiFixedRectangle;
+    let curPartSetup = geometryState.semiFixedRectangles[partKey];
+    if (!curPartSetup) {
+      return;
+    }
     curPartSetup.length += val;
     updatePoints(Object.fromEntries([[partKey, curPartSetup]]));
   }
 
   const updateWidth = (val : number) => {
-    let curPartSetup = geometryState.geometryPoints[partKey] as SemiFixedRectangle;
+    let curPartSetup = geometryState.semiFixedRectangles[partKey];
+    if (!curPartSetup) {
+      return;
+    }
     curPartSetup.width += val;
     updatePoints(Object.fromEntries([[partKey, curPartSetup]]));
   }
@@ -80,40 +86,25 @@ export function PertrudingPartGrabberControls({
         <tbody>
           <tr onMouseEnter={() => {setPartHighlight(true)}} onMouseLeave={() => {setPartHighlight(false)}}>
             <td>{lengthName ? lengthName : "Length"}</td>
-            <td>{ geometryState.geometryPoints && (geometryState.geometryPoints[partKey] as SemiFixedRectangle)?.length?.toFixed(0)}</td>
+            <td>{ geometryState.geometryPoints && (geometryState.semiFixedRectangles[partKey])?.length?.toFixed(0)}</td>
             <td><button onClick={() => {updateLength(singleStep)}}>+</button></td>
             <td><button onClick={() => {updateLength(-singleStep)}}>-</button></td>
           </tr>
 
           <tr onMouseEnter={() => {setPartHighlight(true)}} onMouseLeave={() => {setPartHighlight(false)}}>
             <td>{widthName ? widthName : "Width"}</td>
-            <td>{ geometryState.geometryPoints && (geometryState.geometryPoints[partKey] as SemiFixedRectangle)?.width?.toFixed(0)}</td>
+            <td>{ geometryState.geometryPoints && (geometryState.semiFixedRectangles[partKey])?.width?.toFixed(0)}</td>
             <td><button onClick={() => {updateWidth(singleStep)}}>+</button></td>
             <td><button onClick={() => {updateWidth(-singleStep)}}>-</button></td>
           </tr>
 
           {partHighlight &&
               <PertrudingPartGrabber 
-                width = {(geometryState.geometryPoints[partKey] as SemiFixedRectangle)?.width}
-                length = {(geometryState.geometryPoints[partKey] as SemiFixedRectangle)?.length}
+                width = {(geometryState.semiFixedRectangles[partKey])?.width || 0}
+                length = {(geometryState.semiFixedRectangles[partKey])?.length || 0}
                 anchorPoints = {anchorPoints}
                 pxPerMm = {pxPerMm}
                 strokeWidth = {1}/>}
-
-          {/* <tr onMouseEnter={() => {setPartHighlight(true)}} onMouseLeave={() => {setPartHighlight(false)}}>
-            <td>Width</td>
-            <td>{ geometryState.geometryPoints[partKey]?.width?.toFixed(0)}</td>
-            <td><button onClick={() => {updateWidth(singleStep)}}>+</button></td>
-            <td><button onClick={() => {updateWidth(-singleStep)}}>-</button></td>
-            {(partHighlight || leftOffsetHighlight || rightOffsetHighlight) &&
-              <PertrudingPartGrabber 
-                leftOffset = {geometryState.geometryPoints[partKey]?.leftOffset} 
-                rightOffset = {geometryState.geometryPoints[partKey]?.rightOffset} 
-                width = {geometryState.geometryPoints[partKey]?.width}
-                anchorPoints = {anchorPoints}
-                pxPerMm = {pxPerMm}
-                strokeWidth = {1}/>} */}
-          {/* </tr> */}
         </tbody>
       </table>
     </div>

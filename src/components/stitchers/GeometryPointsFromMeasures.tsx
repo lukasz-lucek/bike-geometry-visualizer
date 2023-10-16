@@ -144,8 +144,8 @@ const GeometryPointsFromMeasures = ({
           }
         }
 
-        if (geometryContext.geometryPoints.seatpost) {
-          const seatpostEndPoint = findIntermediatePoint(seatTubeTop, bottomBracketCenter, - geometryContext.geometryPoints.seatpost.length * dPPMM);
+        if (geometryContext.semiFixedRectangles.seatpost) {
+          const seatpostEndPoint = findIntermediatePoint(seatTubeTop, bottomBracketCenter, - geometryContext.semiFixedRectangles.seatpost.length * dPPMM);
           seatpostEnd = {
             x: seatpostEndPoint!.x,
             y: seatpostEndPoint!.y,
@@ -190,18 +190,18 @@ const GeometryPointsFromMeasures = ({
             }
           }
 
-          if (geometryContext.geometryPoints.headstack) {
+          if (geometryContext.semiFixedRectangles.headstack) {
             const spacersEndPoint = findIntermediatePoint(headTubeTop, headTubeBottom, -sizeMeasures.spacersStack * dPPMM);
             spacersEnd = {
               x: spacersEndPoint!.x,
               y: spacersEndPoint!.y,
               color: helperPointsColor,
             }
-            if (geometryContext.geometryPoints.stem && sizeMeasures.stemLength) {
+            if (geometryContext.fixedRectangles.stem && sizeMeasures.stemLength) {
               const stemStartPoint = findIntermediatePoint(
                 headTubeTop,
                 headTubeBottom, 
-                -(sizeMeasures.spacersStack + geometryContext.geometryPoints.stem.width/2) * dPPMM);
+                -(sizeMeasures.spacersStack + geometryContext.fixedRectangles.stem.width/2) * dPPMM);
               stemStart = {
                 x: stemStartPoint!.x,
                 y: stemStartPoint!.y,

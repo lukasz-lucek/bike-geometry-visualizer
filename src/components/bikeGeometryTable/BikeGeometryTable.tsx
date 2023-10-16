@@ -15,6 +15,8 @@ const BikeGeometryTable = ({ children } : {children : ReactNode}) => {
   } = useGeometryContext();
 
   const points = geometryState.geometryPoints;
+  const semiFixedRectangles = geometryState.semiFixedRectangles;
+  const fixedRectangles = geometryState.fixedRectangles;
   const wheelbase = geometryState.wheelbase;
 
   const {
@@ -40,7 +42,7 @@ const BikeGeometryTable = ({ children } : {children : ReactNode}) => {
     let bbDrop=0;
     let crankArm=0;
     let seatpostSetback=0;
-    let spacersStack=points.headstack ? points.headstack.length : 0;
+    let spacersStack=semiFixedRectangles.headstack ? semiFixedRectangles.headstack.length : 0;
     let stemLength=0;
     let stemAngle=0;
     
@@ -112,7 +114,7 @@ const BikeGeometryTable = ({ children } : {children : ReactNode}) => {
 
           spacersStackEnd = findIntermediatePoint(headTubeTop, headTubeBottom, -spacersStack * pxPerMm);
 
-          const stemWidth = points.stem?.width;
+          const stemWidth = fixedRectangles.stem?.width;
           if (stemWidth && points.handlebarMount) {
             stemStartPoint = findIntermediatePoint(headTubeTop, headTubeBottom, -(spacersStack+stemWidth/2) * pxPerMm) as Point2d;
             stemLength = findDistance(stemStartPoint, points.handlebarMount) / pxPerMm;

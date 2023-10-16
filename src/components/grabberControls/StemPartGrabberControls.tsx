@@ -1,12 +1,12 @@
 import React, { Children, ReactNode, useEffect, useState } from 'react';
-import { GeometryPoints, useGeometryContext } from '../../contexts/GeometryContext';
+import { GeometryFixedRectangles, GeometryPoints, useGeometryContext } from '../../contexts/GeometryContext';
 import { Point2d } from '../../interfaces/Point2d';
 import { FixedRectangle, SemiFixedRectangle } from '../../interfaces/Rectangles';
 import { findIntermediatePoint } from '../../utils/GeometryUtils';
 import RectanglePartGrabber from '../grabbers/RectanglePartGrabber';
 
 interface StemPartPartGrabberControlsProps {
-  partKey : keyof GeometryPoints;
+  partKey : keyof GeometryFixedRectangles;
   anchorPoints : {
     tl: Point2d | null;
     bl: Point2d | null;
@@ -36,13 +36,13 @@ export function StemPartGrabberControls({
     state: [geometryState, updateGeometryState],
   } = useGeometryContext();
 
-  const updatePoints = (newPartialPoints : Partial<GeometryPoints>) => {
-    updateGeometryState({geometryPoints: {...geometryState.geometryPoints, ...newPartialPoints}});
+  const updatePoints = (newPartialPoints : Partial<FixedRectangle>) => {
+    updateGeometryState({fixedRectangles: {...geometryState.fixedRectangles, ...newPartialPoints}});
   }
 
   useEffect(() => {
-    const points = geometryState.geometryPoints;
-    const part = points[partKey] as FixedRectangle | null;
+    const fixedRectangles = geometryState.fixedRectangles;
+    const part = fixedRectangles[partKey];
     const width = part ? part.width : defaultPartSetup.width;
     if (!part) {
       updatePoints(Object.fromEntries([[partKey, defaultPartSetup]]));
@@ -54,10 +54,13 @@ export function StemPartGrabberControls({
         -(anchorPoints.offset.length + width/2)  * pxPerMm);
       setStemStartPoint(startPoint);
     }
-  }, [geometryState.geometryPoints, defaultPartSetup]);
+  }, [geometryState.fixedRectangles, defaultPartSetup]);
 
   const updateWidth = (val : number) => {
-    let curPartSetup = geometryState.geometryPoints[partKey] as FixedRectangle;
+    let curPartSetup = geometryState.fixedRectangles[partKey];
+    if (!curPartSetup) {
+      return;
+    }
     curPartSetup.width += val;
     updatePoints(Object.fromEntries([[partKey, curPartSetup]]));
   }
@@ -73,14 +76,14 @@ export function StemPartGrabberControls({
         <tbody>
           <tr onMouseEnter={() => {setPartHighlight(true)}} onMouseLeave={() => {setPartHighlight(false)}}>
             <td>Width</td>
-            <td>{ (geometryState.geometryPoints[partKey] as FixedRectangle)?.width?.toFixed(0)}</td>
+            <td>{ (geometryState.fixedRectangles[partKey])?.width?.toFixed(0)}</td>
             <td><button onClick={() => {updateWidth(singleStep)}}>+</button></td>
             <td><button onClick={() => {updateWidth(-singleStep)}}>-</button></td>
             {(partHighlight) &&
               <RectanglePartGrabber 
                 leftOffset = {0} 
                 rightOffset = {0} 
-                width = {(geometryState.geometryPoints[partKey] as FixedRectangle)?.width}
+                width = {(geometryState.fixedRectangles[partKey])?.width || 0}
                 anchorPoints = {{tl: stemStartPoint, bl: stemStartPoint, tr: anchorPoints.tr, br: anchorPoints.tr}}
                 pxPerMm = {pxPerMm}
                 strokeWidth = {1}/>}
