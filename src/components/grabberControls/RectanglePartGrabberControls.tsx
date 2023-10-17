@@ -14,11 +14,6 @@ interface RectanglePartGrabberControlsProps {
     br: Point2d | null;
   };
   pxPerMm : number,
-  defaultPartSetup? : {
-    leftOffset : number,
-    rightOffset : number,
-    width: number,
-  };
   children? : ReactNode;
   forceOffset? : {
     left: Boolean;
@@ -30,11 +25,6 @@ export function RectanglePartGrabberControls({
   partKey,
   anchorPoints,
   pxPerMm,
-  defaultPartSetup={
-    leftOffset : 0,
-    rightOffset : 0,
-    width: 10,
-  },
   children,
   forceOffset={
     left:false,
@@ -56,13 +46,6 @@ export function RectanglePartGrabberControls({
   const updatePoints = (newPartialPoints : Partial<GeometryOffsetFixedRectangles>) => {
     updateGeometryState({offsetFixedRectangles: {...geometryState.offsetFixedRectangles, ...newPartialPoints}});
   }
-
-  useEffect(() => {
-    const points = geometryState.offsetFixedRectangles;
-    if (!points[partKey]) {
-      updatePoints(Object.fromEntries([[partKey, defaultPartSetup]]));
-    }
-  }, [geometryState.offsetFixedRectangles, defaultPartSetup]);
 
   const updateLeftOffset = (val : number) => {
     let curPartSetup = geometryState.offsetFixedRectangles[partKey];

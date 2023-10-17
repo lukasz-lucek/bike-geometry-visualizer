@@ -14,7 +14,6 @@ interface StemPartPartGrabberControlsProps {
     offset: SemiFixedRectangle | null;
   }
   pxPerMm: number;
-  defaultPartSetup : FixedRectangle
   children : ReactNode;
 }
 
@@ -22,9 +21,6 @@ export function StemPartGrabberControls({
   partKey,
   anchorPoints,
   pxPerMm,
-  defaultPartSetup={
-    width: 10,
-  },
   children} : StemPartPartGrabberControlsProps) {
 
   const singleStep = 5;
@@ -43,10 +39,7 @@ export function StemPartGrabberControls({
   useEffect(() => {
     const fixedRectangles = geometryState.fixedRectangles;
     const part = fixedRectangles[partKey];
-    const width = part ? part.width : defaultPartSetup.width;
-    if (!part) {
-      updatePoints(Object.fromEntries([[partKey, defaultPartSetup]]));
-    }
+    const width = part.width;
     if (anchorPoints.tl && anchorPoints.bl && anchorPoints.offset) {
       const startPoint = findIntermediatePoint(
         anchorPoints.tl,
@@ -54,7 +47,7 @@ export function StemPartGrabberControls({
         -(anchorPoints.offset.length + width/2)  * pxPerMm);
       setStemStartPoint(startPoint);
     }
-  }, [geometryState.fixedRectangles, defaultPartSetup]);
+  }, [geometryState.fixedRectangles[partKey], anchorPoints]);
 
   const updateWidth = (val : number) => {
     let curPartSetup = geometryState.fixedRectangles[partKey];

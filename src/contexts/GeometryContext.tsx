@@ -18,30 +18,30 @@ export interface GeometryPoints {
 }
 
 export interface GeometryOffsetFixedRectangles {
-  crankArm: OffsetFixedRectangle | null,
-  seatstay: OffsetFixedRectangle | null,
-  chainstay: OffsetFixedRectangle | null,
-  fork: OffsetFixedRectangle | null,
-  seatTube: OffsetFixedRectangle | null,
-  headTube: OffsetFixedRectangle | null,
-  bottomTube: OffsetFixedRectangle | null,
-  topTube: OffsetFixedRectangle | null,
+  crankArm: OffsetFixedRectangle,
+  seatstay: OffsetFixedRectangle,
+  chainstay: OffsetFixedRectangle,
+  fork: OffsetFixedRectangle,
+  seatTube: OffsetFixedRectangle,
+  headTube: OffsetFixedRectangle,
+  bottomTube: OffsetFixedRectangle,
+  topTube: OffsetFixedRectangle,
 }
 
 export interface GeometrySemiFixedRectangles {
-  seatpost: SemiFixedRectangle | null,
-  headstack: SemiFixedRectangle | null,
+  seatpost: SemiFixedRectangle,
+  headstack: SemiFixedRectangle,
 }
 
 export interface GeometryFixedRectangles {
-  stem: FixedRectangle | null,
+  stem: FixedRectangle,
 }
 
 export interface GeometryFixedCircles {
-  rearWheel: FixedCircle | null,
-  frontWheel: FixedCircle | null,
-  chainring: FixedCircle | null,
-  seatpostYoke: FixedCircle | null,
+  rearWheel: FixedCircle,
+  frontWheel: FixedCircle,
+  chainring: FixedCircle,
+  seatpostYoke: FixedCircle,
 }
 
 const defaultGeometryPoints : GeometryPoints = {
@@ -57,30 +57,30 @@ const defaultGeometryPoints : GeometryPoints = {
 }
 
 export const defaultOffsetFixedRectangles : GeometryOffsetFixedRectangles = {
-  crankArm : null,
-  seatstay : null,
-  chainstay : null,
-  fork : null,
-  seatTube : null,
-  headTube : null,
-  bottomTube : null,
-  topTube : null,
+  crankArm : {leftOffset: 0, rightOffset: 0, width: 40},
+  seatstay : {leftOffset: 0, rightOffset: 100, width: 40},
+  chainstay : {leftOffset: 0, rightOffset: 0, width: 40},
+  fork : {leftOffset: 0, rightOffset: 0, width: 50},
+  seatTube : {leftOffset: 0, rightOffset: 0, width: 40},
+  headTube : {leftOffset: 0, rightOffset: 0, width: 60},
+  bottomTube : {leftOffset: 0, rightOffset: 50, width: 60},
+  topTube : {leftOffset: 30, rightOffset: 30, width: 50},
 }
 
 export const defaultSemiFixedRectangles : GeometrySemiFixedRectangles = {
-  seatpost: null,
-  headstack: null,
+  seatpost: {width: 40, length: 150},
+  headstack: {width: 35, length: 30},
 }
 
 export const defaultFixedRectangles : GeometryFixedRectangles = {
-  stem: null,
+  stem: {width: 40},
 }
 
 export const defaultFixedCircles : GeometryFixedCircles = {
-  rearWheel: null,
-  frontWheel: null,
-  chainring: null,
-  seatpostYoke: null,
+  rearWheel: {radius : 350},
+  frontWheel: {radius : 350},
+  chainring: {radius : 100},
+  seatpostYoke: {radius : 20},
 }
 
 export interface GeometryState {

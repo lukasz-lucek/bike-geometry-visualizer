@@ -9,9 +9,6 @@ interface CirclePartGrabberControlsProps {
   partKey : keyof GeometryFixedCircles;
   centerPoint : Point2d | null;
   pxPerMm: number;
-  defaultPartSetup : {
-    radius: number;
-  }
   children : ReactNode;
 }
 
@@ -19,9 +16,6 @@ export function CirclePartGrabberControls({
   partKey,
   centerPoint,
   pxPerMm,
-  defaultPartSetup={
-    radius : 100
-  },
   children} : CirclePartGrabberControlsProps) {
 
   const singleStep = 5;
@@ -35,13 +29,6 @@ export function CirclePartGrabberControls({
   const updatePoints = (newPartialPoints : Partial<GeometryFixedCircles>) => {
     updateGeometryState({fixedCircles: {...geometryState.fixedCircles, ...newPartialPoints}});
   }
-
-  useEffect(() => {
-    const points = geometryState.fixedCircles;
-    if (!points[partKey]) {
-      updatePoints(Object.fromEntries([[partKey, defaultPartSetup]]));
-    }
-  }, [geometryState.fixedCircles, defaultPartSetup]);
 
   const updateRadius = (val : number) => {
     let curPartSetup = geometryState.fixedCircles[partKey];

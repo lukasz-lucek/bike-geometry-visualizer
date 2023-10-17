@@ -25,12 +25,7 @@ const PartsGrabberTable = () => {
             tr: points.headTubeTop,
             br: points.headTubeBottom
           }}
-          pxPerMm = {pxPerMm}
-          defaultPartSetup={{
-            leftOffset : 20,
-            rightOffset : 20,
-            width: 50,
-          }}>
+          pxPerMm = {pxPerMm}>
             TopTube
           </RectanglePartGrabberControls>
 
@@ -40,12 +35,7 @@ const PartsGrabberTable = () => {
             tr: points.headTubeBottom,
             br: points.headTubeTop
           }}
-          pxPerMm = {pxPerMm}
-          defaultPartSetup={{
-            leftOffset : 0,
-            rightOffset : 20,
-            width: 50,
-          }}>
+          pxPerMm = {pxPerMm}>
             BottomTube
           </RectanglePartGrabberControls>
 
@@ -55,12 +45,7 @@ const PartsGrabberTable = () => {
             tr: points.headTubeBottom,
             br: points.headTubeBottom
           }}
-          pxPerMm = {pxPerMm}
-          defaultPartSetup={{
-            leftOffset : 0,
-            rightOffset : 0,
-            width: 50,
-          }}>
+          pxPerMm = {pxPerMm}>
             HeadTube
           </RectanglePartGrabberControls>
 
@@ -70,12 +55,7 @@ const PartsGrabberTable = () => {
             tr: points.bottomBracketCenter,
             br: points.bottomBracketCenter
           }}
-          pxPerMm = {pxPerMm}
-          defaultPartSetup={{
-            leftOffset : 0,
-            rightOffset : 0,
-            width: 50,
-          }}>
+          pxPerMm = {pxPerMm}>
             SeatTube
           </RectanglePartGrabberControls>
 
@@ -85,12 +65,7 @@ const PartsGrabberTable = () => {
             tr: points.frontWheelCenter,
             br: points.frontWheelCenter
           }}
-          pxPerMm = {pxPerMm}
-          defaultPartSetup={{
-            leftOffset : 0,
-            rightOffset : 0,
-            width: 50,
-          }}>
+          pxPerMm = {pxPerMm}>
             Fork
           </RectanglePartGrabberControls>
 
@@ -100,12 +75,7 @@ const PartsGrabberTable = () => {
             tr: points.bottomBracketCenter,
             br: points.bottomBracketCenter
           }}
-          pxPerMm = {pxPerMm}
-          defaultPartSetup={{
-            leftOffset : 0,
-            rightOffset : 0,
-            width: 30,
-          }}>
+          pxPerMm = {pxPerMm}>
             Chainstay
           </RectanglePartGrabberControls>
 
@@ -116,11 +86,6 @@ const PartsGrabberTable = () => {
             br: points.bottomBracketCenter
           }}
           pxPerMm = {pxPerMm}
-          defaultPartSetup={{
-            leftOffset : 0,
-            rightOffset : 30,
-            width: 30,
-          }}
           forceOffset={{
             left:true,
             right:false,
@@ -135,39 +100,25 @@ const PartsGrabberTable = () => {
             tr: points.crankArmEnd,
             br: points.crankArmEnd
           }}
-          pxPerMm = {pxPerMm}
-          defaultPartSetup={{
-            leftOffset: 0,
-            rightOffset: 0,
-            width: 30,
-          }}>
+          pxPerMm = {pxPerMm}>
             CrankArm
           </RectanglePartGrabberControls>
           <CirclePartGrabberControls
             partKey="rearWheel"
             centerPoint={geometryState.geometryPoints.rearWheelCenter}
-            pxPerMm = {pxPerMm}
-            defaultPartSetup={{
-              radius: 350,
-            }}>
+            pxPerMm = {pxPerMm}>
             RearWheel
           </CirclePartGrabberControls>
           <CirclePartGrabberControls
             partKey="frontWheel"
             centerPoint={geometryState.geometryPoints.frontWheelCenter}
-            pxPerMm = {pxPerMm}
-            defaultPartSetup={{
-              radius: 350,
-            }}>
+            pxPerMm = {pxPerMm}>
             FrontWheel
           </CirclePartGrabberControls>
           <CirclePartGrabberControls
             partKey="chainring"
             centerPoint={geometryState.geometryPoints.bottomBracketCenter}
-            pxPerMm = {pxPerMm}
-            defaultPartSetup={{
-              radius: 100,
-            }}>
+            pxPerMm = {pxPerMm}>
             Chainring
           </CirclePartGrabberControls>
           <PertrudingPartGrabberControls
@@ -178,11 +129,7 @@ const PartsGrabberTable = () => {
             }}
             pxPerMm = {pxPerMm}
             lengthName = "length"
-            widthName = "width"
-            defaultPartSetup={{
-              length : 100,
-              width : 30,
-            }}>
+            widthName = "width">
             Seatpost
           </PertrudingPartGrabberControls>
           <PertrudingPartGrabberControls
@@ -193,11 +140,7 @@ const PartsGrabberTable = () => {
             }}
             pxPerMm = {pxPerMm}
             lengthName = "height"
-            widthName = "width"
-            defaultPartSetup={{
-              length : 40,
-              width : 40,
-            }}>
+            widthName = "width">
             Stem spacers
           </PertrudingPartGrabberControls>
 
@@ -209,20 +152,14 @@ const PartsGrabberTable = () => {
               tr: geometryState.geometryPoints.handlebarMount,
               offset: geometryState.semiFixedRectangles.headstack
             }}
-            pxPerMm = {pxPerMm}
-            defaultPartSetup={{
-              width: 40,
-            }}>
+            pxPerMm = {pxPerMm}>
             Stem
           </StemPartGrabberControls>
 
           <CirclePartGrabberControls
             partKey="seatpostYoke"
             centerPoint={geometryState.geometryPoints.seatMount}
-            pxPerMm = {pxPerMm}
-            defaultPartSetup={{
-              radius: 30,
-            }}>
+            pxPerMm = {pxPerMm}>
             Seatpost Yoke
           </CirclePartGrabberControls>
 
