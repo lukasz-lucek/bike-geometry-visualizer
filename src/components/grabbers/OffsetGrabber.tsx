@@ -12,7 +12,7 @@ export interface TableAngleRowPropsType {
   strokeWidth: number,
 }
 
-export function OffsetGrabber({offset, topAnchor, bottomAnchor, pxPerMm, strokeWidth} : TableAngleRowPropsType) {
+export function OffsetGrabber({ offset, topAnchor, bottomAnchor, pxPerMm, strokeWidth }: TableAngleRowPropsType) {
 
   const [shape, setShape] = useState<Line | null>(null);
 
@@ -21,7 +21,7 @@ export function OffsetGrabber({offset, topAnchor, bottomAnchor, pxPerMm, strokeW
       return;
     }
 
-    let ba : Point2d = bottomAnchor;
+    let ba: Point2d = bottomAnchor;
     if (equalPoints(topAnchor, bottomAnchor)) {
       //force vertical offset
       ba = {
@@ -29,13 +29,13 @@ export function OffsetGrabber({offset, topAnchor, bottomAnchor, pxPerMm, strokeW
         y: bottomAnchor.y - 10,
       }
     }
-    const offsetBottom = findIntermediatePoint(topAnchor, ba, offset  * pxPerMm)
+    const offsetBottom = findIntermediatePoint(topAnchor, ba, offset * pxPerMm)
 
     if (!offsetBottom) {
       return;
     }
 
-    const newShape : Line = {
+    const newShape: Line = {
       strokeWidth: strokeWidth,
       p1: topAnchor,
       p2: offsetBottom,
@@ -46,7 +46,7 @@ export function OffsetGrabber({offset, topAnchor, bottomAnchor, pxPerMm, strokeW
 
   return (
     <>
-      {shape && <LineMarker line={shape}/>}
+      {shape && <LineMarker line={shape} />}
     </>
   );
 }

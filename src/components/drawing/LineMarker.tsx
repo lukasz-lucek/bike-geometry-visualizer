@@ -11,11 +11,11 @@ export interface Line {
   color: Color,
 }
 
-export function LineMarker({line} : {line: Line}) {
+export function LineMarker({ line }: { line: Line }) {
   const {
-    state: [canvasState, ],
+    state: [canvasState,],
   } = useCanvasContext();
-  
+
   useEffect(() => {
     const canvas = canvasState.canvas;
     if (!canvas) {
@@ -24,11 +24,11 @@ export function LineMarker({line} : {line: Line}) {
     const fabricLine = new fabric.Line(
       [line.p1.x, line.p1.y, line.p2.x, line.p2.y],
       {
-      stroke: line.color.toString(), // Set the stroke color
-      strokeWidth: Math.ceil(line.strokeWidth), // Set the stroke width
-      selectable: false,
-      evented: false,
-    });
+        stroke: line.color.toString(), // Set the stroke color
+        strokeWidth: Math.ceil(line.strokeWidth), // Set the stroke width
+        selectable: false,
+        evented: false,
+      });
 
     canvas.insertAt(fabricLine, 2, false);
     canvas.renderAll();

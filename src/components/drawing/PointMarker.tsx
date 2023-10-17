@@ -3,11 +3,11 @@ import { fabric } from 'fabric';
 import { useCanvasContext } from '../../contexts/CanvasContext';
 import { ColorPoint2d } from '../../interfaces/Point2d';
 
-export function PointMarker({shape} : {shape: ColorPoint2d}) {
+export function PointMarker({ shape }: { shape: ColorPoint2d }) {
   const {
-    state: [canvasState, ],
+    state: [canvasState,],
   } = useCanvasContext();
-  
+
   useEffect(() => {
     const canvas = canvasState.canvas;
     if (!canvas) {

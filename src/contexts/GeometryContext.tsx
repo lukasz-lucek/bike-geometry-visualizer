@@ -6,7 +6,7 @@ import { Measures } from './MeasurementsContext';
 
 //TODO - divide by type
 export interface GeometryPoints {
-  rearWheelCenter:  ColorPoint2d | null,
+  rearWheelCenter: ColorPoint2d | null,
   frontWheelCenter: ColorPoint2d | null,
   headTubeTop: ColorPoint2d | null,
   headTubeBottom: ColorPoint2d | null,
@@ -44,43 +44,43 @@ export interface GeometryFixedCircles {
   seatpostYoke: FixedCircle,
 }
 
-const defaultGeometryPoints : GeometryPoints = {
-  rearWheelCenter : null,
-  frontWheelCenter : null,
-  headTubeTop : null,
-  headTubeBottom : null,
-  bottomBracketCenter : null,
-  seatTubeTop : null,
-  crankArmEnd : null,
-  handlebarMount : null,
-  seatMount : null,
+const defaultGeometryPoints: GeometryPoints = {
+  rearWheelCenter: null,
+  frontWheelCenter: null,
+  headTubeTop: null,
+  headTubeBottom: null,
+  bottomBracketCenter: null,
+  seatTubeTop: null,
+  crankArmEnd: null,
+  handlebarMount: null,
+  seatMount: null,
 }
 
-export const defaultOffsetFixedRectangles : GeometryOffsetFixedRectangles = {
-  crankArm : {leftOffset: 0, rightOffset: 0, width: 40},
-  seatstay : {leftOffset: 0, rightOffset: 100, width: 40},
-  chainstay : {leftOffset: 0, rightOffset: 0, width: 40},
-  fork : {leftOffset: 0, rightOffset: 0, width: 50},
-  seatTube : {leftOffset: 0, rightOffset: 0, width: 40},
-  headTube : {leftOffset: 0, rightOffset: 0, width: 60},
-  bottomTube : {leftOffset: 0, rightOffset: 50, width: 60},
-  topTube : {leftOffset: 30, rightOffset: 30, width: 50},
+export const defaultOffsetFixedRectangles: GeometryOffsetFixedRectangles = {
+  crankArm: { leftOffset: 0, rightOffset: 0, width: 40 },
+  seatstay: { leftOffset: 0, rightOffset: 100, width: 40 },
+  chainstay: { leftOffset: 0, rightOffset: 0, width: 40 },
+  fork: { leftOffset: 0, rightOffset: 0, width: 50 },
+  seatTube: { leftOffset: 0, rightOffset: 0, width: 40 },
+  headTube: { leftOffset: 0, rightOffset: 0, width: 60 },
+  bottomTube: { leftOffset: 0, rightOffset: 50, width: 60 },
+  topTube: { leftOffset: 30, rightOffset: 30, width: 50 },
 }
 
-export const defaultSemiFixedRectangles : GeometrySemiFixedRectangles = {
-  seatpost: {width: 40, length: 150},
-  headstack: {width: 35, length: 30},
+export const defaultSemiFixedRectangles: GeometrySemiFixedRectangles = {
+  seatpost: { width: 40, length: 150 },
+  headstack: { width: 35, length: 30 },
 }
 
-export const defaultFixedRectangles : GeometryFixedRectangles = {
-  stem: {width: 40},
+export const defaultFixedRectangles: GeometryFixedRectangles = {
+  stem: { width: 40 },
 }
 
-export const defaultFixedCircles : GeometryFixedCircles = {
-  rearWheel: {radius : 350},
-  frontWheel: {radius : 350},
-  chainring: {radius : 100},
-  seatpostYoke: {radius : 20},
+export const defaultFixedCircles: GeometryFixedCircles = {
+  rearWheel: { radius: 350 },
+  frontWheel: { radius: 350 },
+  chainring: { radius: 100 },
+  seatpostYoke: { radius: 20 },
 }
 
 export interface GeometryState {
@@ -115,20 +115,20 @@ interface GeometryContextType {
 const GeometryContext = createContext<GeometryContextType | undefined>(undefined);
 
 export const useGeometryContext = () => {
-  const context =  useContext(GeometryContext);
+  const context = useContext(GeometryContext);
   if (!context) {
     throw new Error("useGeometryContext must be called from within GeometryProvider")
   }
   return context;
 };
 
-export const GeometryProvider = ({ children } : {children : ReactNode}) => {
+export const GeometryProvider = ({ children }: { children: ReactNode }) => {
   const storage = localStorage.getItem("knownGeometries");
-  let bikesList : string[] = [];
+  let bikesList: string[] = [];
   if (storage) {
     bikesList = Object.keys(JSON.parse(storage));
   }
-  const defaultState : GeometryState = {
+  const defaultState: GeometryState = {
     wheelbase: 1000,
     geometryPoints: defaultGeometryPoints,
     offsetFixedRectangles: defaultOffsetFixedRectangles,
@@ -142,14 +142,14 @@ export const GeometryProvider = ({ children } : {children : ReactNode}) => {
 
   const [state, setState] = useState(defaultState);
 
-  const updateState = (newPartialState : Partial<GeometryState>) => {
-    setState({...state,...newPartialState});
+  const updateState = (newPartialState: Partial<GeometryState>) => {
+    setState({ ...state, ...newPartialState });
   }
 
   return (
     <GeometryContext.Provider value={{
-        state: [state, updateState],
-        }}>
+      state: [state, updateState],
+    }}>
       {children}
     </GeometryContext.Provider>
   );

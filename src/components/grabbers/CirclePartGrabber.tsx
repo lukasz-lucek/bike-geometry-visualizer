@@ -4,13 +4,13 @@ import { Point2d } from '../../interfaces/Point2d';
 import CircleMarker, { CircleMarkerData } from '../drawing/CircleMarker';
 
 interface CirclePartGrabberProps {
-  radius : number
-  centerPoint : Point2d | null;
-  pxPerMm : number,
-  strokeWidth : number,
-  placementPoint? : Point2d | null,
-  desiredPxPerMM? : number | null,
-  layer? : number,
+  radius: number
+  centerPoint: Point2d | null;
+  pxPerMm: number,
+  strokeWidth: number,
+  placementPoint?: Point2d | null,
+  desiredPxPerMM?: number | null,
+  layer?: number,
 }
 
 export function CirclePartGrabber(
@@ -19,10 +19,10 @@ export function CirclePartGrabber(
     centerPoint,
     pxPerMm,
     strokeWidth,
-    placementPoint=null,
-    desiredPxPerMM=null,
-    layer=3
-  } : CirclePartGrabberProps) {
+    placementPoint = null,
+    desiredPxPerMM = null,
+    layer = 3
+  }: CirclePartGrabberProps) {
 
   const [circleMarker, setCircleMarker] = useState<CircleMarkerData | null>(null);
   const [scale, setScale] = useState(1);
@@ -33,7 +33,7 @@ export function CirclePartGrabber(
     }
 
     const newCircleMarker = {
-      circle : {
+      circle: {
         center: centerPoint,
         radius: radius * pxPerMm,
         startAngle: 0,
@@ -44,19 +44,19 @@ export function CirclePartGrabber(
     }
     setCircleMarker(newCircleMarker);
     if (desiredPxPerMM != null) {
-      setScale(desiredPxPerMM/pxPerMm);
+      setScale(desiredPxPerMM / pxPerMm);
     }
   }, [radius, centerPoint, pxPerMm, strokeWidth, desiredPxPerMM])
 
 
   return (
     <>
-      {circleMarker && 
+      {circleMarker &&
         <CircleMarker
           circleMarker={circleMarker}
           placementPoint={placementPoint}
           scale={scale}
-          layer={layer}/>
+          layer={layer} />
       }
     </>
   );

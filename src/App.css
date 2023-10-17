@@ -3,25 +3,33 @@
 .app-container {
   display: grid;
   grid-template-columns: 1fr 2fr;
-  grid-template-rows: auto 1fr; /* Auto rows */
-  grid-gap: 10px; /* Gaautop between grid items */
+  grid-template-rows: auto 1fr;
+  /* Auto rows */
+  grid-gap: 10px;
+  /* Gaautop between grid items */
 }
 
 .tool-selection-area {
-  grid-column: 1 / span 1; /* Start at column 1 and span 1 column */
-  grid-row: 1 / span 1; /* Start at row 1 and span 1 row */
+  grid-column: 1 / span 1;
+  /* Start at column 1 and span 1 column */
+  grid-row: 1 / span 1;
+  /* Start at row 1 and span 1 row */
   /* Add your styling for the tool selection area */
 }
 
 .tool-options-area {
-  grid-column: 1 / span 1; /* Start at column 2 and span 1 column */
-  grid-row: 2 / span 1; /* Start at row 1 and span 2 rows */
+  grid-column: 1 / span 1;
+  /* Start at column 2 and span 1 column */
+  grid-row: 2 / span 1;
+  /* Start at row 1 and span 2 rows */
   /* Add your styling for the tool options area */
 }
 
 .workspace {
-  grid-column: 2 / span 2; /* Start at column 3 and span 1 column */
-  grid-row: 1 / span 2; /* Start at row 1 and span 2 rows */
+  grid-column: 2 / span 2;
+  /* Start at column 3 and span 1 column */
+  grid-row: 1 / span 2;
+  /* Start at row 1 and span 2 rows */
   /* Add your styling for the workspace */
 }
 
@@ -57,7 +65,7 @@
   align-items: center;
   align-content: center;
   justify-content: center;
-  background-color:grey;
+  background-color: grey;
 }
 
 img {
@@ -79,9 +87,12 @@ img:hover {
 
 .point-buttons {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Three equal columns */
-  grid-template-rows: auto; /* Auto rows */
-  grid-gap: 10px; /* Gap between grid items */
+  grid-template-columns: repeat(3, 1fr);
+  /* Three equal columns */
+  grid-template-rows: auto;
+  /* Auto rows */
+  grid-gap: 10px;
+  /* Gap between grid items */
 }
 
 .rear-wheel-center:hover {

@@ -12,7 +12,7 @@ import { Canvas } from './components/drawing/Canvas';
 const App = () => {
   const [selectedTool, setSelectedTool] = useState('');
 
-  const handleToolSelect = (toolName : string) => {
+  const handleToolSelect = (toolName: string) => {
     setSelectedTool(toolName);
   };
 
@@ -28,7 +28,7 @@ const App = () => {
               <ToolOptionsArea selectedTool={selectedTool} />
             </div>
             <div className="workspace">
-              <Canvas/>
+              <Canvas />
             </div>
           </div>
         </MeasurementsProvider>

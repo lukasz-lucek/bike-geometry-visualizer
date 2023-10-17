@@ -23,17 +23,17 @@ export interface Measures {
 export interface MeasurementsState {
   measures: Measures,
   helpserPoints: {
-    wheelBaseEnd : Point2d | null;
-    bbTop : Point2d | null;
-    stackReachTouch : Point2d | null;
-    topTubeEffEnd : Point2d | null;
-    headAngleCenter : Point2d | null;
-    headAngleStart : Point2d | null;
-    seatAngleStart : Point2d | null;
-    seatMountProjection : Point2d | null;
-    spacersStackEnd : Point2d | null;
-    stemStartPoint : Point2d | null;
-    stemAnglePoint : Point2d | null;
+    wheelBaseEnd: Point2d | null;
+    bbTop: Point2d | null;
+    stackReachTouch: Point2d | null;
+    topTubeEffEnd: Point2d | null;
+    headAngleCenter: Point2d | null;
+    headAngleStart: Point2d | null;
+    seatAngleStart: Point2d | null;
+    seatMountProjection: Point2d | null;
+    spacersStackEnd: Point2d | null;
+    stemStartPoint: Point2d | null;
+    stemAnglePoint: Point2d | null;
   },
   pxPerMm: number,
   strokeWidth: number,
@@ -46,16 +46,16 @@ interface MeasurementsContextType {
 const MeasurementsContext = createContext<MeasurementsContextType | undefined>(undefined);
 
 export const useMeasurementsContext = () => {
-  const context =  useContext(MeasurementsContext);
+  const context = useContext(MeasurementsContext);
   if (!context) {
-    throw new Error ('useMeasurementsContext needs to be called from within MeasurementsProvider');
+    throw new Error('useMeasurementsContext needs to be called from within MeasurementsProvider');
   }
   return context;
 };
 
-export const MeasurementsProvider = ({ children } : {children : ReactNode}) => {
+export const MeasurementsProvider = ({ children }: { children: ReactNode }) => {
 
-  const defaultState : MeasurementsState = {
+  const defaultState: MeasurementsState = {
     measures: {
       stack: 0,
       reach: 0,
@@ -74,17 +74,17 @@ export const MeasurementsProvider = ({ children } : {children : ReactNode}) => {
       stemAngle: 0,
     },
     helpserPoints: {
-      wheelBaseEnd : null,
-      bbTop : null,
-      stackReachTouch : null,
-      topTubeEffEnd : null,
-      headAngleCenter : null,
-      headAngleStart : null,
-      seatAngleStart : null,
-      seatMountProjection : null,
-      spacersStackEnd : null,
-      stemStartPoint : null,
-      stemAnglePoint : null,
+      wheelBaseEnd: null,
+      bbTop: null,
+      stackReachTouch: null,
+      topTubeEffEnd: null,
+      headAngleCenter: null,
+      headAngleStart: null,
+      seatAngleStart: null,
+      seatMountProjection: null,
+      spacersStackEnd: null,
+      stemStartPoint: null,
+      stemAnglePoint: null,
     },
     pxPerMm: 1,
     strokeWidth: 1,
@@ -92,14 +92,14 @@ export const MeasurementsProvider = ({ children } : {children : ReactNode}) => {
 
   const [state, setState] = useState<MeasurementsState>(defaultState);
 
-  const updateState = (newPartialState : Partial<MeasurementsState>) => {
-    setState({...state,...newPartialState});
+  const updateState = (newPartialState: Partial<MeasurementsState>) => {
+    setState({ ...state, ...newPartialState });
   }
 
   return (
     <MeasurementsContext.Provider value={{
-        state: [state, updateState],
-        }}>
+      state: [state, updateState],
+    }}>
       {children}
     </MeasurementsContext.Provider>
   );

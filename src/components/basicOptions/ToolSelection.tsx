@@ -4,7 +4,7 @@ import GeometrySaver from '../storage/GeometrySaver';
 const ToolSelection = ({
   selectedTool,
   handleToolSelect
-} : {
+}: {
   selectedTool: string;
   handleToolSelect: (val: string) => void;
 }) => {
@@ -17,7 +17,7 @@ const ToolSelection = ({
 
   return (
     <div className="toolbox">
-      <GeometrySaver/>
+      <GeometrySaver />
       {tools.map((tool) => (
         <button
           key={tool.name}

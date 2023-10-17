@@ -1,12 +1,12 @@
 export interface FixedRectangle {
-    width: number;
+  width: number;
 }
 
 export interface SemiFixedRectangle extends FixedRectangle {
-    length: number;
+  length: number;
 }
 
 export interface OffsetFixedRectangle extends FixedRectangle {
-    leftOffset: number;
-    rightOffset: number;
+  leftOffset: number;
+  rightOffset: number;
 }

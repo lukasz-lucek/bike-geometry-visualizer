@@ -6,17 +6,17 @@ import { findIntermediatePoint } from '../../utils/GeometryUtils';
 import RectangleMarker, { RectangleMarkerData } from '../drawing/RectangleMarker';
 
 interface PertrudingPartGrabberProps {
-  width : number
-  length : number
-  anchorPoints : {
+  width: number
+  length: number
+  anchorPoints: {
     tl: Point2d | null;
     bl: Point2d | null;
   }
-  pxPerMm : number,
-  strokeWidth : number,
-  leftPlacementPoint? : Point2d | null,
-  rightPlacementPoint? : Point2d | null,
-  layer? : number,
+  pxPerMm: number,
+  strokeWidth: number,
+  leftPlacementPoint?: Point2d | null,
+  rightPlacementPoint?: Point2d | null,
+  layer?: number,
   desiredPxPerMM?: number | null,
 }
 
@@ -26,14 +26,14 @@ export function PertrudingPartGrabber({
   anchorPoints,
   pxPerMm,
   strokeWidth,
-  leftPlacementPoint=null,
-  rightPlacementPoint=null,
-  layer=3,
-  desiredPxPerMM=null,
-} : PertrudingPartGrabberProps) {
+  leftPlacementPoint = null,
+  rightPlacementPoint = null,
+  layer = 3,
+  desiredPxPerMM = null,
+}: PertrudingPartGrabberProps) {
 
   const {
-    state: [geometryState, ],
+    state: [geometryState,],
   } = useGeometryContext();
 
   const [rectangleMarkerData, setRectangleMarkerData] = useState<RectangleMarkerData | null>(null);
@@ -46,12 +46,12 @@ export function PertrudingPartGrabber({
     if (!anchorPoints.tl || !anchorPoints.bl) {
       return;
     }
-    const endPoint = findIntermediatePoint(anchorPoints.tl, anchorPoints.bl, -length  * pxPerMm);
+    const endPoint = findIntermediatePoint(anchorPoints.tl, anchorPoints.bl, -length * pxPerMm);
     if (!endPoint) {
       return;
     }
 
-    const newRectangleMarkerData : RectangleMarkerData = {
+    const newRectangleMarkerData: RectangleMarkerData = {
       rectangle: {
         p1: anchorPoints.tl,
         p2: endPoint,
@@ -71,7 +71,7 @@ export function PertrudingPartGrabber({
         leftPlacementPoint={leftPlacementPoint}
         rightPlacementPoint={rightPlacementPoint}
         layer={layer}
-        scaling={desiredPxPerMM?desiredPxPerMM/pxPerMm:1}/>}
+        scaling={desiredPxPerMM ? desiredPxPerMM / pxPerMm : 1} />}
     </>
   );
 }

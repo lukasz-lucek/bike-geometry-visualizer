@@ -3,7 +3,7 @@ import PointGrabButton from './PointGrabButton';
 
 const PointGrabGrid = () => {
 
-  const [selectedPoint, setSelectedPoint] = useState<string|null>(null);
+  const [selectedPoint, setSelectedPoint] = useState<string | null>(null);
 
   return (
     <div className="point-buttons">

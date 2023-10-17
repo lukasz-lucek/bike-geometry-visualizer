@@ -9,15 +9,15 @@ interface BackgroundImageProps {
   desiredPxPerMM: number | null;
 }
 
-export function BackgroundImage({isGrayedOut = false, desiredPxPerMM = null} : BackgroundImageProps) {
+export function BackgroundImage({ isGrayedOut = false, desiredPxPerMM = null }: BackgroundImageProps) {
   const [fabricObject, setFabricObject] = useState<fabric.Image | null>(null);
 
   const {
-    state: [canvasState, ],
+    state: [canvasState,],
   } = useCanvasContext();
 
   const {
-    state: [geometryState, ],
+    state: [geometryState,],
   } = useGeometryContext();
 
   useEffect(() => {
@@ -38,11 +38,11 @@ export function BackgroundImage({isGrayedOut = false, desiredPxPerMM = null} : B
     if (desiredPxPerMM && pxPerMm) {
       ratio = desiredPxPerMM / pxPerMm;
     }
-    
-    
-    canvas.setViewportTransform([1,0,0,1,0,0]);
+
+
+    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     fabric.Image.fromURL(geometryState.selectedFile, (img) => {
-      let zoom=1;
+      let zoom = 1;
       if (canvas.width && img.width && canvas.height && img.height) {
         zoom = Math.min(canvas.width / img.width, canvas.height / img.height);
       }
@@ -68,7 +68,7 @@ export function BackgroundImage({isGrayedOut = false, desiredPxPerMM = null} : B
         canvas.renderAll();
       }
     }
-    
+
   }, [fabricObject]);
 
   return (

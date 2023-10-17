@@ -1,8 +1,8 @@
 import Color from 'color';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { ReactNode } from 'react';
 import { Point2d } from '../../interfaces/Point2d';
-import {AngleMarker, Angle} from '../drawing/AngleMarker';
+import { AngleMarker, Angle } from '../drawing/AngleMarker';
 
 export interface TableAngleRowPropsType {
   value: number,
@@ -21,7 +21,7 @@ const BikeGeometryTableAngleRow = (
     endPoint,
     strokeWidth,
     children
-  } : TableAngleRowPropsType) => {
+  }: TableAngleRowPropsType) => {
 
   const [isHighlighted, setIsHighlighted] = useState(false);
   const [angle, setAngle] = useState<Angle | null>(null);
@@ -44,10 +44,10 @@ const BikeGeometryTableAngleRow = (
   }, [startPoint, middlePoint, endPoint]);
 
   return (
-    <tr onMouseEnter={() => {setIsHighlighted(true)}} onMouseLeave={() => {setIsHighlighted(false)}}>
+    <tr onMouseEnter={() => { setIsHighlighted(true) }} onMouseLeave={() => { setIsHighlighted(false) }}>
       <td>{children}</td>
       <td>{value ? value.toFixed(0) : 0}</td>
-      {isHighlighted && angle && <AngleMarker angle={angle}/>}
+      {isHighlighted && angle && <AngleMarker angle={angle} />}
     </tr>
   );
 };

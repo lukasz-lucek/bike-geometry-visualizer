@@ -4,7 +4,7 @@ import ImageUploadOption from './ImageUploadOption'; // Import the ImageUploadOp
 import FrameGeometryInput from './FrameGeometryInput'; // Import the ImageUploadOption component
 import ImageGeometryGrabber from './ImageGeometryGrabber';
 
-const ToolOptionsArea = ({ selectedTool } : {selectedTool : string}) => {
+const ToolOptionsArea = ({ selectedTool }: { selectedTool: string }) => {
   const renderToolOptions = () => {
     switch (selectedTool) {
       case 'imageUpload':

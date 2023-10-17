@@ -6,17 +6,17 @@ import { Point2d } from '../../interfaces/Point2d';
 import { CirclePartGrabber } from '../grabbers/CirclePartGrabber';
 
 interface CirclePartGrabberControlsProps {
-  partKey : keyof GeometryFixedCircles;
-  centerPoint : Point2d | null;
+  partKey: keyof GeometryFixedCircles;
+  centerPoint: Point2d | null;
   pxPerMm: number;
-  children : ReactNode;
+  children: ReactNode;
 }
 
 export function CirclePartGrabberControls({
   partKey,
   centerPoint,
   pxPerMm,
-  children} : CirclePartGrabberControlsProps) {
+  children }: CirclePartGrabberControlsProps) {
 
   const singleStep = 5;
 
@@ -26,11 +26,11 @@ export function CirclePartGrabberControls({
     state: [geometryState, updateGeometryState],
   } = useGeometryContext();
 
-  const updatePoints = (newPartialPoints : Partial<GeometryFixedCircles>) => {
-    updateGeometryState({fixedCircles: {...geometryState.fixedCircles, ...newPartialPoints}});
+  const updatePoints = (newPartialPoints: Partial<GeometryFixedCircles>) => {
+    updateGeometryState({ fixedCircles: { ...geometryState.fixedCircles, ...newPartialPoints } });
   }
 
-  const updateRadius = (val : number) => {
+  const updateRadius = (val: number) => {
     let curPartSetup = geometryState.fixedCircles[partKey];
     if (!curPartSetup) {
       return;
@@ -49,17 +49,17 @@ export function CirclePartGrabberControls({
         </thead>
         <tbody>
 
-          <tr onMouseEnter={() => {setPartHighlight(true)}} onMouseLeave={() => {setPartHighlight(false)}}>
+          <tr onMouseEnter={() => { setPartHighlight(true) }} onMouseLeave={() => { setPartHighlight(false) }}>
             <td>Radius</td>
-            <td>{ (geometryState.fixedCircles[partKey])?.radius?.toFixed(0)}</td>
-            <td><button onClick={() => {updateRadius(singleStep)}}>+</button></td>
-            <td><button onClick={() => {updateRadius(-singleStep)}}>-</button></td>
+            <td>{(geometryState.fixedCircles[partKey])?.radius?.toFixed(0)}</td>
+            <td><button onClick={() => { updateRadius(singleStep) }}>+</button></td>
+            <td><button onClick={() => { updateRadius(-singleStep) }}>-</button></td>
             {partHighlight &&
               <CirclePartGrabber
-                radius = {(geometryState.fixedCircles[partKey])?.radius || 0}
-                centerPoint = {centerPoint}
-                pxPerMm = {pxPerMm}
-                strokeWidth = {1}/>}
+                radius={(geometryState.fixedCircles[partKey])?.radius || 0}
+                centerPoint={centerPoint}
+                pxPerMm={pxPerMm}
+                strokeWidth={1} />}
           </tr>
         </tbody>
       </table>

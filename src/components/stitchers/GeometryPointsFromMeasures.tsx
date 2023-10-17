@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { GeometryPoints, useGeometryContext } from '../../contexts/GeometryContext';
-import { findPxPerMm, findIntermediatePoint, findPointFromPointAngleLength} from '../../utils/GeometryUtils';
+import { findPxPerMm, findIntermediatePoint, findPointFromPointAngleLength } from '../../utils/GeometryUtils';
 import BikeImageStitcher, { DestinationGeometryPoints } from './BikeImageStitcher';
 import GeometryPointVisualization from '../drawing/GeometryPointsVisualization';
 import Color from 'color';
@@ -9,14 +9,14 @@ import { Measures } from '../../contexts/MeasurementsContext';
 
 const GeometryPointsFromMeasures = ({
   sizeMeasures,
-  desiredPxPerMM=null
-} : {
-  sizeMeasures : Measures;
-  desiredPxPerMM : number | null;
+  desiredPxPerMM = null
+}: {
+  sizeMeasures: Measures;
+  desiredPxPerMM: number | null;
 }) => {
-  
+
   const {
-    state: [geometryContext, ],
+    state: [geometryContext,],
   } = useGeometryContext();
 
   const [state, updateState] = useState<DestinationGeometryPoints>({
@@ -73,26 +73,26 @@ const GeometryPointsFromMeasures = ({
       }
     }
 
-    let bottomBracketCenter : ColorPoint2d | null = null;
-    let seatTubeTop : ColorPoint2d | null = null;
-    let headTubeTop : ColorPoint2d | null = null;
-    let headTubeBottom : ColorPoint2d | null = null;
-    let seatStayRight : ColorPoint2d | null = null;
-    let seatStayLeft : ColorPoint2d | null = null;
-    let topTubeLeft : ColorPoint2d | null = null;
-    let topTubeRight : ColorPoint2d | null = null;
-    let bottomTubeRight : ColorPoint2d | null = null;
-    let crankArmEnd : ColorPoint2d | null = null;
-    let seatpostEnd : ColorPoint2d | null = null;
-    let spacersEnd : ColorPoint2d | null = null;
-    let stemStart : ColorPoint2d | null = null;
-    let handlebarMount : ColorPoint2d | null = null;
+    let bottomBracketCenter: ColorPoint2d | null = null;
+    let seatTubeTop: ColorPoint2d | null = null;
+    let headTubeTop: ColorPoint2d | null = null;
+    let headTubeBottom: ColorPoint2d | null = null;
+    let seatStayRight: ColorPoint2d | null = null;
+    let seatStayLeft: ColorPoint2d | null = null;
+    let topTubeLeft: ColorPoint2d | null = null;
+    let topTubeRight: ColorPoint2d | null = null;
+    let bottomTubeRight: ColorPoint2d | null = null;
+    let crankArmEnd: ColorPoint2d | null = null;
+    let seatpostEnd: ColorPoint2d | null = null;
+    let spacersEnd: ColorPoint2d | null = null;
+    let stemStart: ColorPoint2d | null = null;
+    let handlebarMount: ColorPoint2d | null = null;
 
     const bb = sizeMeasures.bbDrop;
     const cs = sizeMeasures.chainstay;
     if (bb && cs) {
-      
-      const dx = Math.sqrt(cs*cs - bb*bb);
+
+      const dx = Math.sqrt(cs * cs - bb * bb);
       bottomBracketCenter = {
         x: dPPMM * ((orgRearWheelCenter.x / pxPerMm) + dx),
         y: dPPMM * ((orgRearWheelCenter.y / pxPerMm) + bb),
@@ -116,8 +116,8 @@ const GeometryPointsFromMeasures = ({
             color: helperPointsColor,
           }
           const rwcl = {
-            x:rearWheelCenter.x,
-            y:rearWheelCenter.y-10,
+            x: rearWheelCenter.x,
+            y: rearWheelCenter.y - 10,
           }
           const seatStayLeftPoint = findIntermediatePoint(rearWheelCenter, rwcl, geometryContext.offsetFixedRectangles.seatstay.leftOffset * dPPMM);
           seatStayLeft = {
@@ -200,8 +200,8 @@ const GeometryPointsFromMeasures = ({
             if (geometryContext.fixedRectangles.stem && sizeMeasures.stemLength) {
               const stemStartPoint = findIntermediatePoint(
                 headTubeTop,
-                headTubeBottom, 
-                -(sizeMeasures.spacersStack + geometryContext.fixedRectangles.stem.width/2) * dPPMM);
+                headTubeBottom,
+                -(sizeMeasures.spacersStack + geometryContext.fixedRectangles.stem.width / 2) * dPPMM);
               stemStart = {
                 x: stemStartPoint!.x,
                 y: stemStartPoint!.y,
@@ -246,10 +246,10 @@ const GeometryPointsFromMeasures = ({
     <>
       {state &&
         //TODO fix the unkonwn cast
-        <GeometryPointVisualization pointsSet={state as unknown as GeometryPoints}/>
+        <GeometryPointVisualization pointsSet={state as unknown as GeometryPoints} />
       }
       {state &&
-        <BikeImageStitcher destinationPoints={state} desiredPxPerMM={desiredPxPerMM}/>
+        <BikeImageStitcher destinationPoints={state} desiredPxPerMM={desiredPxPerMM} />
       }
       {/* {state && state.sizeGeometryPoints && <GeometryPointVisualization pointsSet={geometryContext.geometryPoints}/>} */}
     </>

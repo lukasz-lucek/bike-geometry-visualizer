@@ -6,22 +6,22 @@ import { findIntermediatePoint } from '../../utils/GeometryUtils';
 import RectanglePartGrabber from '../grabbers/RectanglePartGrabber';
 
 interface StemPartPartGrabberControlsProps {
-  partKey : keyof GeometryFixedRectangles;
-  anchorPoints : {
+  partKey: keyof GeometryFixedRectangles;
+  anchorPoints: {
     tl: Point2d | null;
     bl: Point2d | null;
     tr: Point2d | null;
     offset: SemiFixedRectangle | null;
   }
   pxPerMm: number;
-  children : ReactNode;
+  children: ReactNode;
 }
 
 export function StemPartGrabberControls({
   partKey,
   anchorPoints,
   pxPerMm,
-  children} : StemPartPartGrabberControlsProps) {
+  children }: StemPartPartGrabberControlsProps) {
 
   const singleStep = 5;
 
@@ -32,8 +32,8 @@ export function StemPartGrabberControls({
     state: [geometryState, updateGeometryState],
   } = useGeometryContext();
 
-  const updatePoints = (newPartialPoints : Partial<FixedRectangle>) => {
-    updateGeometryState({fixedRectangles: {...geometryState.fixedRectangles, ...newPartialPoints}});
+  const updatePoints = (newPartialPoints: Partial<FixedRectangle>) => {
+    updateGeometryState({ fixedRectangles: { ...geometryState.fixedRectangles, ...newPartialPoints } });
   }
 
   useEffect(() => {
@@ -44,12 +44,12 @@ export function StemPartGrabberControls({
       const startPoint = findIntermediatePoint(
         anchorPoints.tl,
         anchorPoints.bl,
-        -(anchorPoints.offset.length + width/2)  * pxPerMm);
+        -(anchorPoints.offset.length + width / 2) * pxPerMm);
       setStemStartPoint(startPoint);
     }
   }, [geometryState.fixedRectangles[partKey], anchorPoints]);
 
-  const updateWidth = (val : number) => {
+  const updateWidth = (val: number) => {
     let curPartSetup = geometryState.fixedRectangles[partKey];
     if (!curPartSetup) {
       return;
@@ -67,19 +67,19 @@ export function StemPartGrabberControls({
           </tr>
         </thead>
         <tbody>
-          <tr onMouseEnter={() => {setPartHighlight(true)}} onMouseLeave={() => {setPartHighlight(false)}}>
+          <tr onMouseEnter={() => { setPartHighlight(true) }} onMouseLeave={() => { setPartHighlight(false) }}>
             <td>Width</td>
-            <td>{ (geometryState.fixedRectangles[partKey])?.width?.toFixed(0)}</td>
-            <td><button onClick={() => {updateWidth(singleStep)}}>+</button></td>
-            <td><button onClick={() => {updateWidth(-singleStep)}}>-</button></td>
+            <td>{(geometryState.fixedRectangles[partKey])?.width?.toFixed(0)}</td>
+            <td><button onClick={() => { updateWidth(singleStep) }}>+</button></td>
+            <td><button onClick={() => { updateWidth(-singleStep) }}>-</button></td>
             {(partHighlight) &&
-              <RectanglePartGrabber 
-                leftOffset = {0} 
-                rightOffset = {0} 
-                width = {(geometryState.fixedRectangles[partKey])?.width || 0}
-                anchorPoints = {{tl: stemStartPoint, bl: stemStartPoint, tr: anchorPoints.tr, br: anchorPoints.tr}}
-                pxPerMm = {pxPerMm}
-                strokeWidth = {1}/>}
+              <RectanglePartGrabber
+                leftOffset={0}
+                rightOffset={0}
+                width={(geometryState.fixedRectangles[partKey])?.width || 0}
+                anchorPoints={{ tl: stemStartPoint, bl: stemStartPoint, tr: anchorPoints.tr, br: anchorPoints.tr }}
+                pxPerMm={pxPerMm}
+                strokeWidth={1} />}
           </tr>
         </tbody>
       </table>

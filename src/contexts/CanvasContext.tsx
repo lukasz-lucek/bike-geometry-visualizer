@@ -19,21 +19,21 @@ export const useCanvasContext = () => {
   return context;
 };
 
-export const CanvasProvider = ({ children }: {children : ReactNode}) => {
+export const CanvasProvider = ({ children }: { children: ReactNode }) => {
   const defaultState: CanvasState = {
-    canvas : null,
+    canvas: null,
   };
 
   const [state, setState] = useState<CanvasState>(defaultState);
 
-  const updateState = (newPartialState : Partial<CanvasState>) => {
-    setState({...state,...newPartialState});
+  const updateState = (newPartialState: Partial<CanvasState>) => {
+    setState({ ...state, ...newPartialState });
   }
 
   return (
     <CanvasContext.Provider value={{
       state: [state, updateState],
-      }}>
+    }}>
       {children}
     </CanvasContext.Provider>
   );

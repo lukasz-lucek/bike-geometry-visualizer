@@ -1,3 +1,3 @@
 export interface FixedCircle {
-    radius: number;
+  radius: number;
 }

@@ -17,7 +17,7 @@ export function Canvas() {
       preserveObjectStacking: true,
     });
     fabricCanvas.selection = false;
-    fabricCanvas.on('mouse:wheel', function(opt) {
+    fabricCanvas.on('mouse:wheel', function (opt) {
       var delta = opt.e.deltaY;
       var zoom = fabricCanvas.getZoom();
       zoom *= 0.999 ** delta;
@@ -34,13 +34,13 @@ export function Canvas() {
     });
 
     return () => {
-        fabricCanvas.dispose();
+      fabricCanvas.dispose();
     };
   }, []);
 
   return (
     <>
-        <canvas ref={canvasRef} width="1200" height="920"/>
+      <canvas ref={canvasRef} width="1200" height="920" />
     </>
   );
 }

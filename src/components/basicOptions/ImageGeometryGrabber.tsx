@@ -14,7 +14,7 @@ const ImageGeometryGrabber = () => {
   } = useGeometryContext();
 
 
-  const getSuggestedRotationAngle = () : number => {
+  const getSuggestedRotationAngle = (): number => {
     const rearWheelCenter = geometryState.geometryPoints.rearWheelCenter;
     const frontWheelCenter = geometryState.geometryPoints.frontWheelCenter;
     if (!rearWheelCenter || !frontWheelCenter) {
@@ -24,7 +24,7 @@ const ImageGeometryGrabber = () => {
     const y1 = rearWheelCenter.y;
     const x2 = frontWheelCenter.x;
     const y2 = frontWheelCenter.y;
-    
+
     const initialAngle = Math.atan((y1 - y2) / (x2 - x1));
     const initialAngleDegrees = initialAngle * (180 / Math.PI);
     return initialAngleDegrees;
@@ -35,29 +35,29 @@ const ImageGeometryGrabber = () => {
       <input
         type="number"
         placeholder="Wheelbase (mm)"
-        value={geometryState.wheelbase?geometryState.wheelbase:0}
-        onChange={(e) => updateGeometryState({wheelbase: parseInt( e.target.value )})}
+        value={geometryState.wheelbase ? geometryState.wheelbase : 0}
+        onChange={(e) => updateGeometryState({ wheelbase: parseInt(e.target.value) })}
       />
       <p>
-          Sugested rotation: to fix wheel level
-          (
-            {geometryState.geometryPoints['frontWheelCenter'] && geometryState.geometryPoints['rearWheelCenter'] ? 
-              getSuggestedRotationAngle().toFixed(2) :
-              '____'}
-          )
+        Sugested rotation: to fix wheel level
+        (
+        {geometryState.geometryPoints['frontWheelCenter'] && geometryState.geometryPoints['rearWheelCenter'] ?
+          getSuggestedRotationAngle().toFixed(2) :
+          '____'}
+        )
       </p>
       <PointGrabGrid></PointGrabGrid>
       <div className="bike-geometry-table">
         <BikeGeometryTable>
           Bike Geometry Specifications
         </BikeGeometryTable>
-        <PartsGrabberTable/>
-        {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'} isGrayedOut={false} desiredPxPerMM={null}/>}
-        <GeometryPointVisualization pointsSet={geometryState.geometryPoints}/>
+        <PartsGrabberTable />
+        {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'} isGrayedOut={false} desiredPxPerMM={null} />}
+        <GeometryPointVisualization pointsSet={geometryState.geometryPoints} />
       </div>
     </div>
   );
 };
 
 export default ImageGeometryGrabber
-;
+  ;

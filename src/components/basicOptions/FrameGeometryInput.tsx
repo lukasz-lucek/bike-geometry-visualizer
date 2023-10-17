@@ -6,17 +6,17 @@ import BackgroundImage from '../drawing/BackgroundImage';
 
 const FrameGeometryInput = () => {
   const {
-    state: [geometryState, ],
+    state: [geometryState,],
   } = useGeometryContext();
 
   const [showShadowImage, setShowShadowImage] = useState(true);
 
   return (
     <div className="frame-input">
-      <SizesTable/>
-      <p><input type="checkbox" checked={showShadowImage} onChange={() => {setShowShadowImage(!showShadowImage);}}/><label>Show Shadow Image</label></p>
+      <SizesTable />
+      <p><input type="checkbox" checked={showShadowImage} onChange={() => { setShowShadowImage(!showShadowImage); }} /><label>Show Shadow Image</label></p>
 
-      {geometryState.selectedFile && showShadowImage && <BackgroundImage key={'BackgroundImage'} isGrayedOut={true} desiredPxPerMM={1}/>}
+      {geometryState.selectedFile && showShadowImage && <BackgroundImage key={'BackgroundImage'} isGrayedOut={true} desiredPxPerMM={1} />}
     </div>
   );
 };

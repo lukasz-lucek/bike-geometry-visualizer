@@ -12,7 +12,7 @@ const GeometrySaver = () => {
 
   const saveGeometry = () => {
     if (bikeDataName != '') {
-      let knownGeometries : Map<string, GeometryStateForSaving> = new Map();
+      let knownGeometries: Map<string, GeometryStateForSaving> = new Map();
       const knownGeometriesRaw = localStorage.getItem('knownGeometries');
       if (knownGeometriesRaw) {
         knownGeometries = new Map(Object.entries(JSON.parse(knownGeometriesRaw)));
@@ -20,9 +20,9 @@ const GeometrySaver = () => {
           knownGeometries = new Map();
         }
       }
-      knownGeometries.set(bikeDataName,  {
-        selectedFile : state.selectedFile,
-        geometryPoints : state.geometryPoints,
+      knownGeometries.set(bikeDataName, {
+        selectedFile: state.selectedFile,
+        geometryPoints: state.geometryPoints,
         offsetFixedRectangles: state.offsetFixedRectangles,
         semiFixedRectangles: state.semiFixedRectangles,
         fixedRectangles: state.fixedRectangles,
@@ -33,12 +33,12 @@ const GeometrySaver = () => {
         bikesList: [],
       });
       localStorage.setItem('knownGeometries', JSON.stringify(Object.fromEntries(knownGeometries)));
-      updateState({bikesList:  Array.from(knownGeometries.keys())});
+      updateState({ bikesList: Array.from(knownGeometries.keys()) });
     }
   }
 
-  const loadBikeGeometry = (item : string) => {
-    let knownGeometries : Map<string, GeometryState> = new Map();
+  const loadBikeGeometry = (item: string) => {
+    let knownGeometries: Map<string, GeometryState> = new Map();
     const knownGeometriesRaw = localStorage.getItem('knownGeometries');
     if (!knownGeometriesRaw) {
       console.error("no data in local storage - unable to load");
@@ -73,8 +73,8 @@ const GeometrySaver = () => {
     setBikeDataName(item);
   }
 
-  const removeBikeGeometry = (item : string) => {
-    let knownGeometries : Map<string, GeometryState> = new Map();
+  const removeBikeGeometry = (item: string) => {
+    let knownGeometries: Map<string, GeometryState> = new Map();
     const knownGeometriesRaw = localStorage.getItem('knownGeometries');
     if (!knownGeometriesRaw) {
       console.error("no data in local storage - unable to load");
@@ -86,20 +86,20 @@ const GeometrySaver = () => {
     }
     knownGeometries.delete(item);
     localStorage.setItem('knownGeometries', JSON.stringify(Object.fromEntries(knownGeometries)));
-    updateState({bikesList: Array.from(knownGeometries.keys())});
+    updateState({ bikesList: Array.from(knownGeometries.keys()) });
   }
 
   return (
     <div>
-    <input
-      type="text"
-      placeholder="enter name to save"
-      value={bikeDataName}
-      onChange={(e) => setBikeDataName(e.target.value)}
-    />
-    <button disabled={bikeDataName == ''} onClick={() => saveGeometry()}>Save</button>
-    <DropdownActions items={state.bikesList} onLoad={loadBikeGeometry} onRemove={removeBikeGeometry}/>
-  </div>
+      <input
+        type="text"
+        placeholder="enter name to save"
+        value={bikeDataName}
+        onChange={(e) => setBikeDataName(e.target.value)}
+      />
+      <button disabled={bikeDataName == ''} onClick={() => saveGeometry()}>Save</button>
+      <DropdownActions items={state.bikesList} onLoad={loadBikeGeometry} onRemove={removeBikeGeometry} />
+    </div>
   );
 };
 

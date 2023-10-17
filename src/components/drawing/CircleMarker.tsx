@@ -11,18 +11,18 @@ export interface CircleMarkerData {
   strokeWidth: number,
 }
 interface CircleMarkerProps {
-  circleMarker : CircleMarkerData,
+  circleMarker: CircleMarkerData,
   placementPoint: Point2d | null,
   scale: number,
   layer: number,
 }
 
-export function CircleMarker({circleMarker, placementPoint=null, scale=1, layer=3} : CircleMarkerProps) {
+export function CircleMarker({ circleMarker, placementPoint = null, scale = 1, layer = 3 }: CircleMarkerProps) {
 
   const {
-    state: [canvasState, ],
+    state: [canvasState,],
   } = useCanvasContext();
-  
+
   useEffect(() => {
     // if (sh.startAngle && sh.endAngle) {
     const circle = new fabric.Circle({
@@ -52,7 +52,7 @@ export function CircleMarker({circleMarker, placementPoint=null, scale=1, layer=
         circle={circleMarker.circle}
         placementPoint={placementPoint}
         scale={scale}
-        layer={layer}/>
+        layer={layer} />
     </>
   );
 }
