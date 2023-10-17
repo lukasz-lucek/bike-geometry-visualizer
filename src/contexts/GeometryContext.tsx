@@ -84,7 +84,7 @@ export const defaultFixedCircles : GeometryFixedCircles = {
 }
 
 export interface GeometryState {
-  wheelbase: number | null;
+  wheelbase: number;
   geometryPoints: GeometryPoints;
   offsetFixedRectangles: GeometryOffsetFixedRectangles;
   semiFixedRectangles: GeometrySemiFixedRectangles;
@@ -97,7 +97,7 @@ export interface GeometryState {
 
 //workaround for saving data - no maps in local storage
 export interface GeometryStateForSaving {
-  wheelbase: number | null;
+  wheelbase: number;
   geometryPoints: GeometryPoints;
   offsetFixedRectangles: GeometryOffsetFixedRectangles;
   semiFixedRectangles: GeometrySemiFixedRectangles;
@@ -129,7 +129,7 @@ export const GeometryProvider = ({ children } : {children : ReactNode}) => {
     bikesList = Object.keys(JSON.parse(storage));
   }
   const defaultState : GeometryState = {
-    wheelbase: null,
+    wheelbase: 1000,
     geometryPoints: defaultGeometryPoints,
     offsetFixedRectangles: defaultOffsetFixedRectangles,
     semiFixedRectangles: defaultSemiFixedRectangles,
