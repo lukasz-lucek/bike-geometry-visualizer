@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { fabric } from 'fabric';
+import LayeredCanvas from './LayeredCanvas';
 import { useCanvasContext } from '../../contexts/CanvasContext';
 
 export function Canvas() {
@@ -11,7 +11,7 @@ export function Canvas() {
 
   useEffect(() => {
     console.log("CREATING NEW CANVAS!!!")
-    const fabricCanvas = new fabric.Canvas(canvasRef.current, {
+    const fabricCanvas = new LayeredCanvas(canvasRef.current, {
       interactive: false, // Disable editing and selection
       selection: false,
       preserveObjectStacking: true,

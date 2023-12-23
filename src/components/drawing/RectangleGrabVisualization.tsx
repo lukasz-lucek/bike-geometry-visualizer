@@ -103,10 +103,11 @@ export function RectangleGrabVisualization(
 
   useEffect(() => {
     if (loadedImage) {
-      canvasState.canvas?.insertAt(loadedImage, layer, false);
+      console.log("inserting rectangle at layer: " + layer);
+      canvasState.canvas?.addObjectToLayer(loadedImage, layer);
       canvasState.canvas?.renderAll();
       return () => {
-        canvasState.canvas?.remove(loadedImage);
+        canvasState.canvas?.removeObjectFromAnyLayer(loadedImage);
         canvasState.canvas?.renderAll();
       }
     }

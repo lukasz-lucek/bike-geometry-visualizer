@@ -1,8 +1,9 @@
 // src/contexts/CanvasContext.tsx
 import React, { createContext, useContext, useState, ReactNode } from 'react';
+import LayeredCanvas from '../components/drawing/LayeredCanvas';
 
 interface CanvasState {
-  canvas: fabric.Canvas | null;
+  canvas: LayeredCanvas | null;
 }
 
 interface CanvasContextType {
