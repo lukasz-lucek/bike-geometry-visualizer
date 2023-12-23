@@ -12,6 +12,7 @@ Planned features:
 - morph bike image to a different geometry
 - compare two geometries
 - measurement tool
+- store geometry outside local storage
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
