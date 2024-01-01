@@ -52,7 +52,7 @@ const ImageGeometryGrabber = () => {
           Bike Geometry Specifications
         </BikeGeometryTable>
         <PartsGrabberTable />
-        {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'} isGrayedOut={false} desiredPxPerMM={null} />}
+        {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'} isGrayedOut={false} desiredPxPerMM={null} focusPoint={null}/>}
         <GeometryPointVisualization pointsSet={geometryState.geometryPoints} />
       </div>
     </div>

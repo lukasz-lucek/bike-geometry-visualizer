@@ -3,13 +3,15 @@ import { fabric } from 'fabric';
 import { useGeometryContext } from '../../contexts/GeometryContext';
 import { useCanvasContext } from '../../contexts/CanvasContext';
 import { findPxPerMm } from '../../utils/GeometryUtils';
+import { Point2d } from '../../interfaces/Point2d';
 
 interface BackgroundImageProps {
   isGrayedOut: Boolean;
   desiredPxPerMM: number | null;
+  focusPoint: Point2d | null;
 }
 
-export function BackgroundImage({ isGrayedOut = false, desiredPxPerMM = null }: BackgroundImageProps) {
+export function BackgroundImage({ isGrayedOut = false, desiredPxPerMM = null, focusPoint = null }: BackgroundImageProps) {
   const [fabricObject, setFabricObject] = useState<fabric.Image | null>(null);
 
   const {
@@ -20,18 +22,25 @@ export function BackgroundImage({ isGrayedOut = false, desiredPxPerMM = null }: 
     state: [geometryState,],
   } = useGeometryContext();
 
+  const focusMM = 700;
+  let focusZoom = 1;
+
   useEffect(() => {
     const canvas = canvasState.canvas;
     if (!canvas || !geometryState.selectedFile) {
       return;
     }
     let pxPerMm = desiredPxPerMM;
-    if (desiredPxPerMM && geometryState.wheelbase) {
+    if (geometryState.wheelbase) {
       const rearWheelCenter = geometryState.geometryPoints["rearWheelCenter"];
       const frontWheelCenter = geometryState.geometryPoints["frontWheelCenter"];
 
       if (rearWheelCenter && frontWheelCenter) {
         pxPerMm = findPxPerMm(rearWheelCenter, frontWheelCenter, geometryState.wheelbase);
+        if (focusPoint && canvas.height && pxPerMm){
+          console.log("focus Point zoom calculation - focusMM: " + focusMM + ", pxPerMM: " + pxPerMm + " canvas.width: " + canvas.width);
+          focusZoom = canvas.height / (focusMM * pxPerMm);
+        }
       }
     }
     let ratio = 1;
@@ -51,7 +60,18 @@ export function BackgroundImage({ isGrayedOut = false, desiredPxPerMM = null }: 
       img.opacity = isGrayedOut ? 0.4 : 1.0;
       img.scaleX = ratio;
       img.scaleY = ratio;
-      canvas.setZoom(zoom);
+      canvas.setZoom(1);
+      if (focusPoint == null) {
+        canvas.setZoom(zoom);
+      } else if (pxPerMm && canvas.width && canvas.height) {
+        console.log ("Zooming to point:  "+focusPoint.x + ", "+focusPoint.y);
+
+        const panPoint : fabric.IPoint = {x: focusPoint.x - 0.5*focusMM*pxPerMm*canvas.width/canvas.height, y: focusPoint.y - 0.5*focusMM*pxPerMm}
+        console.log("pan Point: " + panPoint.x + ", "+panPoint.y + " zoom: " + focusZoom);
+        
+        canvas.absolutePan(panPoint);
+        canvas.setZoom(focusZoom);
+      }
       canvas.selection = false;
       canvas.interactive = false;
       setFabricObject(img);

@@ -16,7 +16,7 @@ const FrameGeometryInput = () => {
       <SizesTable />
       <p><input type="checkbox" checked={showShadowImage} onChange={() => { setShowShadowImage(!showShadowImage); }} /><label>Show Shadow Image</label></p>
 
-      {geometryState.selectedFile && showShadowImage && <BackgroundImage key={'BackgroundImage'} isGrayedOut={true} desiredPxPerMM={1} />}
+      {geometryState.selectedFile && showShadowImage && <BackgroundImage key={'BackgroundImage'} isGrayedOut={true} desiredPxPerMM={1} focusPoint={null} />}
     </div>
   );
 };

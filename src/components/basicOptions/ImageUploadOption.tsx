@@ -54,7 +54,7 @@ const ImageUploadOption = () => {
         <div className="drop-indicator">Drop it - I'm ready</div> :
         <div className="drop-indicator">You can drop images here</div>}
       <input type="file" onChange={handleFileInputChange} />
-      {geometryState.selectedFile && <BackgroundImage isGrayedOut={false} desiredPxPerMM={null} />}
+      {geometryState.selectedFile && <BackgroundImage isGrayedOut={false} desiredPxPerMM={null} focusPoint={null}/>}
     </div>
   );
 };
