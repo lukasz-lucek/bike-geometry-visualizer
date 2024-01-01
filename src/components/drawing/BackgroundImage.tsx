@@ -38,7 +38,6 @@ export function BackgroundImage({ isGrayedOut = false, desiredPxPerMM = null, fo
       if (rearWheelCenter && frontWheelCenter) {
         pxPerMm = findPxPerMm(rearWheelCenter, frontWheelCenter, geometryState.wheelbase);
         if (focusPoint && canvas.height && pxPerMm){
-          console.log("focus Point zoom calculation - focusMM: " + focusMM + ", pxPerMM: " + pxPerMm + " canvas.width: " + canvas.width);
           focusZoom = canvas.height / (focusMM * pxPerMm);
         }
       }
@@ -60,15 +59,12 @@ export function BackgroundImage({ isGrayedOut = false, desiredPxPerMM = null, fo
       img.opacity = isGrayedOut ? 0.4 : 1.0;
       img.scaleX = ratio;
       img.scaleY = ratio;
+      //reset zoom from previous use
       canvas.setZoom(1);
       if (focusPoint == null) {
         canvas.setZoom(zoom);
       } else if (pxPerMm && canvas.width && canvas.height) {
-        console.log ("Zooming to point:  "+focusPoint.x + ", "+focusPoint.y);
-
         const panPoint : fabric.IPoint = {x: focusPoint.x - 0.5*focusMM*pxPerMm*canvas.width/canvas.height, y: focusPoint.y - 0.5*focusMM*pxPerMm}
-        console.log("pan Point: " + panPoint.x + ", "+panPoint.y + " zoom: " + focusZoom);
-        
         canvas.absolutePan(panPoint);
         canvas.setZoom(focusZoom);
       }
