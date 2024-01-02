@@ -29,6 +29,7 @@ export function Canvas() {
       fabricCanvas.renderAll();
     })
     fabricCanvas.renderAll();
+
     updateCanvasState({
       canvas: fabricCanvas,
     });
