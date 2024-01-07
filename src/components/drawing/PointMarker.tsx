@@ -8,6 +8,7 @@ export function PointMarker({ shape }: { shape: ColorPoint2d }) {
   const {
     state: [canvasState,],
   } = useCanvasContext();
+  
 
   useEffect(() => {
     const canvas = canvasState.canvas;
@@ -28,10 +29,15 @@ export function PointMarker({ shape }: { shape: ColorPoint2d }) {
     canvas.insertAt(circle, 1, false);
     canvas.renderAll();
 
-    // const segment = new SplineSegment(new Vec2D(10,20), new Vec2D(200, 45), new Vec2D(50, 400), 20);
-    // segment.drawToCamvas(canvas);
+    // const segment = new SplineSegment(
+    //   new Vec2D(Math.floor(Math.random() * 1000) ,Math.floor(Math.random() * 1000) ),
+    //   new Vec2D(Math.floor(Math.random() * 1000) ,Math.floor(Math.random() * 1000) ),
+    //   new Vec2D(Math.floor(Math.random() * 1000) ,Math.floor(Math.random() * 1000) ),
+    //   15);
+    // segment.drawToCamvas(canvas, true);
 
     return () => {
+      // segment.removeFromCanvas(canvas);
       canvas.remove(circle);
       canvas.renderAll();
     }

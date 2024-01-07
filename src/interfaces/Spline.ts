@@ -1,5 +1,6 @@
 import { fabric } from 'fabric';
 import { Point2d } from "./Point2d";
+import { Canvas } from 'fabric/fabric-impl';
 
 // Define the Vec2D class that implements Point2d
 export class Vec2D implements Point2d {
@@ -268,162 +269,268 @@ export class SplineSegment {
 		}
   }
 
-  drawToCamvas(canvas: fabric.Canvas) {
-    const externalCanvas = document.createElement('canvas');
-    externalCanvas.width = 300;
-    externalCanvas.height = 300;
-    var ctx = externalCanvas.getContext('2d');
-    if (!ctx) {
-      return;
-    }
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(0, 0, externalCanvas.width, externalCanvas.height);
-    ctx.lineWidth = 1;
+  private createPoint(p: Vec2D, color: string) : fabric.Rect{
+    const controlPointSize = 4
+    return new fabric.Rect({
+      left: p.x - controlPointSize / 2,
+      top: p.y - controlPointSize / 2,
+      width: controlPointSize,
+      height: controlPointSize,
+      fill: color,
+      stroke: color,
+      selectable: false,
+      evented: false,
+    })
+  }
 
-    const drawControlPoints = true;
+  private createDashedLine(p1: Vec2D, p2: Vec2D, color: string) : fabric.Line{
+    return new fabric.Line([p1.x, p1.y, p2.x, p2.y], {
+      stroke: color,
+      strokeWidth: 1,
+      strokeDashArray: [2,4],
+      selectable: false,
+      evented: false,
+    })
+  }
+
+  private createQuadraticPath(p1: Vec2D, c:Vec2D, p2: Vec2D,  color: string) : fabric.Path{
+    return new fabric.Path(`M ${p1.x} ${p1.y} Q ${c.x}, ${c.y}, ${p2.x}, ${p2.y}`, {
+      stroke: color,
+      strokeWidth: 1,
+      fill: '',
+      selectable: false,
+      evented: false,
+    })
+  }
+
+  //control points - no split
+  private capf?: fabric.Rect;
+  private cbpf?: fabric.Rect;
+
+  // control points - split
+  private p1apf?: fabric.Rect;
+  private q1apf?: fabric.Rect;
+  private p2apf?: fabric.Rect;
+  private q2apf?: fabric.Rect;
+  private qapf?: fabric.Rect;
+
+  private p1bpf?: fabric.Rect;
+  private q1bpf?: fabric.Rect;
+  private p2bpf?: fabric.Rect;
+  private q2bpf?: fabric.Rect;
+  private qbpf?: fabric.Rect;
+
+  //dashed lines - no split
+  private p1acalf?: fabric.Line;
+  private cap2alf?: fabric.Line;
+
+  private p1bcblf?: fabric.Line;
+  private cbp2blf?: fabric.Line;
+
+  // dashed lines - split
+  private p1aq1alf?: fabric.Line;
+  private q1aqalf?: fabric.Line;
+  private qaq2alf?: fabric.Line;
+  private q2ap2alf?: fabric.Line;
+
+  private p1bq1blf?: fabric.Line;
+  private q1bqblf?: fabric.Line;
+  private qbq2blf?: fabric.Line;
+  private q2bp2blf?: fabric.Line;
+  
+  //centralLine
+  private centralLine?: fabric.Path;
+
+  //offsetLineA
+  private offsetLineA?: fabric.Path;
+  private offsetLineAP1?: fabric.Path;
+  private offsetLineAP2?: fabric.Path;
+
+  //offsetLineB
+  private offsetLineB?: fabric.Path;
+  private offsetLineBP1?: fabric.Path;
+  private offsetLineBP2?: fabric.Path;
+
+
+  removeFromCanvas(canvas: fabric.Canvas) {
+    if (this.capf) {canvas.remove(this.capf); this.capf = undefined}
+    if (this.cbpf) {canvas.remove(this.cbpf); this.cbpf = undefined}
+
+    if (this.p1apf) {canvas.remove(this.p1apf); this.p1apf=undefined}
+    if (this.q1apf) {canvas.remove(this.q1apf); this.q1apf=undefined}
+    if (this.p2apf) {canvas.remove(this.p2apf); this.p2apf=undefined}
+    if (this.q2apf) {canvas.remove(this.q2apf); this.q2apf=undefined}
+    if (this.qapf) {canvas.remove(this.qapf); this.qapf=undefined}
+
+    if (this.p1bpf) {canvas.remove(this.p1bpf); this.p1bpf=undefined}
+    if (this.q1bpf) {canvas.remove(this.q1bpf); this.q1bpf=undefined}
+    if (this.p2bpf) {canvas.remove(this.p2bpf); this.p2bpf=undefined}
+    if (this.q2bpf) {canvas.remove(this.q2bpf); this.q2bpf=undefined}
+    if (this.qbpf) {canvas.remove(this.qbpf); this.qbpf=undefined}
+
+    if (this.p1acalf) {canvas.remove(this.p1acalf); this.p1acalf=undefined}
+    if (this.cap2alf) {canvas.remove(this.cap2alf); this.cap2alf=undefined}
+
+    if (this.p1bcblf) {canvas.remove(this.p1bcblf); this.p1bcblf=undefined}
+    if (this.cbp2blf) {canvas.remove(this.cbp2blf); this.cbp2blf=undefined}
+
+    if (this.p1aq1alf) {canvas.remove(this.p1aq1alf); this.p1aq1alf=undefined}
+    if (this.q1aqalf) {canvas.remove(this.q1aqalf); this.q1aqalf=undefined}
+    if (this.qaq2alf) {canvas.remove(this.qaq2alf); this.qaq2alf=undefined}
+    if (this.q2ap2alf) {canvas.remove(this.q2ap2alf); this.q2ap2alf=undefined}
+    
+    if (this.p1bq1blf) {canvas.remove(this.p1bq1blf); this.p1bq1blf=undefined}
+    if (this.q1bqblf) {canvas.remove(this.q1bqblf); this.q1bqblf=undefined}
+    if (this.qbq2blf) {canvas.remove(this.qbq2blf); this.qbq2blf=undefined}
+    if (this.q2bp2blf) {canvas.remove(this.q2bp2blf); this.q2bp2blf=undefined}
+
+    if (this.centralLine) {canvas.remove(this.centralLine); this.centralLine=undefined}
+
+    if (this.offsetLineA) {canvas.remove(this.offsetLineA); this.offsetLineA=undefined}
+    if (this.offsetLineAP1) {canvas.remove(this.offsetLineAP1); this.offsetLineAP1=undefined}
+    if (this.offsetLineAP2) {canvas.remove(this.offsetLineAP2); this.offsetLineAP2=undefined}
+
+    if (this.offsetLineB) {canvas.remove(this.offsetLineB); this.offsetLineB=undefined}
+    if (this.offsetLineBP1) {canvas.remove(this.offsetLineBP1); this.offsetLineBP1=undefined}
+    if (this.offsetLineBP2) {canvas.remove(this.offsetLineBP2); this.offsetLineBP2=undefined}
+  }
+
+  private drawExistingRepresentationToCanvas(canvas: fabric.Canvas) {
+    if (this.capf) canvas.add(this.capf);
+    if (this.cbpf) canvas.add(this.cbpf);
+
+    if (this.p1apf) canvas.add(this.p1apf);
+    if (this.q1apf) canvas.add(this.q1apf);
+    if (this.p2apf) canvas.add(this.p2apf);
+    if (this.q2apf) canvas.add(this.q2apf);
+    if (this.qapf) canvas.add(this.qapf);
+
+    if (this.p1bpf) canvas.add(this.p1bpf);
+    if (this.q1bpf) canvas.add(this.q1bpf);
+    if (this.p2bpf) canvas.add(this.p2bpf);
+    if (this.q2bpf) canvas.add(this.q2bpf);
+    if (this.qbpf) canvas.add(this.qbpf);
+
+    if (this.p1acalf) canvas.add(this.p1acalf);
+    if (this.cap2alf) canvas.add(this.cap2alf);
+
+    if (this.p1bcblf) canvas.add(this.p1bcblf);
+    if (this.cbp2blf) canvas.add(this.cbp2blf);
+
+    if (this.p1aq1alf) canvas.add(this.p1aq1alf);
+    if (this.q1aqalf) canvas.add(this.q1aqalf);
+    if (this.qaq2alf) canvas.add(this.qaq2alf);
+    if (this.q2ap2alf) canvas.add(this.q2ap2alf);
+
+    if (this.p1bq1blf) canvas.add(this.p1bq1blf);
+    if (this.q1bqblf) canvas.add(this.q1bqblf);
+    if (this.qbq2blf) canvas.add(this.qbq2blf);
+    if (this.q2bp2blf) canvas.add(this.q2bp2blf);
+
+    if (this.centralLine) canvas.add(this.centralLine);
+
+    if (this.offsetLineA) canvas.add(this.offsetLineA);
+    if (this.offsetLineAP1) canvas.add(this.offsetLineAP1);
+    if (this.offsetLineAP2) canvas.add(this.offsetLineAP2);
+
+    if (this.offsetLineB) canvas.add(this.offsetLineB);
+    if (this.offsetLineBP1) canvas.add(this.offsetLineBP1);
+    if (this.offsetLineBP2) canvas.add(this.offsetLineBP2);
+  }
+
+  private createCanvasRepresentation(drawControlPoints: boolean) {
     if (drawControlPoints) {
-			// draw control points
-			var r = 2;
-			ctx.beginPath();
-			if (!this.split) {
-        if (!this.ca || !this.cb) {
-          return;
+      const controlPointsColor = '#0072bc';
+      if (!this.split) {
+        if (this.ca && this.cb) {
+          this.capf = this.createPoint(this.ca, controlPointsColor);
+          this.cbpf = this.createPoint(this.cb, controlPointsColor);
         }
-				ctx.rect(this.ca.x - r, this.ca.y - r, r * 2, r * 2);
-				ctx.rect(this.cb.x - r, this.cb.y - r, r * 2, r * 2);
-			}
-			else {
-        if (!this.p1a || !this.p2a || !this.q1a || !this.q2a || !this.qa) {
-          return;
-        }
-				ctx.rect(this.p1a.x - r, this.p1a.y - r, r * 2, r * 2);
-				ctx.rect(this.q1a.x - r, this.q1a.y - r, r * 2, r * 2);
-				ctx.rect(this.p2a.x - r, this.p2a.y - r, r * 2, r * 2);
-				ctx.rect(this.q2a.x - r, this.q2a.y - r, r * 2, r * 2);
-				ctx.rect(this.qa.x - r, this.qa.y - r, r * 2, r * 2);
-
-        if (!this.p1b || !this.p2b || !this.q1b || !this.q2b || !this.qb) {
-          return;
-        }
-				ctx.rect(this.p1b.x - r, this.p1b.y - r, r * 2, r * 2);
-				ctx.rect(this.q1b.x - r, this.q1b.y - r, r * 2, r * 2);
-				ctx.rect(this.p2b.x - r, this.p2b.y - r, r * 2, r * 2);
-				ctx.rect(this.q2b.x - r, this.q2b.y - r, r * 2, r * 2);
-				ctx.rect(this.qb.x - r, this.qb.y - r, r * 2, r * 2);
-
-				ctx.moveTo(this.qa.x, this.qa.y);
-				ctx.lineTo(this.qb.x, this.qb.y);
-			}
-			ctx.closePath();
-			ctx.strokeStyle = '#0072bc';
-			ctx.stroke();
-			ctx.fillStyle = '#0072bc';
-			ctx.fill();
-
-			// draw dashed lines
-			ctx.beginPath();
-			if (!this.split) {
-        if (!this.p1a || !this.p2a || !this.ca) {
-          return;
-        }
-				ctx.moveTo(this.p1a.x, this.p1a.y);
-				ctx.lineTo(this.ca.x, this.ca.y);
-				ctx.lineTo(this.p2a.x, this.p2a.y);
-
-        if (!this.p1b || !this.p2b || !this.cb) {
-          return;
+      } else {
+        if (this.p1a && this.p2a && this.q1a && this.q2a && this.qa) {
+          this.p1apf = this.createPoint(this.p1a, controlPointsColor);
+          this.q1apf = this.createPoint(this.q1a, controlPointsColor);
+          this.p2apf = this.createPoint(this.p2a, controlPointsColor);
+          this.q2apf = this.createPoint(this.q2a, controlPointsColor);
+          this.qapf = this.createPoint(this.qa, controlPointsColor);
         }
 
-				ctx.moveTo(this.p1b.x, this.p1b.y);
-				ctx.lineTo(this.cb.x, this.cb.y);
-				ctx.lineTo(this.p2b.x, this.p2b.y);
-			}
-			else {
-        if (!this.p1a || !this.p2a || !this.q1a || !this.q2a || !this.qa) {
-          return;
+        if (this.p1b && this.p2b && this.q1b && this.q2b && this.qb) {
+
+          this.p1bpf = this.createPoint(this.p1b, controlPointsColor);
+          this.q1bpf = this.createPoint(this.q1b, controlPointsColor);
+          this.p2bpf = this.createPoint(this.p2b, controlPointsColor);
+          this.q2bpf = this.createPoint(this.q2b, controlPointsColor);
+          this.qbpf = this.createPoint(this.qb, controlPointsColor);
         }
-				ctx.moveTo(this.p1a.x, this.p1a.y);
-				ctx.lineTo(this.q1a.x, this.q1a.y);
-				ctx.lineTo(this.qa.x, this.qa.y);
-				ctx.lineTo(this.q2a.x, this.q2a.y);
-				ctx.lineTo(this.p2a.x, this.p2a.y);
-
-        if (!this.p1b || !this.p2b || !this.q1b || !this.q2b || !this.qb) {
-          return;
-        }
-
-				ctx.moveTo(this.p1b.x, this.p1b.y);
-				ctx.lineTo(this.q1b.x, this.q1b.y);
-				ctx.lineTo(this.qb.x, this.qb.y);
-				ctx.lineTo(this.q2b.x, this.q2b.y);
-				ctx.lineTo(this.p2b.x, this.p2b.y);
-			}
-			ctx.setLineDash([2,4]);
-			ctx.stroke();
-			ctx.closePath();
-			ctx.setLineDash([]);
-		}
-
-		// central line
-		ctx.beginPath();
-		ctx.moveTo(this.start.x, this.start.y);
-		ctx.quadraticCurveTo(this.control.x, this.control.y, this.end.x, this.end.y);
-		ctx.strokeStyle = '#959595';
-		ctx.stroke();
-
-		// offset curve a
-    if (!this.p1a) {
-      return;
-    }
-		ctx.beginPath();
-		ctx.moveTo(this.p1a.x, this.p1a.y);
-		if (!this.split) {
-      if (!this.ca || !this.p2a) {
-        return;
       }
-			ctx.quadraticCurveTo(this.ca.x, this.ca.y, this.p2a.x, this.p2a.y);
+      
+      const controlLinesColor = '#0072bc';
+      // draw dashed lines
+      if (!this.split) {
+        if (this.p1a && this.p2a && this.ca) {
+          this.p1acalf = this.createDashedLine(this.p1a, this.ca, controlLinesColor);
+          this.cap2alf = this.createDashedLine(this.ca, this.p2a, controlLinesColor);
+        }
+
+        if (this.p1b && this.p2b && this.cb) {
+          this.p1bcblf = this.createDashedLine(this.p1b, this.cb, controlLinesColor);
+          this.cbp2blf = this.createDashedLine(this.cb, this.p2b, controlLinesColor);
+        }
+      }
+      else {
+        if (this.p1a && this.p2a && this.q1a && this.q2a && this.qa) {
+          this.p1aq1alf = this.createDashedLine(this.p1a, this.q1a, controlLinesColor);
+          this.q1aqalf = this.createDashedLine(this.q1a, this.qa, controlLinesColor);
+          this.qaq2alf = this.createDashedLine(this.qa, this.q2a, controlLinesColor);
+          this.q2ap2alf = this.createDashedLine(this.q2a, this.p2a, controlLinesColor);
+        }
+
+        if (this.p1b && this.p2b && this.q1b && this.q2b && this.qb) {
+          this.p1bq1blf = this.createDashedLine(this.p1b, this.q1b, controlLinesColor);
+          this.q1bqblf = this.createDashedLine(this.q1b, this.qb, controlLinesColor);
+          this.qbq2blf = this.createDashedLine(this.qb, this.q2b, controlLinesColor);
+          this.q2bp2blf = this.createDashedLine(this.q2b, this.p2b, controlLinesColor);
+        }
+      }
+    }
+    // central line
+    const centralLineColor = '#959595';
+    this.centralLine = this.createQuadraticPath(this.start, this.control, this.end, centralLineColor);
+
+    
+    const offsetLineColor = '#0072bc'
+    // offset curve a
+		if (!this.split) {
+      if (this.p1a && this.ca && this.p2a) {
+        this.offsetLineA = this.createQuadraticPath(this.p1a, this.ca, this.p2a, offsetLineColor)
+      } 
 		}
 		else {
-      if (!this.q1a || !this.qa || !this.q2a || !this.p2a) {
-        return;
+      if (this.p1a && this.q1a && this.qa && this.q2a && this.p2a) {
+        this.offsetLineAP1 = this.createQuadraticPath(this.p1a, this.q1a, this.qa, offsetLineColor)
+        this.offsetLineAP2 = this.createQuadraticPath(this.qa, this.q2a, this.p2a, offsetLineColor)
       }
-			ctx.quadraticCurveTo(this.q1a.x, this.q1a.y, this.qa.x, this.qa.y);
-			ctx.quadraticCurveTo(this.q2a.x, this.q2a.y, this.p2a.x, this.p2a.y);
 		}
-		ctx.strokeStyle = '#0072bc';
-		ctx.lineWidth = 2;
-		ctx.stroke();
 
-		// offset curve b
-		ctx.beginPath();
-    if (!this.p1b) {
-      return;
-    }
-		ctx.moveTo(this.p1b.x, this.p1b.y);
+    // offset curve b
 		if (!this.split) {
-      if (!this.cb || !this.p2b) {
-        return;
-      }
-			ctx.quadraticCurveTo(this.cb.x, this.cb.y, this.p2b.x, this.p2b.y);
+      if (this.p1b && this.cb && this.p2b) {
+        this.offsetLineB = this.createQuadraticPath(this.p1b, this.cb, this.p2b, offsetLineColor)
+      } 
 		}
 		else {
-      if (!this.q1b || !this.qb || !this.q2b || !this.p2b) {
-        return;
+      if (this.p1b && this.q1b && this.qb && this.q2b && this.p2b) {
+        this.offsetLineBP1 = this.createQuadraticPath(this.p1b, this.q1b, this.qb, offsetLineColor)
+        this.offsetLineBP2 = this.createQuadraticPath(this.qb, this.q2b, this.p2b, offsetLineColor)
       }
-			ctx.quadraticCurveTo(this.q1b.x, this.q1b.y, this.qb.x, this.qb.y);
-			ctx.quadraticCurveTo(this.q2b.x, this.q2b.y, this.p2b.x, this.p2b.y);
 		}
-		ctx.strokeStyle = '#0072bc';
-		ctx.stroke();
+  }
 
-    const imageUrl = externalCanvas.toDataURL();
-
-    // Step 4: Create a Fabric.js Image object
-    fabric.Image.fromURL(imageUrl, (img) => {
-      // Step 5: Add the Fabric.js Image object to the Fabric.js canvas
-      canvas.add(img);
-      canvas.renderAll();
-    });
+  drawToCamvas(canvas: fabric.Canvas, drawControlPoints: boolean) {
+    this.removeFromCanvas(canvas);
+    this.createCanvasRepresentation(drawControlPoints);
+    this.drawExistingRepresentationToCanvas(canvas);
   }
 }
 
