@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { fabric } from 'fabric';
 import { useCanvasContext } from '../../contexts/CanvasContext';
 import { ColorPoint2d } from '../../interfaces/Point2d';
-// import { SplineSegment, Vec2D } from '../../interfaces/Spline';
 
 export function PointMarker({ shape }: { shape: ColorPoint2d }) {
   const {
@@ -29,15 +28,7 @@ export function PointMarker({ shape }: { shape: ColorPoint2d }) {
     canvas.insertAt(circle, 1, false);
     canvas.renderAll();
 
-    // const segment = new SplineSegment(
-    //   new Vec2D(Math.floor(Math.random() * 1000) ,Math.floor(Math.random() * 1000) ),
-    //   new Vec2D(Math.floor(Math.random() * 1000) ,Math.floor(Math.random() * 1000) ),
-    //   new Vec2D(Math.floor(Math.random() * 1000) ,Math.floor(Math.random() * 1000) ),
-    //   15);
-    // segment.drawToCamvas(canvas, true);
-
     return () => {
-      // segment.removeFromCanvas(canvas);
       canvas.remove(circle);
       canvas.renderAll();
     }

@@ -16,6 +16,10 @@ export class Vec2D implements Point2d {
     return new Vec2D(this.x + a.x, this.y + a.y);
   }
 
+  divide(div: number) : Vec2D {
+    return new Vec2D(this.x / div, this.y / div);
+  }
+
   angleBetween(v: Vec2D, faceNormalize?: boolean): number {
     if (faceNormalize === undefined) {
       var dot = this.dot(v);
@@ -395,7 +399,7 @@ export class SplineSegment {
     if (this.offsetLineBP2) {canvas.remove(this.offsetLineBP2); this.offsetLineBP2=undefined}
   }
 
-  private drawExistingRepresentationToCanvas(canvas: fabric.Canvas) {
+  private addExistingRepresentationToCanvas(canvas: fabric.Canvas) {
     if (this.capf) canvas.add(this.capf);
     if (this.cbpf) canvas.add(this.cbpf);
 
@@ -530,11 +534,58 @@ export class SplineSegment {
   drawToCamvas(canvas: fabric.Canvas, drawControlPoints: boolean) {
     this.removeFromCanvas(canvas);
     this.createCanvasRepresentation(drawControlPoints);
-    this.drawExistingRepresentationToCanvas(canvas);
+    this.addExistingRepresentationToCanvas(canvas);
   }
 }
 
-export interface OffsetSpline {
-  segments: [SplineSegment],
-  thickness: number,
+export class OffsetSpline {
+  private intermediatePoints: Vec2D[];
+  private controlPoints: Vec2D[];
+  private segments: SplineSegment[];
+  private thickness: number;
+
+  constructor(thickness: number) {
+    this.thickness = thickness;
+    this.intermediatePoints = new Array<Vec2D>();
+    this.controlPoints = new Array<Vec2D>();
+    this.segments = new Array<SplineSegment>();
+  }
+
+  addIntermediatePoint(point: Vec2D) {
+    const orgLength = this.intermediatePoints.length;
+    this.intermediatePoints.push(point);
+    if (orgLength == 1) {
+      //add segment with arbitrary control Point
+      const segStart = this.intermediatePoints[orgLength - 1];
+      // control point of first segmend - in the middle of segment with small offset
+      const segControl = segStart.add(point).divide(2).add(new Vec2D(+20,-30));
+      this.controlPoints.push(segControl);
+
+      this.segments.push(new SplineSegment(segStart, point, segControl, this.thickness));
+    } else if (orgLength > 1) {
+      const segStart = this.intermediatePoints[orgLength - 1];
+
+      //get previous control point and add new control point symetrical in relation to segStart
+      const prevSegControl = this.controlPoints[orgLength - 2];
+      const diff = segStart.sub(prevSegControl);
+      const segControl = segStart.add(diff);
+      this.controlPoints.push(segControl);
+
+      this.segments.push(new SplineSegment(segStart, point, segControl, this.thickness));
+    }
+  }
+
+  setThickness(thickness : number) {
+    this.thickness = thickness;
+    this.segments.forEach((segment) => {segment.setThickness(thickness);});
+  }
+
+  drawToCanvas(canvas: fabric.Canvas, drawControlPoints: boolean) {
+    this.segments.forEach((segment) => {segment.drawToCamvas(canvas, drawControlPoints);});
+  }
+
+  removeFromCanvas(canvas: fabric.Canvas) {
+    this.segments.forEach((segment) => {segment.removeFromCanvas(canvas);});
+  }
+
 }
