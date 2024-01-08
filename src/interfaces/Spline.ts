@@ -125,6 +125,31 @@ export class Line2D {
 
     return isec;
   }
+
+  intersectLineNoBound(l: Line2D): LineIntersection {
+    const x1 = this.a.x;
+    const y1 = this.a.y;
+    const x2 = this.b.x;
+    const y2 = this.b.y;
+
+    const x3 = l.a.x;
+    const y3 = l.a.y;
+    const x4 = l.b.x;
+    const y4 = l.b.y;
+
+    const denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+
+    if (denominator === 0) {
+      // Lines are parallel, no intersection
+      new LineIntersection(LineIntersectionType.PARALLEL, undefined);
+    }
+
+    const px = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / denominator;
+
+    const py = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / denominator;
+
+    return new LineIntersection(LineIntersectionType.INTERSECTING, new Vec2D(px, py));
+  }
 }
 
 export class LineIntersection {
@@ -531,7 +556,7 @@ export class SplineSegment {
 		}
   }
 
-  drawToCamvas(canvas: fabric.Canvas, drawControlPoints: boolean) {
+  drawToCanvas(canvas: fabric.Canvas, drawControlPoints: boolean) {
     this.removeFromCanvas(canvas);
     this.createCanvasRepresentation(drawControlPoints);
     this.addExistingRepresentationToCanvas(canvas);
@@ -543,12 +568,16 @@ export class OffsetSpline {
   private controlPoints: Vec2D[];
   private segments: SplineSegment[];
   private thickness: number;
+  private intermediatePointDrags : fabric.Circle[];
+  private controlPointDrags: fabric.Circle[];
 
   constructor(thickness: number) {
     this.thickness = thickness;
     this.intermediatePoints = new Array<Vec2D>();
     this.controlPoints = new Array<Vec2D>();
     this.segments = new Array<SplineSegment>();
+    this.intermediatePointDrags = new Array<fabric.Circle>();
+    this.controlPointDrags = new Array<fabric.Circle>();
   }
 
   addIntermediatePoint(point: Vec2D) {
@@ -580,12 +609,225 @@ export class OffsetSpline {
     this.segments.forEach((segment) => {segment.setThickness(thickness);});
   }
 
+  getThickness() : number {
+    return this.thickness;
+  }
+
+  getDragOnPosition(pos: Vec2D) : SplineDragIndex {
+    const tresholdDistanceSquared = 49;
+    const iPointDistances = this.intermediatePoints.map((iPoint) => iPoint.distanceToSquared(pos));
+    const minIDistance = Math.min(...iPointDistances);
+
+    const cPointDistances = this.controlPoints.map((cPoint) => cPoint.distanceToSquared(pos));
+    const minCDistance = Math.min(...cPointDistances);
+
+    if (minCDistance < minIDistance) {
+      if (minCDistance > tresholdDistanceSquared){
+        return new SplineDragIndex(SplineDragIndexType.NONE, 0);
+      }
+      const index = cPointDistances.indexOf(minCDistance);
+      const point = this.controlPoints[index];
+      return new SplineDragIndex(
+        SplineDragIndexType.CONTROL,
+        index,
+        pos.sub(point)
+      );
+    } else {
+      if (minIDistance > tresholdDistanceSquared){
+        return new SplineDragIndex(SplineDragIndexType.NONE, 0);
+      }
+      const index = iPointDistances.indexOf(minIDistance);
+      const point = this.intermediatePoints[index];
+      return new SplineDragIndex(
+        SplineDragIndexType.INTERMEDIATE,
+        index,
+        pos.sub(point)
+      );
+    }
+  }
+
+  private calculateAdjustedControlPoint(movedPoint: Vec2D, offset: Vec2D, sharedControlPoint: Vec2D, unmovedPoint: Vec2D) : Vec2D | undefined {
+    const landingPoint = movedPoint.add(offset);
+    const fakeControlPointLanding = sharedControlPoint.add(offset);
+    const line1 = new Line2D(landingPoint, fakeControlPointLanding);
+    const line2 = new Line2D(sharedControlPoint, unmovedPoint);
+    const interrsection = line1.intersectLineNoBound(line2);
+    if (interrsection.type == LineIntersectionType.INTERSECTING) {
+      return interrsection.pos;
+    }
+    return undefined;
+  }
+
+  moveDragToPosition(drag: SplineDragIndex, pos: Vec2D) : boolean {
+    if (drag.type == SplineDragIndexType.NONE) {
+      return false;
+    }
+    const dragOffset : Vec2D =  drag.offset!;
+    
+    if (drag.type == SplineDragIndexType.INTERMEDIATE) {
+      let safeToMovePrevControl = true;
+      let safeToMoveNextControl = true;
+      let adjustedPrevControlPoint = undefined;
+      let adjustedNextControlPoint = undefined;
+      const intermediatePoint = this.intermediatePoints[drag.index];
+      const offset = pos.sub(intermediatePoint).sub(dragOffset);
+      if (drag.index < this.controlPoints.length) {
+        const nextControlPoint = this.controlPoints[drag.index];
+        const nextIntermediatePoin = this.intermediatePoints[drag.index+1];
+        adjustedNextControlPoint = this.calculateAdjustedControlPoint(intermediatePoint, offset, nextControlPoint, nextIntermediatePoin);
+        if (!adjustedNextControlPoint) {
+          safeToMoveNextControl = false;
+        }
+      }
+      if (drag.index > 0) {
+        const prevControlPoint = this.controlPoints[drag.index-1];
+        const prevIntermediatePoin = this.intermediatePoints[drag.index-1];
+        adjustedPrevControlPoint = this.calculateAdjustedControlPoint(intermediatePoint, offset, prevControlPoint, prevIntermediatePoin);
+        if (!adjustedPrevControlPoint) {
+          safeToMovePrevControl = false;
+        }
+      }
+      if (safeToMovePrevControl && safeToMoveNextControl) {
+        this.intermediatePoints[drag.index] = intermediatePoint.add(offset);
+        if (drag.index < this.segments.length) {
+          this.segments[drag.index].setStart(this.intermediatePoints[drag.index]);
+        }
+        if (drag.index > 0) {
+          this.segments[drag.index-1].setEnd(this.intermediatePoints[drag.index]);
+        }
+
+        if (adjustedNextControlPoint) {
+          this.controlPoints[drag.index] = adjustedNextControlPoint;
+          if (drag.index < this.segments.length) {
+            this.segments[drag.index].setControl(adjustedNextControlPoint);
+          }
+        }
+        if (adjustedPrevControlPoint) {
+          this.controlPoints[drag.index-1] = adjustedPrevControlPoint;
+          if (drag.index > 0) {
+            this.segments[drag.index-1].setControl(adjustedPrevControlPoint);
+          }
+        }
+      }
+    }
+
+    if (drag.type == SplineDragIndexType.CONTROL) {
+      let safeToMovePrevControl = true;
+      let safeToMoveNextControl = true;
+      let adjustedPrevControlPoint = undefined;
+      let adjustedNextControlPoint = undefined;
+      const curControlPoint = pos.sub(dragOffset);
+      if (drag.index > 0) {
+        const prevEnd = this.intermediatePoints[drag.index];
+        const prevStart = this.intermediatePoints[drag.index-1];
+        const prevControlPoint = this.controlPoints[drag.index-1];
+
+        const line1 = new Line2D(curControlPoint, prevEnd);
+        const line2 = new Line2D(prevStart, prevControlPoint);
+        const intersection = line1.intersectLineNoBound(line2);
+        if (intersection.type == LineIntersectionType.INTERSECTING) {
+          adjustedPrevControlPoint = intersection.pos!;
+        } else {
+          safeToMovePrevControl = false;
+        }
+      }
+      if (drag.index < this.controlPoints.length - 1) {
+        const nextEnd = this.intermediatePoints[drag.index+2];
+        const nextStart = this.intermediatePoints[drag.index+1];
+        const nextControlPoint = this.controlPoints[drag.index+1];
+
+        const line1 = new Line2D(curControlPoint, nextStart);
+        const line2 = new Line2D(nextEnd, nextControlPoint);
+        const intersection = line1.intersectLineNoBound(line2);
+        if (intersection.type == LineIntersectionType.INTERSECTING) {
+          adjustedNextControlPoint = intersection.pos!;
+        } else {
+          safeToMoveNextControl = false;
+        }
+      }
+      if (safeToMovePrevControl && safeToMoveNextControl) {
+        this.controlPoints[drag.index] = curControlPoint;
+        this.segments[drag.index].setControl(curControlPoint);
+        if (adjustedPrevControlPoint) {
+          this.controlPoints[drag.index-1] = adjustedPrevControlPoint;
+          this.segments[drag.index-1].setControl(adjustedPrevControlPoint);
+        }
+        if (adjustedNextControlPoint) {
+          this.controlPoints[drag.index+1] = adjustedNextControlPoint;
+          this.segments[drag.index+1].setControl(adjustedNextControlPoint);
+        }
+      }
+    }
+    return true;
+  }
+
+  private cleanupCanvas(canvas: fabric.Canvas) {
+    this.intermediatePointDrags.forEach((drag) => canvas.remove(drag));
+    this.controlPointDrags.forEach((drag) => canvas.remove(drag));
+  }
+
+  private addDragsToCanvas(canvas: fabric.Canvas) {
+    this.intermediatePoints.forEach((iPoint) => {
+      const drag = new fabric.Circle({
+        radius: this.thickness/2,
+        fill: 'white', // Set the fill to transparent
+        stroke: '#959595', // Set the stroke color
+        strokeWidth: 1, // Set the stroke width
+        selectable: false,
+        evented: false,
+        left: iPoint.x - this.thickness/2,
+        top: iPoint.y - this.thickness/2,
+      });
+      canvas.add(drag)
+      this.intermediatePointDrags.push(drag)
+    });
+
+    this.controlPoints.forEach((cPoint) => {
+      const drag = new fabric.Circle({
+        radius: this.thickness/2,
+        fill: 'yellow', // Set the fill to transparent
+        stroke: '#959595', // Set the stroke color
+        strokeWidth: 1, // Set the stroke width
+        selectable: false,
+        evented: false,
+        left: cPoint.x - this.thickness/2,
+        top: cPoint.y - this.thickness/2,
+      });
+      canvas.add(drag)
+      this.controlPointDrags.push(drag)
+    });
+  }
+
   drawToCanvas(canvas: fabric.Canvas, drawControlPoints: boolean) {
-    this.segments.forEach((segment) => {segment.drawToCamvas(canvas, drawControlPoints);});
+    //cleanup old representation
+    this.cleanupCanvas(canvas);
+
+    this.segments.forEach((segment) => {segment.drawToCanvas(canvas, drawControlPoints);});
+
+    this.addDragsToCanvas(canvas);
   }
 
   removeFromCanvas(canvas: fabric.Canvas) {
+    this.cleanupCanvas(canvas);
     this.segments.forEach((segment) => {segment.removeFromCanvas(canvas);});
   }
 
+}
+
+export class SplineDragIndex {
+  type: SplineDragIndexType;
+  index: number;
+  offset?: Vec2D;
+
+  constructor(type: SplineDragIndexType, index: number, offset?: Vec2D) {
+    this.type = type;
+    this.index = index;
+    this.offset = offset;
+  }
+}
+
+export enum SplineDragIndexType {
+  NONE = 0,
+  INTERMEDIATE = 1,
+  CONTROL = 2
 }
