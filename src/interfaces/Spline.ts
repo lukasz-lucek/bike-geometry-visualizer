@@ -563,31 +563,66 @@ export class SplineSegment {
   }
 }
 
-export class OffsetSpline {
-  private intermediatePoints: Vec2D[];
-  private controlPoints: Vec2D[];
+abstract class OffsetSplineSaver {
+  protected intermediatePoints: Vec2D[];
+  protected controlPoints: Vec2D[];
+  protected thickness: number;
+
+  constructor(param: number | string) {
+    if (typeof param === 'number') {
+      this.thickness = param;
+      this.intermediatePoints = new Array<Vec2D>();
+      this.controlPoints = new Array<Vec2D>();
+    } else {
+      const parsed = JSON.parse(param) as OffsetSplineSaver;
+      this.intermediatePoints = parsed.intermediatePoints.map((ip) => new Vec2D(ip.x, ip.y));
+      this.controlPoints = parsed.controlPoints.map((cp) => new Vec2D(cp.x, cp.y));
+      this.thickness = parsed.thickness;
+    }
+  }
+
+  abstract reconstruct() : void;
+
+  public toJSON() {
+    return {
+      intermediatePoints: this.intermediatePoints,
+      controlPoints: this.controlPoints,
+      thickness: this.thickness
+    }
+  }
+}
+
+export class OffsetSpline extends OffsetSplineSaver {
   private segments: SplineSegment[];
-  private thickness: number;
   private intermediatePointDrags : fabric.Circle[];
   private controlPointDrags: fabric.Circle[];
 
-  constructor(thickness: number) {
-    this.thickness = thickness;
-    this.intermediatePoints = new Array<Vec2D>();
-    this.controlPoints = new Array<Vec2D>();
+  constructor(param: number | string) {
+    super(param);
     this.segments = new Array<SplineSegment>();
     this.intermediatePointDrags = new Array<fabric.Circle>();
     this.controlPointDrags = new Array<fabric.Circle>();
   }
 
-  addIntermediatePoint(point: Vec2D) {
+  reconstruct(): void {
+    this.segments = new Array<SplineSegment>();
+    const tempIP = this.intermediatePoints;
+    const tempCP = this.controlPoints;
+    this.intermediatePoints = new Array<Vec2D>();
+    this.controlPoints = new Array<Vec2D>();
+    for(let i = 0; i < tempIP.length; i++) {
+      this.addIntermediatePoint(tempIP[i], i > 0 ? tempCP[i-1] : undefined)
+    }
+  }
+
+  addIntermediatePoint(point: Vec2D, cPoint?: Vec2D) {
     const orgLength = this.intermediatePoints.length;
     this.intermediatePoints.push(point);
     if (orgLength == 1) {
       //add segment with arbitrary control Point
-      const segStart = this.intermediatePoints[orgLength - 1];
+       const segStart = this.intermediatePoints[orgLength - 1];
       // control point of first segmend - in the middle of segment with small offset
-      const segControl = segStart.add(point).divide(2).add(new Vec2D(+20,-30));
+      const segControl = cPoint ? cPoint : segStart.add(point).divide(2).add(new Vec2D(+20,-30));
       this.controlPoints.push(segControl);
 
       this.segments.push(new SplineSegment(segStart, point, segControl, this.thickness));
@@ -597,7 +632,7 @@ export class OffsetSpline {
       //get previous control point and add new control point symetrical in relation to segStart
       const prevSegControl = this.controlPoints[orgLength - 2];
       const diff = segStart.sub(prevSegControl);
-      const segControl = segStart.add(diff);
+      const segControl = cPoint ? cPoint : segStart.add(diff);
       this.controlPoints.push(segControl);
 
       this.segments.push(new SplineSegment(segStart, point, segControl, this.thickness));

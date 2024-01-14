@@ -3,6 +3,7 @@ import { FixedCircle } from '../interfaces/FixedCircle';
 import { ColorPoint2d } from '../interfaces/Point2d';
 import { FixedRectangle, OffsetFixedRectangle, SemiFixedRectangle } from '../interfaces/Rectangles';
 import { Measures } from './MeasurementsContext';
+import { OffsetSpline } from '../interfaces/Spline';
 
 //TODO - divide by type
 export interface GeometryPoints {
@@ -93,6 +94,7 @@ export interface GeometryState {
   selectedFile: null | string;
   bikesList: string[];
   sizesTable: Map<string, Measures>;
+  //handlebarGeometry: OffsetSpline;
 }
 
 //workaround for saving data - no maps in local storage
@@ -106,6 +108,7 @@ export interface GeometryStateForSaving {
   selectedFile: null | string;
   bikesList: string[];
   sizesTable: {};
+  //handlebarGeometry: OffsetSpline;
 }
 
 interface GeometryContextType {

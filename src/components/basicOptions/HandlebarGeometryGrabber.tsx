@@ -1,10 +1,8 @@
 import React from 'react';
-import BikeGeometryTable from '../bikeGeometryTable/BikeGeometryTable';
-import PartsGrabberTable from '../grabberControls/PartsGrabberTable';
-import PointGrabGrid from '../grabberControls/PointGrabGrid';
 import { useGeometryContext } from '../../contexts/GeometryContext';
 import BackgroundImage from "../drawing/BackgroundImage"
 import GeometryPointVisualization from '../drawing/GeometryPointsVisualization';
+import SplineGrabControls from '../grabberControls/SplineGrabControls';
 
 const HandlebarGeometryGrabber = () => {
 
@@ -14,7 +12,7 @@ const HandlebarGeometryGrabber = () => {
 
   return (
     <div className="image-upload-option">
-      {/* <PointGrabGrid></PointGrabGrid> */}
+      <SplineGrabControls/>
       <div className="bike-geometry-table">
         {/* <BikeGeometryTable>
           Bike Geometry Specifications

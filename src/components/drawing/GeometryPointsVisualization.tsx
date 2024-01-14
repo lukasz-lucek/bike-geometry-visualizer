@@ -25,7 +25,14 @@ export function GeometryPointVisualization({ pointsSet }: { pointsSet: GeometryP
     // if (canvas && allShapes.size > 0) {
     //   const spline = new OffsetSpline(15);
     //   allShapes.forEach((value,) => {spline.addIntermediatePoint(new Vec2D(value.x ,value.y))});
-    //   // spline.drawToCanvas(canvas,true);
+    //   spline.drawToCanvas(canvas,true);
+
+
+    //   const minimalRepresentation = JSON.stringify(spline);
+    //   console.log(minimalRepresentation);
+    //   const spline2 = new OffsetSpline(minimalRepresentation);
+    //   spline2.reconstruct();
+    //   spline2.drawToCanvas(canvas, true);
 
     //   if (allShapes.size > 0) {
     //     spline.moveDragToPosition(new SplineDragIndex(SplineDragIndexType.INTERMEDIATE, 0, new Vec2D(0, 0)), new Vec2D(450, 700));
@@ -35,10 +42,13 @@ export function GeometryPointVisualization({ pointsSet }: { pointsSet: GeometryP
     //     spline.moveDragToPosition(new SplineDragIndex(SplineDragIndexType.INTERMEDIATE, 1, new Vec2D(0, 0)), new Vec2D(1450, 750));
     //     spline.moveDragToPosition(new SplineDragIndex(SplineDragIndexType.CONTROL, 1, new Vec2D(0, 0)), new Vec2D(1950, 950));
     //   }
-    //   spline.drawToCanvas(canvas,true);
+    //   spline.drawToCanvas(canvas,false);
+
     //   return () => {
     //     spline.removeFromCanvas(canvas);
+    //     spline2.removeFromCanvas(canvas);
     //   }
+
     // }
   }, [pointsSet]);
 
