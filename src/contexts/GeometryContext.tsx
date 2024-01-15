@@ -4,6 +4,7 @@ import { ColorPoint2d } from '../interfaces/Point2d';
 import { FixedRectangle, OffsetFixedRectangle, SemiFixedRectangle } from '../interfaces/Rectangles';
 import { Measures } from './MeasurementsContext';
 import { OffsetSpline } from '../interfaces/Spline';
+import GeometryStatesSerializer from './GeometryStatesSerilizer';
 
 //TODO - divide by type
 export interface GeometryPoints {
@@ -97,20 +98,6 @@ export interface GeometryState {
   //handlebarGeometry: OffsetSpline;
 }
 
-//workaround for saving data - no maps in local storage
-export interface GeometryStateForSaving {
-  wheelbase: number;
-  geometryPoints: GeometryPoints;
-  offsetFixedRectangles: GeometryOffsetFixedRectangles;
-  semiFixedRectangles: GeometrySemiFixedRectangles;
-  fixedRectangles: GeometryFixedRectangles;
-  fixedCircles: GeometryFixedCircles;
-  selectedFile: null | string;
-  bikesList: string[];
-  sizesTable: {};
-  //handlebarGeometry: OffsetSpline;
-}
-
 interface GeometryContextType {
   state: [GeometryState, (newPartialState: Partial<GeometryState>) => void];
 }
@@ -129,7 +116,9 @@ export const GeometryProvider = ({ children }: { children: ReactNode }) => {
   const storage = localStorage.getItem("knownGeometries");
   let bikesList: string[] = [];
   if (storage) {
-    bikesList = Object.keys(JSON.parse(storage));
+    const geomStatSerializer = new GeometryStatesSerializer();
+    geomStatSerializer.deserialize(storage);
+    bikesList = Array.from(geomStatSerializer.knownGeometries.keys());
   }
   const defaultState: GeometryState = {
     wheelbase: 1000,

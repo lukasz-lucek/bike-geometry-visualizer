@@ -1,7 +1,8 @@
 
 import React, { useState } from 'react';
-import { defaultFixedCircles, defaultFixedRectangles, defaultOffsetFixedRectangles, defaultSemiFixedRectangles, GeometryState, GeometryStateForSaving, useGeometryContext } from '../../contexts/GeometryContext';
+import { defaultFixedCircles, defaultFixedRectangles, defaultOffsetFixedRectangles, defaultSemiFixedRectangles, GeometryState, useGeometryContext } from '../../contexts/GeometryContext';
 import DropdownActions from './DropdownActions';
+import GeometryStatesSerializer from '../../contexts/GeometryStatesSerilizer';
 
 const GeometrySaver = () => {
   const [bikeDataName, setBikeDataName] = useState('');
@@ -12,63 +13,44 @@ const GeometrySaver = () => {
 
   const saveGeometry = () => {
     if (bikeDataName != '') {
-      let knownGeometries: Map<string, GeometryStateForSaving> = new Map();
+      const geomStatSerializer = new GeometryStatesSerializer();
       const knownGeometriesRaw = localStorage.getItem('knownGeometries');
       if (knownGeometriesRaw) {
-        knownGeometries = new Map(Object.entries(JSON.parse(knownGeometriesRaw)));
-        if (knownGeometries == null) {
-          knownGeometries = new Map();
-        }
+        geomStatSerializer.deserialize(knownGeometriesRaw)
       }
-      knownGeometries.set(bikeDataName, {
-        selectedFile: state.selectedFile,
-        geometryPoints: state.geometryPoints,
-        offsetFixedRectangles: state.offsetFixedRectangles,
-        semiFixedRectangles: state.semiFixedRectangles,
-        fixedRectangles: state.fixedRectangles,
-        fixedCircles: state.fixedCircles,
-        wheelbase: state.wheelbase,
-        // workaround for inablility to save maps to local storage
-        sizesTable: Object.fromEntries(state.sizesTable),
-        bikesList: [],
-      });
-      localStorage.setItem('knownGeometries', JSON.stringify(Object.fromEntries(knownGeometries)));
-      updateState({ bikesList: Array.from(knownGeometries.keys()) });
+      let {bikesList: _, ...toSave} = state;
+      geomStatSerializer.knownGeometries.set(bikeDataName, {bikesList: [], ...toSave})
+
+      localStorage.setItem('knownGeometries', geomStatSerializer.serialize());
+      updateState({ bikesList: Array.from(geomStatSerializer.knownGeometries.keys()) });
     }
   }
 
   const loadBikeGeometry = (item: string) => {
-    let knownGeometries: Map<string, GeometryState> = new Map();
+    const geomStatSerializer = new GeometryStatesSerializer();
     const knownGeometriesRaw = localStorage.getItem('knownGeometries');
     if (!knownGeometriesRaw) {
       console.error("no data in local storage - unable to load");
       return;
     }
-    knownGeometries = new Map(Object.entries(JSON.parse(knownGeometriesRaw)));
+    geomStatSerializer.deserialize(knownGeometriesRaw);
+    const knownGeometries = geomStatSerializer.knownGeometries;
     if (knownGeometries == null) {
       console.error("unable to read data from local storage - unable to load");
       return;
     }
+    
     const geometryData = knownGeometries.get(item);
     if (geometryData == null || geometryData.selectedFile == null || geometryData.geometryPoints == null) {
       console.error("Broken data in local storage - cannot load");
       return;
     }
-    // workaround for reading a map from local storage
-    if (!(geometryData.sizesTable as any instanceof Map)) {
-      console.log("trying to read old data of sizesTable");
-      geometryData.sizesTable = new Map(Object.entries(geometryData.sizesTable));
-    }
-    updateState({
-      selectedFile: geometryData.selectedFile,
-      geometryPoints: geometryData.geometryPoints,
-      offsetFixedRectangles: geometryData.offsetFixedRectangles || defaultOffsetFixedRectangles,
-      semiFixedRectangles: geometryData.semiFixedRectangles || defaultSemiFixedRectangles,
-      fixedRectangles: geometryData.fixedRectangles || defaultFixedRectangles,
-      fixedCircles: geometryData.fixedCircles || defaultFixedCircles,
-      wheelbase: geometryData.wheelbase,
-      sizesTable: geometryData.sizesTable,
-    });
+    geometryData.offsetFixedRectangles = geometryData.offsetFixedRectangles || defaultOffsetFixedRectangles;
+    geometryData.semiFixedRectangles = geometryData.semiFixedRectangles || defaultSemiFixedRectangles;
+    geometryData.fixedRectangles = geometryData.fixedRectangles || defaultFixedRectangles;
+    geometryData.fixedCircles = geometryData.fixedCircles || defaultFixedCircles;
+    let {bikesList: _, ...newState} = geometryData;
+    updateState(newState);
 
     setBikeDataName(item);
   }
