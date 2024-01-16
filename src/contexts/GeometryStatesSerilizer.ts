@@ -1,5 +1,6 @@
 import { Console } from 'console';
 import { GeometryState } from './GeometryContext';
+import { OffsetSpline } from '../interfaces/Spline';
 
 export class GeometryStatesSerializer {
   knownGeometries: Map<string, GeometryState>
@@ -16,6 +17,11 @@ export class GeometryStatesSerializer {
     if (key === "sizesTable") {
       return new Map(value)
     }
+    if (key === "handlebarGeometry") {
+      const spline = new OffsetSpline(value);
+      spline.reconstruct();
+      return spline;
+    }
     return value
   }
 
@@ -27,6 +33,7 @@ export class GeometryStatesSerializer {
       console.log("Old sizes table ");
       return arr
     }
+
     return value
   }
 

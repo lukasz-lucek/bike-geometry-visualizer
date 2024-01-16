@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { defaultFixedCircles, defaultFixedRectangles, defaultOffsetFixedRectangles, defaultSemiFixedRectangles, GeometryState, useGeometryContext } from '../../contexts/GeometryContext';
 import DropdownActions from './DropdownActions';
 import GeometryStatesSerializer from '../../contexts/GeometryStatesSerilizer';
+import { OffsetSpline } from '../../interfaces/Spline';
 
 const GeometrySaver = () => {
   const [bikeDataName, setBikeDataName] = useState('');
@@ -49,6 +50,7 @@ const GeometrySaver = () => {
     geometryData.semiFixedRectangles = geometryData.semiFixedRectangles || defaultSemiFixedRectangles;
     geometryData.fixedRectangles = geometryData.fixedRectangles || defaultFixedRectangles;
     geometryData.fixedCircles = geometryData.fixedCircles || defaultFixedCircles;
+    geometryData.handlebarGeometry = geometryData.handlebarGeometry || new OffsetSpline(15);
     let {bikesList: _, ...newState} = geometryData;
     updateState(newState);
 

@@ -568,13 +568,13 @@ abstract class OffsetSplineSaver {
   protected controlPoints: Vec2D[];
   protected thickness: number;
 
-  constructor(param: number | string) {
+  constructor(param: number | OffsetSplineSaver) {
     if (typeof param === 'number') {
       this.thickness = param;
       this.intermediatePoints = new Array<Vec2D>();
       this.controlPoints = new Array<Vec2D>();
     } else {
-      const parsed = JSON.parse(param) as OffsetSplineSaver;
+      const parsed = param;
       this.intermediatePoints = parsed.intermediatePoints.map((ip) => new Vec2D(ip.x, ip.y));
       this.controlPoints = parsed.controlPoints.map((cp) => new Vec2D(cp.x, cp.y));
       this.thickness = parsed.thickness;
@@ -597,7 +597,7 @@ export class OffsetSpline extends OffsetSplineSaver {
   private intermediatePointDrags : fabric.Circle[];
   private controlPointDrags: fabric.Circle[];
 
-  constructor(param: number | string) {
+  constructor(param: number | OffsetSplineSaver) {
     super(param);
     this.segments = new Array<SplineSegment>();
     this.intermediatePointDrags = new Array<fabric.Circle>();
