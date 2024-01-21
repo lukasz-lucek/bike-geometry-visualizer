@@ -5,6 +5,7 @@ import { findIntermediatePoint, findPxPerMm } from '../../utils/GeometryUtils';
 import CirclePartGrabber from '../grabbers/CirclePartGrabber';
 import PertrudingPartGrabber from '../grabbers/PertrudingPartGrabber';
 import RectanglePartGrabber from '../grabbers/RectanglePartGrabber';
+import HandlebarGrabber from '../grabbers/HandlebarGrabber';
 
 export interface DestinationGeometryPoints {
   rearWheelCenter: ColorPoint2d | null;
@@ -320,6 +321,20 @@ const BikeImageStitcher = ({ destinationPoints, desiredPxPerMM = null }: BikeIma
               strokeWidth={0}
               leftPlacementPoint={destinationPoints.stemStart}
               rightPlacementPoint={destinationPoints.handlebarMount}
+              desiredPxPerMM={dPPMM}
+              layer={7} />
+          }
+
+          {geometryState.handlebarGeometry && destinationPoints.handlebarMount &&
+            <HandlebarGrabber
+              geometry={geometryState.handlebarGeometry}
+              raise={0}
+              setback={0}
+              reach={0}
+              drop={0}
+              rotation={0}
+              pxPerMm={pxPerMm}
+              mountingPoint={destinationPoints.handlebarMount}
               desiredPxPerMM={dPPMM}
               layer={7} />
           }

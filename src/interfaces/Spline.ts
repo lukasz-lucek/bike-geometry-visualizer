@@ -332,6 +332,59 @@ export class SplineSegment {
     })
   }
 
+  public getOffsetALineMoveDescription() : string {
+    if (this.p1a) {
+      return `M ${this.p1a.x} ${this.p1a.y}`;
+    }
+    return '';
+  }
+
+  public getOffsetALineLineDescription() : string {
+    if (this.p1a) {
+      return `L ${this.p1a.x} ${this.p1a.y}`;
+    }
+    return '';
+  }
+
+  public getOffsetALineDesription() : string {
+    if (!this.split) {
+      if (this.ca && this.p2a) {
+        return `Q ${this.ca.x}, ${this.ca.y}, ${this.p2a.x}, ${this.p2a.y}`;
+      } 
+		}
+		else {
+      if (this.q1a && this.qa && this.q2a && this.p2a) {
+        return `Q ${this.q1a.x}, ${this.q1a.y}, ${this.qa.x}, ${this.qa.y} Q ${this.q2a.x}, ${this.q2a.y}, ${this.p2a.x}, ${this.p2a.y}`
+        // this.offsetLineAP1 = this.createQuadraticPath(this.p1a, this.q1a, this.qa, offsetLineColor)
+        // this.offsetLineAP2 = this.createQuadraticPath(this.qa, this.q2a, this.p2a, offsetLineColor)
+      }
+		}
+    return '';
+  }
+
+  public getOffsetBLineLineDescription() : string {
+    if (this.p2b) {
+      return `L ${this.p2b.x} ${this.p2b.y}`;
+    }
+    return '';
+  }
+
+  public getOffsetBLineDesription() : string {
+    if (!this.split) {
+      if (this.p1b && this.cb) {
+        return `Q ${this.cb.x}, ${this.cb.y}, ${this.p1b.x}, ${this.p1b.y}`;
+      } 
+		}
+		else {
+      if (this.p1b && this.q1b && this.qb && this.q2b) {
+        return `Q ${this.q2b.x}, ${this.q2b.y}, ${this.qb.x}, ${this.qb.y} Q ${this.q1b.x}, ${this.q1b.y}, ${this.p1b.x}, ${this.p1b.y}`
+        // this.offsetLineAP1 = this.createQuadraticPath(this.p1b, this.q1b, this.qb, offsetLineColor)
+        // this.offsetLineAP2 = this.createQuadraticPath(this.qb, this.q2b, this.p2b, offsetLineColor)
+      }
+		}
+    return '';
+  }
+
   //control points - no split
   private capf?: fabric.Rect;
   private cbpf?: fabric.Rect;
@@ -561,6 +614,7 @@ export class SplineSegment {
     this.createCanvasRepresentation(drawControlPoints);
     this.addExistingRepresentationToCanvas(canvas);
   }
+  
 }
 
 abstract class OffsetSplineSaver {
@@ -602,6 +656,44 @@ export class OffsetSpline extends OffsetSplineSaver {
     this.segments = new Array<SplineSegment>();
     this.intermediatePointDrags = new Array<fabric.Circle>();
     this.controlPointDrags = new Array<fabric.Circle>();
+  }
+
+  getFabricPath(): fabric.Path | null {
+    // var path = 'M 230 230 A 45 45, 0, 1, 1, 275 275 L 275 230 Z';
+    // return new fabric.Path(path, {fill: '',
+    // stroke: 'blue',
+    // strokeWidth: 5,
+    // scaleX: 2,
+    // scaleY: 2,
+    // lockScalingX: true,
+    // lockScalingY: true,
+    // lockSkewingX: true,
+    // lockSkewingY: true,
+    // originX: 'center',
+    // originY: 'center',})
+
+    if (this.segments.length == 0) {
+      return null;
+    }
+    const ascendingResult = this.segments[0].getOffsetALineMoveDescription() + this.segments.map((segment) => segment.getOffsetALineDesription()).join(' ');
+    const descendingResult = this.segments[this.segments.length-1].getOffsetBLineLineDescription() + this.segments.slice(0).reverse().map((segment) => segment.getOffsetBLineDesription()).join(' ');
+    var path = `${ascendingResult} ${descendingResult} ${this.segments[0].getOffsetALineLineDescription()}`;
+    return new fabric.Path(path, {fill: 'green',
+      opacity: 0.5,
+      stroke: 'blue',
+      strokeWidth: 1,
+      selectable: false,
+      evented: false,
+      // scaleX: 2,
+      // scaleY: 2,
+      // lockScalingX: true,
+      // lockScalingY: true,
+      // lockSkewingX: true,
+      // lockSkewingY: true,
+      // originX: 'center',
+      // originY: 'center',
+    }
+    );
   }
 
   reconstruct(): void {
