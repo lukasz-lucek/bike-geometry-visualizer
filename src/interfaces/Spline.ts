@@ -251,13 +251,6 @@ export class SplineSegment {
   getMainLineBB(): BoundingBox {return this.mainLineBB!;}
 
   private calcualteBBForQuadraticCurve(p1: Vec2D, c: Vec2D, p2: Vec2D) : BoundingBox {
-    // t(pc-p1) - t(p2-pc) = pc - p1
-    // t(pc - p1 - p2 + pc) = pc - p1
-    // t = (pc - p1) / (2pc - p1 - p2)
-
-    // pa(t) = p1 + t(pc-p1)
-    // pb(t) = pc + t(p2-pc)
-
     const tx = (c.x - p1.x) / (2*c.x - p1.x - p2.x);
     const ty = (c.y - p1.y) / (2*c.y - p1.y - p2.y);
 
@@ -801,6 +794,20 @@ export class OffsetSpline extends OffsetSplineSaver {
     return {top: miny, left: minx, width: maxx - minx, height: maxy - miny};
   }
 
+  getStartingPoint() : Vec2D | undefined{
+    if (this.segments.length == 0) {
+      return undefined;
+    }
+    return this.segments[0].getStart();
+  }
+
+  getEndingPoint() : Vec2D | undefined {
+    if (this.segments.length == 0) {
+      return undefined;
+    }
+    return this.segments[this.segments.length-1].getEnd();
+  }
+
   setThickness(thickness : number) {
     this.thickness = thickness;
     this.segments.forEach((segment) => {segment.setThickness(thickness);});
@@ -968,6 +975,7 @@ export class OffsetSpline extends OffsetSplineSaver {
       const drag = new fabric.Circle({
         radius: this.thickness/2,
         fill: 'white', // Set the fill to transparent
+        opacity: 0.75,
         stroke: '#959595', // Set the stroke color
         strokeWidth: 1, // Set the stroke width
         selectable: false,
@@ -983,6 +991,7 @@ export class OffsetSpline extends OffsetSplineSaver {
       const drag = new fabric.Circle({
         radius: this.thickness/2,
         fill: 'yellow', // Set the fill to transparent
+        opacity: 0.75,
         stroke: '#959595', // Set the stroke color
         strokeWidth: 1, // Set the stroke width
         selectable: false,

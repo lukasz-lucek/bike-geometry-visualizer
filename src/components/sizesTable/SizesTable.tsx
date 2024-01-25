@@ -34,7 +34,7 @@ const SizesTable = () => {
 
   const addSizeToTable = () => {
     let ns = new Map(geometryState.sizesTable);
-    ns.set(sizeName, mState.measures);
+    ns.set(sizeName, Object.assign({}, mState.measures));
     updateGeometryState({ sizesTable: ns });
   }
 

@@ -20,8 +20,16 @@ export interface Measures {
   stemAngle: number;
 }
 
+export interface HandlebarMeasures {
+  handlebarDrop: number;
+  handlebarReach: number;
+  handlebarRaise: number;
+  handlebarSetback: number;
+}
+
 export interface MeasurementsState {
   measures: Measures,
+  handlebarMeasures: HandlebarMeasures,
   helpserPoints: {
     wheelBaseEnd: Point2d | null;
     bbTop: Point2d | null;
@@ -34,6 +42,13 @@ export interface MeasurementsState {
     spacersStackEnd: Point2d | null;
     stemStartPoint: Point2d | null;
     stemAnglePoint: Point2d | null;
+  },
+  handlebarHelpserPoints: {
+    handlebarGEometryStart: Point2d | null;
+    handlebarReachEnd: Point2d | null;
+    handlebarDropEnd: Point2d | null;
+    handlebarRaiseEnd: Point2d | null;
+    handlebarSetbackEnd: Point2d | null;
   },
   pxPerMm: number,
   strokeWidth: number,
@@ -73,6 +88,12 @@ export const MeasurementsProvider = ({ children }: { children: ReactNode }) => {
       stemLength: 0,
       stemAngle: 0,
     },
+    handlebarMeasures : {
+      handlebarDrop: 0,
+      handlebarReach: 0,
+      handlebarRaise: 0,
+      handlebarSetback: 0,
+    },
     helpserPoints: {
       wheelBaseEnd: null,
       bbTop: null,
@@ -85,6 +106,13 @@ export const MeasurementsProvider = ({ children }: { children: ReactNode }) => {
       spacersStackEnd: null,
       stemStartPoint: null,
       stemAnglePoint: null,
+    },
+    handlebarHelpserPoints: {
+      handlebarGEometryStart: null,
+      handlebarReachEnd: null,
+      handlebarDropEnd: null,
+      handlebarRaiseEnd: null,
+      handlebarSetbackEnd: null,
     },
     pxPerMm: 1,
     strokeWidth: 1,

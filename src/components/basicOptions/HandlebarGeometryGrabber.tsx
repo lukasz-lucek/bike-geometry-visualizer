@@ -5,6 +5,7 @@ import GeometryPointVisualization from '../drawing/GeometryPointsVisualization';
 import SplineGrabControls from '../grabberControls/SplineGrabControls';
 import SplineVisualization from '../drawing/SplineVisualization';
 import HandlebarGrabber from '../grabbers/HandlebarGrabber';
+import HandlebarGeometryTable from '../bikeGeometryTable/HandlebarGeometryTable';
 
 const HandlebarGeometryGrabber = () => {
 
@@ -15,10 +16,11 @@ const HandlebarGeometryGrabber = () => {
   return (
     <div className="image-upload-option">
       <SplineGrabControls/>
+      <HandlebarGeometryTable>Handlebar geometry</HandlebarGeometryTable>
       {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'} isGrayedOut={false} desiredPxPerMM={null} focusPoint={geometryState.geometryPoints.handlebarMount} />}
       <GeometryPointVisualization pointsSet={geometryState.geometryPoints} />
       <SplineVisualization spline={geometryState.handlebarGeometry} drawControlPoints={true}/>
-
+{/* 
       {geometryState.handlebarGeometry && 
             <HandlebarGrabber
               geometry={geometryState.handlebarGeometry}
@@ -31,7 +33,7 @@ const HandlebarGeometryGrabber = () => {
               mountingPoint={null}
               desiredPxPerMM={1}
               layer={7} />
-          }
+          } */}
     </div>
   );
 };
