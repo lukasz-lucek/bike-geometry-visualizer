@@ -103,7 +103,6 @@ export function RectangleGrabVisualization(
 
   useEffect(() => {
     if (loadedImage) {
-      console.log("inserting rectangle at layer: " + layer);
       canvasState.canvas?.addObjectToLayer(loadedImage, layer);
       canvasState.canvas?.renderAll();
       return () => {

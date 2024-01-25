@@ -4,11 +4,12 @@
 // import { findIntermediatePoint } from '../../utils/GeometryUtils';
 // import { RectangleMarker, RectangleMarkerData } from '../drawing/RectangleMarker';
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Point2d } from "../../interfaces/Point2d";
 import { OffsetSpline } from "../../interfaces/Spline";
 import { useCanvasContext } from "../../contexts/CanvasContext";
 import { fabric } from 'fabric';
+import { useGeometryContext } from "../../contexts/GeometryContext";
 
 interface HandlebarGrabberProps {
   geometry: OffsetSpline;
@@ -40,41 +41,81 @@ export function HandlebarGrabber(
     state: [canvasState,],
   } = useCanvasContext();
 
+  const {
+    state: [geometryState,],
+  } = useGeometryContext();
+
+  const [loadedImage, setLoadedImage] = useState<fabric.Image | null>(null);
+
   useEffect(() => {
     if (!canvasState.canvas) {
       return;
     }
     
-    
-    var path1 = new fabric.Path('M 10 10 L 50 10 L 50 50 L 10 50', { stroke: 'red' });
-    var path2 = new fabric.Path('L 50 10 L 90 10 L 90 50 L 50 50', { stroke: 'blue' });
-
-    // Group paths into an array
-    var paths = [path1, path2];
-
-    // Combine paths into a single path
-    const compined = paths.map(function(path) { return path.path?.join(' '); }).join(' ');
-
-    var combinedPath = new fabric.Path(compined, { stroke: 'red', fill: ''});
-    canvasState.canvas.addObjectToLayer(combinedPath, layer);
-
     const handlebarOutline = geometry.getFabricPath();
     if (!handlebarOutline) {
       return;
     }
-    canvasState.canvas.addObjectToLayer(handlebarOutline, layer);
+
+    const boundingBox = handlebarOutline.getBoundingRect();
+    
+    if (geometryState.selectedFile) {
+      fabric.Image.fromURL(geometryState.selectedFile, (img) => {
+        if (!canvasState.canvas) {
+          return;
+        }
+        const filter = new fabric.Image.filters.Invert();
+        img.filters!.push(filter);
+        img.applyFilters();
+        var clipPath = new fabric.Circle({
+          radius: 100,
+          top: -100,
+          left: -100
+        });
+        
+        handlebarOutline.top = boundingBox.top > 0 ? 0 : boundingBox.top;
+        handlebarOutline.left = boundingBox.left > 0 ? 0 : boundingBox.left;
+        handlebarOutline.originX = "center";
+        handlebarOutline.originY = "center";
+        img.clipPath = handlebarOutline
+        setLoadedImage(img);
+      },
+      {
+        top: boundingBox.top > 0 ? boundingBox.top : 0,
+        left: boundingBox.left > 0 ? boundingBox.left : 0,
+        width: boundingBox.width,
+        height: boundingBox.height,
+        cropX: boundingBox.left,
+        cropY: boundingBox.top,
+        evented: false
+      });
+    }
+
+    const mainLineBB = geometry.getMainLineBB();
+    const rect = new fabric.Rect({...mainLineBB, stroke: 'blue', fill: '', evented: false});
+    canvasState.canvas.addObjectToLayer(rect, layer+1);
     
     canvasState.canvas.renderAll();
     return () => {
       if (canvasState.canvas) {
-        canvasState.canvas.removeObjectFromAnyLayer(handlebarOutline);
-        canvasState.canvas.removeObjectFromAnyLayer(combinedPath);
+        canvasState.canvas?.removeObjectFromAnyLayer(rect);
         canvasState.canvas.renderAll();
       }
     }
 
-  }, [geometry, raise, setback, reach, drop, rotation, pxPerMm, mountingPoint, desiredPxPerMM, layer, canvasState.canvas])
+  }, [geometry, raise, setback, reach, drop, rotation, pxPerMm, mountingPoint, desiredPxPerMM, layer, canvasState.canvas, geometryState.selectedFile])
 
+  useEffect(() => {
+    if (loadedImage) {
+      console.log("inserting handlebar at layer: " + layer);
+      canvasState.canvas?.addObjectToLayer(loadedImage, layer);
+      canvasState.canvas?.renderAll();
+      return () => {
+        canvasState.canvas?.removeObjectFromAnyLayer(loadedImage);
+        canvasState.canvas?.renderAll();
+      }
+    }
+  }, [loadedImage]);
 
   return (
     <>

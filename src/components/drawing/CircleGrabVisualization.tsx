@@ -74,7 +74,6 @@ export function CircleGrabVisualization({ circle, placementPoint = null, scale =
 
   useEffect(() => {
     if (loadedImage) {
-      console.log("inserting circle at layer: " + layer)
       canvasState.canvas?.addObjectToLayer(loadedImage, layer);
       canvasState.canvas?.renderAll();
       return () => {

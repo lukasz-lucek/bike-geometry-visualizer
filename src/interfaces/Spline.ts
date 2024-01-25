@@ -1,6 +1,7 @@
 import { fabric } from 'fabric';
 import { Point2d } from "./Point2d";
 import { Canvas } from 'fabric/fabric-impl';
+import { BoundingBox } from './BoundingBox';
 
 // Define the Vec2D class that implements Point2d
 export class Vec2D implements Point2d {
@@ -226,6 +227,8 @@ export class SplineSegment {
   private q1b?: Vec2D;
   private q2b?: Vec2D;
 
+  private mainLineBB?: BoundingBox;
+
   constructor(start: Vec2D, end: Vec2D, control: Vec2D, thickness: number) {
     this.start = start;
     this.end = end;
@@ -234,16 +237,57 @@ export class SplineSegment {
     this.split = false;
 
     this.calculateIntermediatePoins();
+    this.calculateBB();
   }
 
   getStart() : Vec2D {return this.start;}
-  setStart(start: Vec2D) {this.start = start; this.calculateIntermediatePoins();}
+  setStart(start: Vec2D) {this.start = start; this.calculateIntermediatePoins(); this.calculateBB();}
   getEnd() : Vec2D {return this.end;}
-  setEnd(end: Vec2D) {this.end = end; this.calculateIntermediatePoins();}
+  setEnd(end: Vec2D) {this.end = end; this.calculateIntermediatePoins();  this.calculateBB();}
   getControl() : Vec2D {return this.control;}
-  setControl(control: Vec2D) {this.control = control; this.calculateIntermediatePoins();}
+  setControl(control: Vec2D) {this.control = control; this.calculateIntermediatePoins();  this.calculateBB();}
   getThickness() : number {return this.thickness;}
   setThickness(thickness: number) {this.thickness = thickness; this.calculateIntermediatePoins();}
+  getMainLineBB(): BoundingBox {return this.mainLineBB!;}
+
+  private calcualteBBForQuadraticCurve(p1: Vec2D, c: Vec2D, p2: Vec2D) : BoundingBox {
+    // t(pc-p1) - t(p2-pc) = pc - p1
+    // t(pc - p1 - p2 + pc) = pc - p1
+    // t = (pc - p1) / (2pc - p1 - p2)
+
+    // pa(t) = p1 + t(pc-p1)
+    // pb(t) = pc + t(p2-pc)
+
+    const tx = (c.x - p1.x) / (2*c.x - p1.x - p2.x);
+    const ty = (c.y - p1.y) / (2*c.y - p1.y - p2.y);
+
+    const result = {
+      tx: tx > 0 && tx < 1 ? tx : undefined,
+      ty: ty > 0 && ty < 1 ? ty : undefined
+    }
+
+    let minx = Number.MAX_SAFE_INTEGER,
+        miny = minx,
+        maxx = Number.MIN_SAFE_INTEGER,
+        maxy = maxx;
+
+    // For each extremum, see if that changes the bbox values.
+    [0, result.tx, result.ty, 1].forEach(t => {
+        if (t != undefined) {
+          let p = MathUtils.getPointInQuadraticCurve(t, p1, c, p2);
+          if (p.x < minx) minx = p.x;
+          if (p.x > maxx) maxx = p.x;
+          if (p.y < miny) miny = p.y;
+          if (p.y > maxy) maxy = p.y;
+        }
+    });
+
+    return {top: miny, left: minx, width: maxx - minx, height: maxy - miny};
+  }
+
+  private calculateBB() {
+    this.mainLineBB = this.calcualteBBForQuadraticCurve(this.start, this.control, this.end);
+  }
 
   private calculateIntermediatePoins() {
     const p1 = this.start;
@@ -678,10 +722,10 @@ export class OffsetSpline extends OffsetSplineSaver {
     const ascendingResult = this.segments[0].getOffsetALineMoveDescription() + this.segments.map((segment) => segment.getOffsetALineDesription()).join(' ');
     const descendingResult = this.segments[this.segments.length-1].getOffsetBLineLineDescription() + this.segments.slice(0).reverse().map((segment) => segment.getOffsetBLineDesription()).join(' ');
     var path = `${ascendingResult} ${descendingResult} ${this.segments[0].getOffsetALineLineDescription()}`;
-    return new fabric.Path(path, {fill: 'green',
-      opacity: 0.5,
-      stroke: 'blue',
-      strokeWidth: 1,
+    return new fabric.Path(path, {fill: 'black',
+      //opacity: 0.5,
+      //stroke: 'blue',
+      //strokeWidth: 1,
       selectable: false,
       evented: false,
       // scaleX: 2,
@@ -729,6 +773,32 @@ export class OffsetSpline extends OffsetSplineSaver {
 
       this.segments.push(new SplineSegment(segStart, point, segControl, this.thickness));
     }
+  }
+
+  getMainLineBB() : BoundingBox | undefined{
+    if (this.segments.length == 0) {
+      return undefined;
+    }
+
+    let minx = Number.MAX_SAFE_INTEGER,
+        miny = minx,
+        maxx = Number.MIN_SAFE_INTEGER,
+        maxy = maxx;
+
+    this.segments.forEach((segment) => {
+      const cur = segment.getMainLineBB();
+      const curMinX = cur.left;
+      const curMinY = cur.top;
+      const curMaxX = cur.left + cur.width;
+      const curMaxY = cur.top + cur.height;
+
+      if (curMinX < minx) minx = curMinX;
+      if (curMaxX > maxx) maxx = curMaxX;
+      if (curMinY < miny) miny = curMinY;
+      if (curMaxY > maxy) maxy = curMaxY;
+    })
+
+    return {top: miny, left: minx, width: maxx - minx, height: maxy - miny};
   }
 
   setThickness(thickness : number) {

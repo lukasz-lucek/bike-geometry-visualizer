@@ -336,7 +336,7 @@ const BikeImageStitcher = ({ destinationPoints, desiredPxPerMM = null }: BikeIma
               pxPerMm={pxPerMm}
               mountingPoint={destinationPoints.handlebarMount}
               desiredPxPerMM={dPPMM}
-              layer={7} />
+              layer={9} />
           }
         </div>
       }
