@@ -971,17 +971,20 @@ export class OffsetSpline extends OffsetSplineSaver {
   }
 
   private addDragsToCanvas(canvas: fabric.Canvas) {
+    let dragSize = this.thickness/2;
+    dragSize = dragSize < 5 ? 5 : dragSize;
+    dragSize = dragSize > 10 ? 10 : dragSize;
     this.intermediatePoints.forEach((iPoint) => {
       const drag = new fabric.Circle({
-        radius: this.thickness/2,
+        radius: dragSize,
         fill: 'white', // Set the fill to transparent
         opacity: 0.75,
         stroke: '#959595', // Set the stroke color
         strokeWidth: 1, // Set the stroke width
         selectable: false,
         evented: false,
-        left: iPoint.x - this.thickness/2,
-        top: iPoint.y - this.thickness/2,
+        left: iPoint.x - dragSize,
+        top: iPoint.y - dragSize,
       });
       canvas.add(drag)
       this.intermediatePointDrags.push(drag)
@@ -989,15 +992,15 @@ export class OffsetSpline extends OffsetSplineSaver {
 
     this.controlPoints.forEach((cPoint) => {
       const drag = new fabric.Circle({
-        radius: this.thickness/2,
+        radius: dragSize,
         fill: 'yellow', // Set the fill to transparent
         opacity: 0.75,
         stroke: '#959595', // Set the stroke color
         strokeWidth: 1, // Set the stroke width
         selectable: false,
         evented: false,
-        left: cPoint.x - this.thickness/2,
-        top: cPoint.y - this.thickness/2,
+        left: cPoint.x - dragSize,
+        top: cPoint.y - dragSize,
       });
       canvas.add(drag)
       this.controlPointDrags.push(drag)
