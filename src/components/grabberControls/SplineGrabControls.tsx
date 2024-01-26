@@ -35,12 +35,26 @@ const SplineGrabControls = () => {
     })
     
   }
+
+  const setThickness = (val: number) => {
+    const spline = new OffsetSpline(JSON.parse(JSON.stringify(geometryState.handlebarGeometry)));
+    spline.reconstruct();
+    spline.setThickness(val);
+    updateSpline(spline);
+  }
+
   return (
     <div >
       <button
         onClick={() => handleAddPoint()}
       >Add point to spline</button>
       {canvasState.canvas && <PointPickerControls ref={pointPickerControlsRef} />}
+      <label htmlFor="handlebarThickenss">Thickenss: </label>
+      <input
+        id='handlebarThickenss'
+        value={geometryState.handlebarGeometry.getThickness().toFixed(0)}
+        onChange={(e) => setThickness(Number(e.target.value))}
+        type="number"/>
       {canvasState.canvas && <SplineMoveControls spline={geometryState.handlebarGeometry} updateSpline={updateSpline} />}
     </div>
   );
