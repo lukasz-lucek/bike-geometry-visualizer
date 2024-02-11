@@ -29,6 +29,7 @@ const HandlebarGeometryTable = ({ children }: { children: ReactNode }) => {
     let handlebarReach = 0;
     let handlebarRaise = 0;
     let handlebarSetback = 0;
+    let handlebarRotation = 0;
 
     let pxPerMm = 1;
     let strokeWidth = 2;
@@ -82,6 +83,7 @@ const HandlebarGeometryTable = ({ children }: { children: ReactNode }) => {
         handlebarReach,
         handlebarRaise,
         handlebarSetback,
+        handlebarRotation,
       },
       handlebarHelpserPoints: {
         handlebarGEometryStart,

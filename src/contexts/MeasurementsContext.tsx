@@ -25,6 +25,7 @@ export interface HandlebarMeasures {
   handlebarReach: number;
   handlebarRaise: number;
   handlebarSetback: number;
+  handlebarRotation: number;
 }
 
 export interface MeasurementsState {
@@ -93,6 +94,7 @@ export const MeasurementsProvider = ({ children }: { children: ReactNode }) => {
       handlebarReach: 0,
       handlebarRaise: 0,
       handlebarSetback: 0,
+      handlebarRotation: 0,
     },
     helpserPoints: {
       wheelBaseEnd: null,
