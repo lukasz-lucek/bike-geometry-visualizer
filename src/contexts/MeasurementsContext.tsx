@@ -69,6 +69,14 @@ export const useMeasurementsContext = () => {
   return context;
 };
 
+export const defauleHandlebarMeasures : HandlebarMeasures = {
+  handlebarDrop: 0,
+  handlebarReach: 0,
+  handlebarRaise: 0,
+  handlebarSetback: 0,
+  handlebarRotation: 0,
+}
+
 export const MeasurementsProvider = ({ children }: { children: ReactNode }) => {
 
   const defaultState: MeasurementsState = {
@@ -89,13 +97,7 @@ export const MeasurementsProvider = ({ children }: { children: ReactNode }) => {
       stemLength: 0,
       stemAngle: 0,
     },
-    handlebarMeasures : {
-      handlebarDrop: 0,
-      handlebarReach: 0,
-      handlebarRaise: 0,
-      handlebarSetback: 0,
-      handlebarRotation: 0,
-    },
+    handlebarMeasures : defauleHandlebarMeasures,
     helpserPoints: {
       wheelBaseEnd: null,
       bbTop: null,

@@ -4,6 +4,7 @@ import { defaultFixedCircles, defaultFixedRectangles, defaultOffsetFixedRectangl
 import DropdownActions from './DropdownActions';
 import GeometryStatesSerializer from '../../contexts/GeometryStatesSerilizer';
 import { OffsetSpline } from '../../interfaces/Spline';
+import { defauleHandlebarMeasures } from '../../contexts/MeasurementsContext';
 
 const GeometrySaver = () => {
   const [bikeDataName, setBikeDataName] = useState('');
@@ -51,6 +52,15 @@ const GeometrySaver = () => {
     geometryData.fixedRectangles = geometryData.fixedRectangles || defaultFixedRectangles;
     geometryData.fixedCircles = geometryData.fixedCircles || defaultFixedCircles;
     geometryData.handlebarGeometry = geometryData.handlebarGeometry || new OffsetSpline(15);
+    geometryData.sizesTable = geometryData.sizesTable || new Map();
+    geometryData.handlebarsTable = geometryData.handlebarsTable || new Map();
+
+    for (const key of geometryData.sizesTable.keys()) {
+      if (!geometryData.handlebarsTable.get(key)) {
+        geometryData.handlebarsTable.set(key, Object.assign({}, defauleHandlebarMeasures));
+      }
+    }
+
     let {bikesList: _, ...newState} = geometryData;
     updateState(newState);
 

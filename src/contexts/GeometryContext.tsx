@@ -2,7 +2,7 @@ import React, { createContext, ReactNode, useContext, useState } from 'react';
 import { FixedCircle } from '../interfaces/FixedCircle';
 import { ColorPoint2d } from '../interfaces/Point2d';
 import { FixedRectangle, OffsetFixedRectangle, SemiFixedRectangle } from '../interfaces/Rectangles';
-import { Measures } from './MeasurementsContext';
+import { HandlebarMeasures, Measures } from './MeasurementsContext';
 import { OffsetSpline } from '../interfaces/Spline';
 import GeometryStatesSerializer from './GeometryStatesSerilizer';
 
@@ -95,6 +95,7 @@ export interface GeometryState {
   selectedFile: null | string;
   bikesList: string[];
   sizesTable: Map<string, Measures>;
+  handlebarsTable: Map<string, HandlebarMeasures>;
   handlebarGeometry: OffsetSpline;
 }
 
@@ -130,6 +131,7 @@ export const GeometryProvider = ({ children }: { children: ReactNode }) => {
     selectedFile: null,
     bikesList: bikesList,
     sizesTable: new Map(),
+    handlebarsTable: new Map(),
     handlebarGeometry: new OffsetSpline(15)
   }
 

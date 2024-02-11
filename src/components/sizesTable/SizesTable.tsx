@@ -1,7 +1,7 @@
 // src/components/FrameGeometryInput.js
 import React, { useEffect, useState } from 'react';
 import { useGeometryContext } from '../../contexts/GeometryContext';
-import { Measures, useMeasurementsContext } from '../../contexts/MeasurementsContext';
+import { HandlebarMeasures, Measures, useMeasurementsContext } from '../../contexts/MeasurementsContext';
 import GeometryPointsFromMeasures from '../stitchers/GeometryPointsFromMeasures';
 
 const SizesTable = () => {
@@ -24,24 +24,28 @@ const SizesTable = () => {
   }
   const measurements: (keyof Measures)[] = Object.keys(defaultSizes) as (keyof Measures)[];
 
-  useEffect(() => {
-
-    // TODO move uninitialized values handling somewhere else
-    if (!geometryState.sizesTable) {
-      updateGeometryState({ sizesTable: new Map() });
-    }
-  }, [geometryState, mState.measures]);
+  const defaultHandlebarMeasures = {
+    ...mState.handlebarMeasures,
+  }
+  const handlebarMeasurements: (keyof HandlebarMeasures)[] = Object.keys(defaultHandlebarMeasures) as (keyof HandlebarMeasures)[];
 
   const addSizeToTable = () => {
     let ns = new Map(geometryState.sizesTable);
     ns.set(sizeName, Object.assign({}, mState.measures));
-    updateGeometryState({ sizesTable: ns });
+
+    let nh = new Map(geometryState.handlebarsTable);
+    nh.set(sizeName, Object.assign({}, mState.handlebarMeasures));
+    updateGeometryState({ sizesTable: ns, handlebarsTable: nh });
   }
 
   const removeSizeVromTable = (name: string) => {
-    const newState = new Map(geometryState.sizesTable);
-    newState.delete(name);
-    updateGeometryState({ sizesTable: newState });
+    const ns = new Map(geometryState.sizesTable);
+    ns.delete(name);
+
+    const nh = new Map(geometryState.handlebarsTable);
+    nh.delete(name);
+
+    updateGeometryState({ sizesTable: ns, handlebarsTable: nh });
   }
 
   const nameTaken = () => {
@@ -57,6 +61,17 @@ const SizesTable = () => {
     }
     changedSize[measurement] = newVal;
     updateGeometryState({ sizesTable: newState });
+  }
+
+  const setHandlebarMeasureValue = (newVal: number, size: string, measurement: keyof HandlebarMeasures) => {
+
+    const newState = new Map(geometryState.handlebarsTable);
+    let changedSize = newState.get(size);
+    if (!changedSize) {
+      return;
+    }
+    changedSize[measurement] = newVal;
+    updateGeometryState({ handlebarsTable: newState });
   }
 
   return (
@@ -99,6 +114,23 @@ const SizesTable = () => {
                   <input
                     value={geometryState.sizesTable.get(size)![measurement] ? geometryState.sizesTable.get(size)![measurement].toFixed(0) : 0}
                     onChange={(e) => setMeasureValue(Number(e.target.value), size, measurement)}
+                    type="number" />
+                </td>
+              ))}
+            </tr>
+          ))}
+
+          {handlebarMeasurements.map((measurement) => (
+            <tr key={'R' + measurement}>
+              <td key={'H' + measurement}>{measurement}</td>
+              {knownSizes.map((size) => (
+                <td
+                  key={'V' + size + measurement}
+                  onMouseEnter={() => { setHighlightedSize(size) }}
+                  onMouseLeave={() => { setHighlightedSize(null) }}>
+                  <input
+                    value={geometryState.handlebarsTable.get(size)![measurement] ? geometryState.handlebarsTable.get(size)![measurement].toFixed(0) : 0}
+                    onChange={(e) => setHandlebarMeasureValue(Number(e.target.value), size, measurement)}
                     type="number" />
                 </td>
               ))}

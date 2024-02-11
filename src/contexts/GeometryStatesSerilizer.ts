@@ -17,6 +17,9 @@ export class GeometryStatesSerializer {
     if (key === "sizesTable") {
       return new Map(value)
     }
+    if (key === 'handlebarsTable') {
+      return new Map(value);
+    }
     if (key === "handlebarGeometry") {
       const spline = new OffsetSpline(value);
       spline.reconstruct();
@@ -31,6 +34,14 @@ export class GeometryStatesSerializer {
     } else if (key === "sizesTable") {
       const arr = Array.from(Object.entries(value))
       console.log("Old sizes table ");
+      return arr
+    }
+
+    if (key === "handlebarsTable" && value instanceof Map) {
+      return Array.from(value.entries())
+    } else if (key === "handlebarsTable") {
+      const arr = Array.from(Object.entries(value))
+      console.log("Old handlebarsTable sizes table ");
       return arr
     }
 
