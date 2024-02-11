@@ -749,7 +749,7 @@ export class OffsetSpline extends OffsetSplineSaver {
     this.intermediatePoints.push(point);
     if (orgLength == 1) {
       //add segment with arbitrary control Point
-       const segStart = this.intermediatePoints[orgLength - 1];
+      const segStart = this.intermediatePoints[orgLength - 1];
       // control point of first segmend - in the middle of segment with small offset
       const segControl = cPoint ? cPoint : segStart.add(point).divide(2).add(new Vec2D(+20,-30));
       this.controlPoints.push(segControl);
@@ -765,6 +765,17 @@ export class OffsetSpline extends OffsetSplineSaver {
       this.controlPoints.push(segControl);
 
       this.segments.push(new SplineSegment(segStart, point, segControl, this.thickness));
+    }
+  }
+
+  removeLastIntermediatePoint() {
+    const orgLength = this.intermediatePoints.length;
+    if (orgLength > 0) {
+      if (orgLength > 1) {
+        this.segments.pop();
+        this.controlPoints.pop();
+      }
+      this.intermediatePoints.pop();
     }
   }
 
