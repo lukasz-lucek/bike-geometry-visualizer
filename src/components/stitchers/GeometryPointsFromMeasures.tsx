@@ -5,13 +5,15 @@ import BikeImageStitcher, { DestinationGeometryPoints } from './BikeImageStitche
 import GeometryPointVisualization from '../drawing/GeometryPointsVisualization';
 import Color from 'color';
 import { ColorPoint2d } from '../../interfaces/Point2d';
-import { Measures } from '../../contexts/MeasurementsContext';
+import { HandlebarMeasures, Measures } from '../../contexts/MeasurementsContext';
 
 const GeometryPointsFromMeasures = ({
   sizeMeasures,
+  handlebarMeasurements,
   desiredPxPerMM = null
 }: {
   sizeMeasures: Measures;
+  handlebarMeasurements: HandlebarMeasures;
   desiredPxPerMM: number | null;
 }) => {
 
@@ -249,7 +251,7 @@ const GeometryPointsFromMeasures = ({
         <GeometryPointVisualization pointsSet={state as unknown as GeometryPoints} />
       }
       {state &&
-        <BikeImageStitcher destinationPoints={state} desiredPxPerMM={desiredPxPerMM} />
+        <BikeImageStitcher destinationPoints={state} desiredPxPerMM={desiredPxPerMM} handlebarMeasurements={handlebarMeasurements}/>
       }
       {/* {state && state.sizeGeometryPoints && <GeometryPointVisualization pointsSet={geometryContext.geometryPoints}/>} */}
     </>

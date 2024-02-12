@@ -6,6 +6,7 @@ import CirclePartGrabber from '../grabbers/CirclePartGrabber';
 import PertrudingPartGrabber from '../grabbers/PertrudingPartGrabber';
 import RectanglePartGrabber from '../grabbers/RectanglePartGrabber';
 import HandlebarGrabber from '../grabbers/HandlebarGrabber';
+import { HandlebarMeasures } from '../../contexts/MeasurementsContext';
 
 export interface DestinationGeometryPoints {
   rearWheelCenter: ColorPoint2d | null;
@@ -29,9 +30,10 @@ export interface DestinationGeometryPoints {
 interface BikeImageStitcherProps {
   destinationPoints: DestinationGeometryPoints;
   desiredPxPerMM: number | null;
+  handlebarMeasurements: HandlebarMeasures;
 }
 
-const BikeImageStitcher = ({ destinationPoints, desiredPxPerMM = null }: BikeImageStitcherProps) => {
+const BikeImageStitcher = ({ destinationPoints, desiredPxPerMM = null, handlebarMeasurements}: BikeImageStitcherProps) => {
   const {
     state: [geometryState,],
   } = useGeometryContext();
@@ -100,7 +102,7 @@ const BikeImageStitcher = ({ destinationPoints, desiredPxPerMM = null }: BikeIma
               strokeWidth={0}
               placementPoint={destinationPoints.bottomBracketCenter}
               desiredPxPerMM={dPPMM}
-              layer={5} />
+              layer={7} />
           }
 
           {geometryState.offsetFixedRectangles.chainstay && destinationPoints.bottomBracketCenter && destinationPoints.rearWheelCenter &&
@@ -119,7 +121,7 @@ const BikeImageStitcher = ({ destinationPoints, desiredPxPerMM = null }: BikeIma
               leftPlacementPoint={destinationPoints.rearWheelCenter}
               rightPlacementPoint={destinationPoints.bottomBracketCenter}
               desiredPxPerMM={dPPMM}
-              layer={7} />
+              layer={5} />
           }
 
           {geometryState.offsetFixedRectangles.seatTube && destinationPoints.bottomBracketCenter && destinationPoints.seatTubeTop &&
@@ -138,7 +140,7 @@ const BikeImageStitcher = ({ destinationPoints, desiredPxPerMM = null }: BikeIma
               leftPlacementPoint={destinationPoints.seatTubeTop}
               rightPlacementPoint={destinationPoints.bottomBracketCenter}
               desiredPxPerMM={dPPMM}
-              layer={9} />
+              layer={5} />
           }
 
           {geometryState.offsetFixedRectangles.seatstay && destinationPoints.seatStayLeft && destinationPoints.seatStayRight &&
@@ -176,26 +178,7 @@ const BikeImageStitcher = ({ destinationPoints, desiredPxPerMM = null }: BikeIma
               leftPlacementPoint={destinationPoints.topTubeLeft}
               rightPlacementPoint={destinationPoints.topTubeRight}
               desiredPxPerMM={dPPMM}
-              layer={7} />
-          }
-
-          {geometryState.offsetFixedRectangles.bottomTube && destinationPoints.bottomBracketCenter && destinationPoints.bottomTubeRight &&
-            <RectanglePartGrabber
-              leftOffset={geometryState.offsetFixedRectangles.bottomTube.leftOffset}
-              rightOffset={geometryState.offsetFixedRectangles.bottomTube.rightOffset}
-              width={geometryState.offsetFixedRectangles.bottomTube.width}
-              anchorPoints={{
-                tl: geometryState.geometryPoints.bottomBracketCenter,
-                bl: geometryState.geometryPoints.bottomBracketCenter,
-                tr: geometryState.geometryPoints.headTubeBottom,
-                br: geometryState.geometryPoints.headTubeTop
-              }}
-              pxPerMm={pxPerMm}
-              strokeWidth={0}
-              leftPlacementPoint={destinationPoints.bottomBracketCenter}
-              rightPlacementPoint={destinationPoints.bottomTubeRight}
-              desiredPxPerMM={dPPMM}
-              layer={7} />
+              layer={8} />
           }
 
           {geometryState.offsetFixedRectangles.bottomTube && destinationPoints.bottomBracketCenter && destinationPoints.bottomTubeRight &&
@@ -233,7 +216,7 @@ const BikeImageStitcher = ({ destinationPoints, desiredPxPerMM = null }: BikeIma
               leftPlacementPoint={destinationPoints.headTubeTop}
               rightPlacementPoint={destinationPoints.headTubeBottom}
               desiredPxPerMM={dPPMM}
-              layer={7} />
+              layer={5} />
           }
 
           {geometryState.offsetFixedRectangles.fork && destinationPoints.frontWheelCenter && destinationPoints.headTubeBottom &&
@@ -287,7 +270,7 @@ const BikeImageStitcher = ({ destinationPoints, desiredPxPerMM = null }: BikeIma
               leftPlacementPoint={destinationPoints.headTubeTop}
               rightPlacementPoint={destinationPoints.spacersEnd}
               desiredPxPerMM={dPPMM}
-              layer={7} />
+              layer={8} />
           }
 
           {geometryState.semiFixedRectangles.seatpost && destinationPoints.seatTubeTop && destinationPoints.bottomBracketCenter &&
@@ -328,11 +311,11 @@ const BikeImageStitcher = ({ destinationPoints, desiredPxPerMM = null }: BikeIma
           {geometryState.handlebarGeometry && destinationPoints.handlebarMount &&
             <HandlebarGrabber
               geometry={geometryState.handlebarGeometry}
-              raise={0}
-              setback={0}
-              reach={0}
-              drop={0}
-              rotation={0}
+              raise={handlebarMeasurements.handlebarRaise}
+              setback={handlebarMeasurements.handlebarSetback}
+              reach={handlebarMeasurements.handlebarReach}
+              drop={handlebarMeasurements.handlebarDrop}
+              rotation={handlebarMeasurements.handlebarRotation}
               pxPerMm={pxPerMm}
               mountingPoint={destinationPoints.handlebarMount}
               desiredPxPerMM={dPPMM}

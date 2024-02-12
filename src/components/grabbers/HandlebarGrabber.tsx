@@ -58,20 +58,45 @@ export function HandlebarGrabber(
     }
 
     const boundingBox = handlebarOutline.getBoundingRect();
+
+    const mainScale = desiredPxPerMM ? desiredPxPerMM / pxPerMm : 1;
+    const desiredScale = desiredPxPerMM ? desiredPxPerMM : 1;
+
+    let {reach : orgReachPx, drop : orgDropPx, startPoint, endPoint} = geometry.getReachAndDropInPx();
+
+    if (!orgReachPx || !orgDropPx) {
+      return;
+    }
+
+    if (!mountingPoint || !startPoint) {
+      return;
+    }
+
+    const leftMountOffsetPx = startPoint.x - boundingBox.left;
+    const topMountOffsetPx = startPoint.y - boundingBox.top;
+
+    let orgHandlebarReach = orgReachPx / pxPerMm;
+    const scaleX = reach / orgHandlebarReach;
+
+    let orgHandlebarDrop = orgDropPx / pxPerMm;
+    const scaleY = drop / orgHandlebarDrop;
+
+    const topLeft = new fabric.Point(
+      mountingPoint.x - leftMountOffsetPx * mainScale * scaleX - setback * desiredScale,
+      mountingPoint.y - topMountOffsetPx * mainScale * scaleY - raise * desiredScale
+    );
+
+    const topLeftRotated = fabric.util.rotatePoint(topLeft, new fabric.Point(mountingPoint.x, mountingPoint.y), fabric.util.degreesToRadians(rotation))
     
+
     if (geometryState.selectedFile) {
       fabric.Image.fromURL(geometryState.selectedFile, (img) => {
         if (!canvasState.canvas) {
           return;
         }
-        const filter = new fabric.Image.filters.Invert();
-        img.filters!.push(filter);
-        img.applyFilters();
-        var clipPath = new fabric.Circle({
-          radius: 100,
-          top: -100,
-          left: -100
-        });
+        //const filter = new fabric.Image.filters.Invert();
+        //img.filters!.push(filter);
+        //img.applyFilters();
         
         handlebarOutline.top = boundingBox.top > 0 ? 0 : boundingBox.top;
         handlebarOutline.left = boundingBox.left > 0 ? 0 : boundingBox.left;
@@ -81,27 +106,48 @@ export function HandlebarGrabber(
         setLoadedImage(img);
       },
       {
-        top: boundingBox.top > 0 ? boundingBox.top : 0,
-        left: boundingBox.left > 0 ? boundingBox.left : 0,
+        // top: boundingBox.top > 0 ? boundingBox.top * mainScale: 0,
+        // left: boundingBox.left > 0 ? boundingBox.left * mainScale : 0,
+        top: topLeftRotated.y,
+        left: topLeftRotated.x,
         width: boundingBox.width,
         height: boundingBox.height,
         cropX: boundingBox.left,
         cropY: boundingBox.top,
+        scaleX: mainScale * scaleX,
+        scaleY: mainScale * scaleY,
+        angle: rotation,
         evented: false
       });
     }
 
-    const mainLineBB = geometry.getMainLineBB();
-    const rect = new fabric.Rect({...mainLineBB, stroke: 'blue', fill: '', evented: false});
-    canvasState.canvas.addObjectToLayer(rect, layer+1);
+    // const mainLineBB = geometry.getMainLineBB();
+    // if (!mainLineBB) {
+    //   return;
+    // }
+    // const rect = new fabric.Rect({...mainLineBB, stroke: 'blue', fill: '', evented: false});
+    // rect.width = rect.width! * mainScale * scaleX;
+    // rect.height = rect.height! * mainScale * scaleY;
+
+    // const topLeftRect = new fabric.Point(
+    //   mountingPoint.x - leftMountOffsetPx * mainScale * scaleX - setback * desiredScale + (mainLineBB.left - boundingBox.left) * mainScale,
+    //   mountingPoint.y - topMountOffsetPx * mainScale * scaleY - raise * desiredScale + (mainLineBB.top - boundingBox.top) * mainScale
+    // );
+
+    // const topLeftRectRotated = fabric.util.rotatePoint(topLeftRect, new fabric.Point(mountingPoint.x, mountingPoint.y), fabric.util.degreesToRadians(rotation))
+
+    // rect.top = topLeftRectRotated.y;
+    // rect.left = topLeftRectRotated.x;
+    // rect.angle = rotation;
+    // canvasState.canvas.addObjectToLayer(rect, layer+1);
     
-    canvasState.canvas.renderAll();
-    return () => {
-      if (canvasState.canvas) {
-        canvasState.canvas?.removeObjectFromAnyLayer(rect);
-        canvasState.canvas.renderAll();
-      }
-    }
+    // canvasState.canvas.renderAll();
+    // return () => {
+    //   if (canvasState.canvas) {
+    //     canvasState.canvas?.removeObjectFromAnyLayer(rect);
+    //     canvasState.canvas.renderAll();
+    //   }
+    // }
 
   }, [geometry, raise, setback, reach, drop, rotation, pxPerMm, mountingPoint, desiredPxPerMM, layer, canvasState.canvas, geometryState.selectedFile])
 

@@ -49,24 +49,27 @@ const HandlebarGeometryTable = ({ children }: { children: ReactNode }) => {
     }
 
     const handlebarGeometry = geometryState.handlebarGeometry;
-    const startPoint = handlebarGeometry.getStartingPoint();
-    if (!startPoint) {
-      return;
-    }
-    const mainLineBB = handlebarGeometry.getMainLineBB();
-    if (!mainLineBB) {
-      return;
-    }
-    handlebarReach = (mainLineBB.width - startPoint.x + mainLineBB.left) / pxPerMm;
-    handlebarGEometryStart = {x: startPoint.x, y: startPoint.y}
-    handlebarReachEnd = {x: startPoint.x + handlebarReach * pxPerMm, y: startPoint.y}
 
-    const endPoint = handlebarGeometry.getEndingPoint();
-    if (!endPoint) {
+    let {reach, drop, startPoint, endPoint} = handlebarGeometry.getReachAndDropInPx();
+
+    //const startPoint = handlebarGeometry.getStartingPoint();
+    if (!startPoint || !reach) {
       return;
     }
-    handlebarDrop = (endPoint.y - startPoint.y) / pxPerMm;
-    handlebarDropEnd = {x: startPoint.x, y: startPoint.y + handlebarDrop * pxPerMm}
+    // const mainLineBB = handlebarGeometry.getMainLineBB();
+    // if (!mainLineBB) {
+    //   return;
+    // }
+    handlebarReach = reach / pxPerMm;
+    handlebarGEometryStart = {x: startPoint.x, y: startPoint.y}
+    handlebarReachEnd = {x: startPoint.x + reach, y: startPoint.y}
+
+    // const endPoint = handlebarGeometry.getEndingPoint();
+    if (!endPoint || !drop) {
+      return;
+    }
+    handlebarDrop = drop / pxPerMm;
+    handlebarDropEnd = {x: startPoint.x, y: startPoint.y + drop}
 
     const handlebarMount = geometryState.geometryPoints.handlebarMount;
     if (handlebarMount) {

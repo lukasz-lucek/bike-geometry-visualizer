@@ -805,6 +805,26 @@ export class OffsetSpline extends OffsetSplineSaver {
     return {top: miny, left: minx, width: maxx - minx, height: maxy - miny};
   }
 
+  getReachAndDropInPx() : {reach: number | undefined, drop: number | undefined, startPoint: Vec2D | undefined, endPoint: Vec2D | undefined} {
+    let reach = undefined;
+    let drop = undefined;
+
+    const startPoint = this.getStartingPoint();
+    const endPoint = this.getEndingPoint();
+    if (startPoint) {
+      const mainLineBB = this.getMainLineBB();
+      if (mainLineBB) {
+
+        reach = (mainLineBB.width - startPoint.x + mainLineBB.left);
+      }
+      
+      if (endPoint) {
+         drop = (endPoint.y - startPoint.y);
+      }
+    }
+    return {reach, drop, startPoint, endPoint}
+  }
+
   getStartingPoint() : Vec2D | undefined{
     if (this.segments.length == 0) {
       return undefined;

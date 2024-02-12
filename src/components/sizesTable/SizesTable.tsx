@@ -138,7 +138,11 @@ const SizesTable = () => {
           ))}
         </tbody>
       </table>
-      {highlightedSize && <GeometryPointsFromMeasures sizeMeasures={geometryState.sizesTable.get(highlightedSize)!} desiredPxPerMM={1} />}
+      {highlightedSize && 
+        <GeometryPointsFromMeasures 
+          sizeMeasures={geometryState.sizesTable.get(highlightedSize)!}
+          desiredPxPerMM={1}
+          handlebarMeasurements={geometryState.handlebarsTable.get(highlightedSize)!}/>}
     </div>
   );
 };
