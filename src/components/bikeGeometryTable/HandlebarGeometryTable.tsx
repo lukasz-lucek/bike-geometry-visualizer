@@ -25,6 +25,7 @@ const HandlebarGeometryTable = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     //const pxPerMm = measurementsState.pxPerMm;
 
+    const shiftersMountPoint = geometryState.shifterMountOffset;
     let handlebarDrop = 0;
     let handlebarReach = 0;
     let handlebarRaise = 0;
@@ -52,19 +53,14 @@ const HandlebarGeometryTable = ({ children }: { children: ReactNode }) => {
 
     let {reach, drop, startPoint, endPoint} = handlebarGeometry.getReachAndDropInPx();
 
-    //const startPoint = handlebarGeometry.getStartingPoint();
     if (!startPoint || !reach) {
       return;
     }
-    // const mainLineBB = handlebarGeometry.getMainLineBB();
-    // if (!mainLineBB) {
-    //   return;
-    // }
+
     handlebarReach = reach / pxPerMm;
     handlebarGEometryStart = {x: startPoint.x, y: startPoint.y}
     handlebarReachEnd = {x: startPoint.x + reach, y: startPoint.y}
 
-    // const endPoint = handlebarGeometry.getEndingPoint();
     if (!endPoint || !drop) {
       return;
     }
@@ -87,6 +83,7 @@ const HandlebarGeometryTable = ({ children }: { children: ReactNode }) => {
         handlebarRaise,
         handlebarSetback,
         handlebarRotation,
+        shiftersMountPoint,
       },
       handlebarHelpserPoints: {
         handlebarGEometryStart,

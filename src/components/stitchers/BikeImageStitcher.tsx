@@ -316,6 +316,7 @@ const BikeImageStitcher = ({ destinationPoints, desiredPxPerMM = null, handlebar
               reach={handlebarMeasurements.handlebarReach}
               drop={handlebarMeasurements.handlebarDrop}
               rotation={handlebarMeasurements.handlebarRotation}
+              shiftersMountOffset={handlebarMeasurements.shiftersMountPoint}
               pxPerMm={pxPerMm}
               mountingPoint={destinationPoints.handlebarMount}
               desiredPxPerMM={dPPMM}

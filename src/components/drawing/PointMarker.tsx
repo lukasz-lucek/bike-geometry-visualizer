@@ -3,7 +3,7 @@ import { fabric } from 'fabric';
 import { useCanvasContext } from '../../contexts/CanvasContext';
 import { ColorPoint2d } from '../../interfaces/Point2d';
 
-export function PointMarker({ shape }: { shape: ColorPoint2d }) {
+export function PointMarker({ shape, layer=1 }: { shape: ColorPoint2d, layer?: number}) {
   const {
     state: [canvasState,],
   } = useCanvasContext();
@@ -25,15 +25,15 @@ export function PointMarker({ shape }: { shape: ColorPoint2d }) {
       top: shape.y - 13,
     });
 
-    canvas.insertAt(circle, 1, false);
+    canvas.addObjectToLayer(circle, layer);
     canvas.renderAll();
 
     return () => {
-      canvas.remove(circle);
+      canvas.removeObjectFromAnyLayer(circle);
       canvas.renderAll();
     }
 
-  }, [shape, canvasState.canvas]);
+  }, [shape, canvasState.canvas, layer]);
 
   return (
     <>

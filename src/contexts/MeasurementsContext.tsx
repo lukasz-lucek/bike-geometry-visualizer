@@ -26,6 +26,7 @@ export interface HandlebarMeasures {
   handlebarRaise: number;
   handlebarSetback: number;
   handlebarRotation: number;
+  shiftersMountPoint: number;
 }
 
 export interface MeasurementsState {
@@ -75,6 +76,7 @@ export const defauleHandlebarMeasures : HandlebarMeasures = {
   handlebarRaise: 0,
   handlebarSetback: 0,
   handlebarRotation: 0,
+  shiftersMountPoint: 0,
 }
 
 export const MeasurementsProvider = ({ children }: { children: ReactNode }) => {

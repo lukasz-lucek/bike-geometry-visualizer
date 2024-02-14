@@ -5,11 +5,13 @@
 // import { RectangleMarker, RectangleMarkerData } from '../drawing/RectangleMarker';
 
 import React, { useEffect, useState } from "react";
-import { Point2d } from "../../interfaces/Point2d";
+import { ColorPoint2d, Point2d } from "../../interfaces/Point2d";
 import { OffsetSpline } from "../../interfaces/Spline";
 import { useCanvasContext } from "../../contexts/CanvasContext";
 import { fabric } from 'fabric';
 import { useGeometryContext } from "../../contexts/GeometryContext";
+import PointMarker from "../drawing/PointMarker";
+import Color from "color";
 
 interface HandlebarGrabberProps {
   geometry: OffsetSpline;
@@ -18,6 +20,7 @@ interface HandlebarGrabberProps {
   reach: number;
   drop: number;
   rotation: number;
+  shiftersMountOffset: number;
   pxPerMm: number,
   mountingPoint?: Point2d | null,
   desiredPxPerMM?: number | null,
@@ -31,6 +34,7 @@ export function HandlebarGrabber(
     reach,
     drop,
     rotation,
+    shiftersMountOffset,
     pxPerMm,
     mountingPoint = null,
     desiredPxPerMM = null,
@@ -46,6 +50,7 @@ export function HandlebarGrabber(
   } = useGeometryContext();
 
   const [loadedImage, setLoadedImage] = useState<fabric.Image | null>(null);
+  const [shiftersMountPoint, setShiftersMountPoint] = useState<ColorPoint2d | null>(null);
 
   useEffect(() => {
     if (!canvasState.canvas) {
@@ -62,7 +67,7 @@ export function HandlebarGrabber(
     const mainScale = desiredPxPerMM ? desiredPxPerMM / pxPerMm : 1;
     const desiredScale = desiredPxPerMM ? desiredPxPerMM : 1;
 
-    let {reach : orgReachPx, drop : orgDropPx, startPoint, endPoint} = geometry.getReachAndDropInPx();
+    let {reach : orgReachPx, drop : orgDropPx, startPoint, } = geometry.getReachAndDropInPx();
 
     if (!orgReachPx || !orgDropPx) {
       return;
@@ -86,7 +91,27 @@ export function HandlebarGrabber(
       mountingPoint.y - topMountOffsetPx * mainScale * scaleY - raise * desiredScale
     );
 
-    const topLeftRotated = fabric.util.rotatePoint(topLeft, new fabric.Point(mountingPoint.x, mountingPoint.y), fabric.util.degreesToRadians(rotation))
+    const rotationPoint = new fabric.Point(mountingPoint.x, mountingPoint.y);
+    const rotationRadians = fabric.util.degreesToRadians(rotation);
+    const topLeftRotated = fabric.util.rotatePoint(topLeft, rotationPoint, rotationRadians)
+
+    const orgShiftersMountPoint = geometry.getPointAlongSpline(shiftersMountOffset);
+    if (orgShiftersMountPoint) {
+      let mountPoint = new fabric.Point(
+        topLeft.x + (orgShiftersMountPoint.x - boundingBox.left) * mainScale * scaleX,
+        topLeft.y + (orgShiftersMountPoint.y - boundingBox.top) * mainScale * scaleY
+      )
+
+      mountPoint = fabric.util.rotatePoint(mountPoint, rotationPoint, rotationRadians)
+
+      const mountPointColor : ColorPoint2d = {
+        color: Color('yellow'),
+        x: mountPoint.x,
+        y: mountPoint.y
+      }
+
+      setShiftersMountPoint(mountPointColor);
+    }
     
 
     if (geometryState.selectedFile) {
@@ -149,7 +174,7 @@ export function HandlebarGrabber(
     //   }
     // }
 
-  }, [geometry, raise, setback, reach, drop, rotation, pxPerMm, mountingPoint, desiredPxPerMM, layer, canvasState.canvas, geometryState.selectedFile])
+  }, [geometry, raise, setback, reach, drop, rotation, shiftersMountOffset, pxPerMm, mountingPoint, desiredPxPerMM, layer, canvasState.canvas, geometryState.selectedFile])
 
   useEffect(() => {
     if (loadedImage) {
@@ -165,7 +190,7 @@ export function HandlebarGrabber(
 
   return (
     <>
-      
+      {shiftersMountPoint && <PointMarker shape={shiftersMountPoint} layer={10}/>}
     </>
   );
 }

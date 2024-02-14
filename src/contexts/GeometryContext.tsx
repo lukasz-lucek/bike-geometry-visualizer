@@ -97,6 +97,7 @@ export interface GeometryState {
   sizesTable: Map<string, Measures>;
   handlebarsTable: Map<string, HandlebarMeasures>;
   handlebarGeometry: OffsetSpline;
+  shifterMountOffset: number;
 }
 
 interface GeometryContextType {
@@ -132,7 +133,8 @@ export const GeometryProvider = ({ children }: { children: ReactNode }) => {
     bikesList: bikesList,
     sizesTable: new Map(),
     handlebarsTable: new Map(),
-    handlebarGeometry: new OffsetSpline(15)
+    handlebarGeometry: new OffsetSpline(15),
+    shifterMountOffset: 0,
   }
 
   const [state, setState] = useState(defaultState);

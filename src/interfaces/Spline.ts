@@ -249,6 +249,9 @@ export class SplineSegment {
   getThickness() : number {return this.thickness;}
   setThickness(thickness: number) {this.thickness = thickness; this.calculateIntermediatePoins();}
   getMainLineBB(): BoundingBox {return this.mainLineBB!;}
+  getPointAlongSpline(offset: number) : Vec2D {
+    return MathUtils.getPointInQuadraticCurve(offset, this.start, this.control, this.end);
+  }
 
   private calcualteBBForQuadraticCurve(p1: Vec2D, c: Vec2D, p2: Vec2D) : BoundingBox {
     const tx = (c.x - p1.x) / (2*c.x - p1.x - p2.x);
@@ -777,6 +780,23 @@ export class OffsetSpline extends OffsetSplineSaver {
       }
       this.intermediatePoints.pop();
     }
+  }
+
+  getMaxOffsetAlongSpline() : number {
+    return this.segments.length
+  }
+
+  getPointAlongSpline(offset: number) : Vec2D | undefined {
+    if (this.intermediatePoints.length == 0) {
+      return undefined
+    }
+    const max = this.getMaxOffsetAlongSpline();
+    let off = offset < 0 ? 0 : offset;
+    if (off >= max) {
+      return this.intermediatePoints[this.intermediatePoints.length-1]
+    }
+    const index = Math.floor(off);
+    return this.segments[index].getPointAlongSpline(off - index);
   }
 
   getMainLineBB() : BoundingBox | undefined{

@@ -5,6 +5,8 @@ import { OffsetSpline, Vec2D } from '../../interfaces/Spline';
 import { useGeometryContext } from '../../contexts/GeometryContext';
 import { useCanvasContext } from '../../contexts/CanvasContext';
 import SplineMoveControls from '../drawing/SplineMoveControls';
+import PointMarker from '../drawing/PointMarker';
+import { ColorPoint2d } from '../../interfaces/Point2d';
 
 const SplineGrabControls = () => {
 
@@ -50,6 +52,15 @@ const SplineGrabControls = () => {
     updateSpline(spline);
   }
 
+  const getShifterMountPoin = () : ColorPoint2d => {
+    const mountPoint = geometryState.handlebarGeometry.getPointAlongSpline(geometryState.shifterMountOffset);
+    return {
+      color: Color('yellow'),
+      x: mountPoint!.x,
+      y: mountPoint!.y,
+    }
+  }
+
   return (
     <div >
       <button
@@ -65,7 +76,22 @@ const SplineGrabControls = () => {
       <button
         onClick={() => handleRemovePoint()}
       >Remove last point</button>
+      <br/>
+      <label htmlFor="shifterMountPoint">Shifter mount point:</label>
+      <input id="shifterMountPoint" 
+        type="range" min={0} 
+        max={geometryState.handlebarGeometry.getMaxOffsetAlongSpline()}
+        step={0.02}
+        disabled={geometryState.handlebarGeometry.getMaxOffsetAlongSpline() == 0}
+        value={geometryState.shifterMountOffset}
+        onChange={(e) => {updateGeometryState({shifterMountOffset: Number(e.target.value)})}}
+      ></input>
       {canvasState.canvas && <SplineMoveControls spline={geometryState.handlebarGeometry} updateSpline={updateSpline} />}
+      {canvasState.canvas &&
+        geometryState.handlebarGeometry && 
+        geometryState.handlebarGeometry.getMaxOffsetAlongSpline() > 0 && 
+        <PointMarker key={'PointMarkerShofterMountPoint'} shape={getShifterMountPoin()} />}
+      
     </div>
   );
 };

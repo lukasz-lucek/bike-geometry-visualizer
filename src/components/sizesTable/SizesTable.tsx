@@ -128,10 +128,22 @@ const SizesTable = () => {
                   key={'V' + size + measurement}
                   onMouseEnter={() => { setHighlightedSize(size) }}
                   onMouseLeave={() => { setHighlightedSize(null) }}>
+                  {measurement != 'shiftersMountPoint' &&
                   <input
                     value={geometryState.handlebarsTable.get(size)![measurement] ? geometryState.handlebarsTable.get(size)![measurement].toFixed(0) : 0}
                     onChange={(e) => setHandlebarMeasureValue(Number(e.target.value), size, measurement)}
                     type="number" />
+                  }
+                  {measurement == 'shiftersMountPoint' &&
+                  <input
+                    type="range" min={0} 
+                    max={geometryState.handlebarGeometry.getMaxOffsetAlongSpline()}
+                    step={0.02}
+                    disabled={geometryState.handlebarGeometry.getMaxOffsetAlongSpline() == 0}
+                    value={geometryState.handlebarsTable.get(size)![measurement]}
+                    onChange={(e) => {setHandlebarMeasureValue(Number(e.target.value), size, measurement)}}
+                  />
+                  }
                 </td>
               ))}
             </tr>
