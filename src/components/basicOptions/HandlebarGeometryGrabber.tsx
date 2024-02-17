@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGeometryContext } from '../../contexts/GeometryContext';
 import BackgroundImage from "../drawing/BackgroundImage"
 import GeometryPointVisualization from '../drawing/GeometryPointsVisualization';
@@ -20,6 +20,8 @@ const HandlebarGeometryGrabber = () => {
     state: [canvasState,],
   } = useCanvasContext();
 
+  const [showMountPoint, setShowMountPoint] = useState(true);
+
   const getShifterMountPoin = () : ColorPoint2d => {
     const mountPoint = geometryState.handlebarGeometry.getPointAlongSpline(geometryState.shifterMountOffset);
     return {
@@ -34,11 +36,12 @@ const HandlebarGeometryGrabber = () => {
       <SplineGrabControls/>
       <p>
       <label htmlFor="shifterMountPoint">Shifter mount point:</label>
+      <input id='showMountPointCheckbox' type="checkbox" onChange={(e) => {setShowMountPoint(e.target.checked)}} checked={showMountPoint}/>
       <input id="shifterMountPoint" 
         type="range" min={0} 
         max={geometryState.handlebarGeometry.getMaxOffsetAlongSpline()}
         step={0.02}
-        disabled={geometryState.handlebarGeometry.getMaxOffsetAlongSpline() == 0}
+        disabled={!showMountPoint || geometryState.handlebarGeometry.getMaxOffsetAlongSpline() == 0}
         value={geometryState.shifterMountOffset}
         onChange={(e) => {updateGeometryState({shifterMountOffset: Number(e.target.value)})}}
       ></input>
@@ -46,6 +49,7 @@ const HandlebarGeometryGrabber = () => {
       {canvasState.canvas &&
         geometryState.handlebarGeometry && 
         geometryState.handlebarGeometry.getMaxOffsetAlongSpline() > 0 && 
+        showMountPoint &&
         <PointMarker key={'PointMarkerShofterMountPoint'} shape={getShifterMountPoin()} />}
       <HandlebarGeometryTable>Handlebar geometry</HandlebarGeometryTable>
       {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'} isGrayedOut={false} desiredPxPerMM={null} focusPoint={geometryState.geometryPoints.handlebarMount} />}
