@@ -19,7 +19,7 @@ export function SplineVisualization({ spline, drawControlPoints }: { spline: Off
     return () => {
       spline.removeFromCanvas(canvas);
     }
-  }, [spline, canvasState.canvas]);
+  }, [spline, canvasState.canvas, drawControlPoints]);
 
   return (
     <>

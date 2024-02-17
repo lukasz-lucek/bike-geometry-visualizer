@@ -57,8 +57,8 @@ const PointGrabButton = (props: PointGrabButtonProps) => {
     >
       {props.children}
       (
-      {geometryState.geometryPoints[props.pointKey] ? (geometryState.geometryPoints[props.pointKey] as ColorPoint2d).x.toFixed(0) : '____'},
-      {geometryState.geometryPoints[props.pointKey] ? (geometryState.geometryPoints[props.pointKey] as ColorPoint2d).y.toFixed(0) : '____'}
+      {geometryState.geometryPoints[props.pointKey] ? (geometryState.geometryPoints[props.pointKey]!).x.toFixed(0) : '____'},
+      {geometryState.geometryPoints[props.pointKey] ? (geometryState.geometryPoints[props.pointKey]!).y.toFixed(0) : '____'}
       )
       {canvasState.canvas && <PointPickerControls ref={pointPickerControlsRef} />}
     </button>

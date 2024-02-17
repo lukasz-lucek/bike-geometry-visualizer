@@ -1,12 +1,11 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import PointPickerControls, { PointPickerControlsRef } from '../drawing/PointPickerControls';
 import Color from 'color';
 import { OffsetSpline, Vec2D } from '../../interfaces/Spline';
 import { useGeometryContext } from '../../contexts/GeometryContext';
 import { useCanvasContext } from '../../contexts/CanvasContext';
 import SplineMoveControls from '../drawing/SplineMoveControls';
-import PointMarker from '../drawing/PointMarker';
-import { ColorPoint2d } from '../../interfaces/Point2d';
+import SplineVisualization from '../drawing/SplineVisualization';
 
 const SplineGrabControls = () => {
 
@@ -19,6 +18,10 @@ const SplineGrabControls = () => {
   const {
     state: [canvasState,],
   } = useCanvasContext();
+
+  const [showGeometry, setShowGeometry] = useState(true);
+  const [showControlPoints, setShowControlPoints] = useState(false);
+
 
   const updateSpline = (s: OffsetSpline) => {
     updateGeometryState({handlebarGeometry: s});
@@ -52,15 +55,6 @@ const SplineGrabControls = () => {
     updateSpline(spline);
   }
 
-  const getShifterMountPoin = () : ColorPoint2d => {
-    const mountPoint = geometryState.handlebarGeometry.getPointAlongSpline(geometryState.shifterMountOffset);
-    return {
-      color: Color('yellow'),
-      x: mountPoint!.x,
-      y: mountPoint!.y,
-    }
-  }
-
   return (
     <div >
       <button
@@ -77,21 +71,12 @@ const SplineGrabControls = () => {
         onClick={() => handleRemovePoint()}
       >Remove last point</button>
       <br/>
-      <label htmlFor="shifterMountPoint">Shifter mount point:</label>
-      <input id="shifterMountPoint" 
-        type="range" min={0} 
-        max={geometryState.handlebarGeometry.getMaxOffsetAlongSpline()}
-        step={0.02}
-        disabled={geometryState.handlebarGeometry.getMaxOffsetAlongSpline() == 0}
-        value={geometryState.shifterMountOffset}
-        onChange={(e) => {updateGeometryState({shifterMountOffset: Number(e.target.value)})}}
-      ></input>
+      <label htmlFor='showGeometryCheckbox'>Show geometry:</label>
+      <input id='showGeometryCheckbox' type="checkbox" onChange={(e) => {setShowGeometry(e.target.checked)}} checked={showGeometry}/>
+      <label htmlFor='showControlPointsCheckbox'>Show geometry helper lines:</label>
+      <input id='showControlPointsCheckbox' type="checkbox" disabled={!showGeometry} onChange={(e) => {setShowControlPoints(e.target.checked)}} checked={showControlPoints}/>
       {canvasState.canvas && <SplineMoveControls spline={geometryState.handlebarGeometry} updateSpline={updateSpline} />}
-      {canvasState.canvas &&
-        geometryState.handlebarGeometry && 
-        geometryState.handlebarGeometry.getMaxOffsetAlongSpline() > 0 && 
-        <PointMarker key={'PointMarkerShofterMountPoint'} shape={getShifterMountPoin()} />}
-      
+      {showGeometry && <SplineVisualization spline={geometryState.handlebarGeometry} drawControlPoints={showControlPoints}/>}
     </div>
   );
 };
