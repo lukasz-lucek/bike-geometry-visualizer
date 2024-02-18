@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { defaultFixedCircles, defaultFixedRectangles, defaultOffsetFixedRectangles, defaultSemiFixedRectangles, GeometryState, useGeometryContext } from '../../contexts/GeometryContext';
+import { defaultFixedCircles, defaultFixedRectangles, defaultOffsetFixedRectangles, defaultPolygons, defaultSemiFixedRectangles, GeometryState, useGeometryContext } from '../../contexts/GeometryContext';
 import DropdownActions from './DropdownActions';
 import GeometryStatesSerializer from '../../contexts/GeometryStatesSerilizer';
 import { OffsetSpline } from '../../interfaces/Spline';
@@ -54,6 +54,7 @@ const GeometrySaver = () => {
     geometryData.handlebarGeometry = geometryData.handlebarGeometry || new OffsetSpline(15);
     geometryData.sizesTable = geometryData.sizesTable || new Map();
     geometryData.handlebarsTable = geometryData.handlebarsTable || new Map();
+    geometryData.polygons = geometryData.polygons || defaultPolygons;
 
     for (const key of geometryData.sizesTable.keys()) {
       if (!geometryData.handlebarsTable.get(key)) {

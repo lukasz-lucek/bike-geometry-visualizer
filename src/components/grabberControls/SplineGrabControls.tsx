@@ -2,10 +2,12 @@ import React, { useRef, useState } from 'react';
 import PointPickerControls, { PointPickerControlsRef } from '../drawing/PointPickerControls';
 import Color from 'color';
 import { OffsetSpline, Vec2D } from '../../interfaces/Spline';
-import { useGeometryContext } from '../../contexts/GeometryContext';
+import { GeometryPolygons, useGeometryContext } from '../../contexts/GeometryContext';
 import { useCanvasContext } from '../../contexts/CanvasContext';
 import SplineMoveControls from '../drawing/SplineMoveControls';
 import SplineVisualization from '../drawing/SplineVisualization';
+import PolygonGrabControls from './PolygonGrabControls';
+import { Polygon } from '../../interfaces/Polygon';
 
 const SplineGrabControls = () => {
 
@@ -55,6 +57,10 @@ const SplineGrabControls = () => {
     updateSpline(spline);
   }
 
+  const updateShifterPolygon = (polygon: Polygon) => {
+    updateGeometryState({polygons: {shifter: polygon, seat: geometryState.polygons.seat}});
+  }
+
   return (
     <div >
       <button
@@ -77,6 +83,7 @@ const SplineGrabControls = () => {
       <input id='showControlPointsCheckbox' type="checkbox" disabled={!showGeometry} onChange={(e) => {setShowControlPoints(e.target.checked)}} checked={showControlPoints}/>
       {canvasState.canvas && <SplineMoveControls spline={geometryState.handlebarGeometry} updateSpline={updateSpline} />}
       {showGeometry && <SplineVisualization spline={geometryState.handlebarGeometry} drawControlPoints={showControlPoints}/>}
+      <PolygonGrabControls polygon={geometryState.polygons.shifter} updatePolygon={updateShifterPolygon}/>
     </div>
   );
 };

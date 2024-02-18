@@ -5,6 +5,7 @@ import { FixedRectangle, OffsetFixedRectangle, SemiFixedRectangle } from '../int
 import { HandlebarMeasures, Measures } from './MeasurementsContext';
 import { OffsetSpline } from '../interfaces/Spline';
 import GeometryStatesSerializer from './GeometryStatesSerilizer';
+import { Polygon } from '../interfaces/Polygon';
 
 //TODO - divide by type
 export interface GeometryPoints {
@@ -46,6 +47,11 @@ export interface GeometryFixedCircles {
   seatpostYoke: FixedCircle,
 }
 
+export interface GeometryPolygons {
+  shifter: Polygon;
+  seat: Polygon;
+}
+
 const defaultGeometryPoints: GeometryPoints = {
   rearWheelCenter: null,
   frontWheelCenter: null,
@@ -85,6 +91,11 @@ export const defaultFixedCircles: GeometryFixedCircles = {
   seatpostYoke: { radius: 20 },
 }
 
+export const defaultPolygons: GeometryPolygons = {
+  shifter: { vertices: []},
+  seat: {vertices: []},
+}
+
 export interface GeometryState {
   wheelbase: number;
   geometryPoints: GeometryPoints;
@@ -98,6 +109,7 @@ export interface GeometryState {
   handlebarsTable: Map<string, HandlebarMeasures>;
   handlebarGeometry: OffsetSpline;
   shifterMountOffset: number;
+  polygons: GeometryPolygons;
 }
 
 interface GeometryContextType {
@@ -135,6 +147,7 @@ export const GeometryProvider = ({ children }: { children: ReactNode }) => {
     handlebarsTable: new Map(),
     handlebarGeometry: new OffsetSpline(15),
     shifterMountOffset: 0,
+    polygons: defaultPolygons,
   }
 
   const [state, setState] = useState(defaultState);
