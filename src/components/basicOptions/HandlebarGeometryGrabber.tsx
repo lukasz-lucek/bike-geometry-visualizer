@@ -9,6 +9,7 @@ import { useCanvasContext } from '../../contexts/CanvasContext';
 import PointMarker from '../drawing/PointMarker';
 import { ColorPoint2d } from '../../interfaces/Point2d';
 import Color from 'color';
+import LineMarker, { Line } from '../drawing/LineMarker';
 
 const HandlebarGeometryGrabber = () => {
 
@@ -22,12 +23,22 @@ const HandlebarGeometryGrabber = () => {
 
   const [showMountPoint, setShowMountPoint] = useState(true);
 
-  const getShifterMountPoin = () : ColorPoint2d => {
+  const getShifterMountPoint = () : ColorPoint2d => {
     const mountPoint = geometryState.handlebarGeometry.getPointAlongSpline(geometryState.shifterMountOffset);
     return {
       color: Color('yellow'),
       x: mountPoint!.x,
       y: mountPoint!.y,
+    }
+  }
+
+  const getShifterMountPointTangent = () : Line => {
+    const mountTangent = geometryState.handlebarGeometry.getLineTangentAlongSpline(geometryState.shifterMountOffset);
+    return {
+      color: Color('yellow'),
+      strokeWidth: 1,
+      p1: mountTangent!.a,
+      p2: mountTangent!.b,
     }
   }
 
@@ -50,7 +61,13 @@ const HandlebarGeometryGrabber = () => {
         geometryState.handlebarGeometry && 
         geometryState.handlebarGeometry.getMaxOffsetAlongSpline() > 0 && 
         showMountPoint &&
-        <PointMarker key={'PointMarkerShofterMountPoint'} shape={getShifterMountPoin()} />}
+        <PointMarker key={'PointMarkerShofterMountPoint'} shape={getShifterMountPoint()} /> }
+      {canvasState.canvas &&
+        geometryState.handlebarGeometry && 
+        geometryState.handlebarGeometry.getMaxOffsetAlongSpline() > 0 && 
+        showMountPoint &&
+        <LineMarker key={'LineMarkerShifterMountPointTangent'} line={getShifterMountPointTangent()} />}
+        
       <HandlebarGeometryTable>Handlebar geometry</HandlebarGeometryTable>
       {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'} isGrayedOut={false} desiredPxPerMM={null} focusPoint={geometryState.geometryPoints.handlebarMount} />}
       <GeometryPointVisualization pointsSet={geometryState.geometryPoints} />

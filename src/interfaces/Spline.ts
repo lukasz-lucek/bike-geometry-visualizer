@@ -178,6 +178,13 @@ export class MathUtils {
 		return new Vec2D(x, y);
 	}
 
+  static getLineTangentToQuadraticCurve(t : number, p1 : Point2d, pc: Point2d, p2: Point2d) : Line2D {
+    const a: Vec2D = new Vec2D(p1.x+(pc.x-p1.x)*t, p1.y+(pc.y-p1.y)*t);
+    const b: Vec2D = new Vec2D(pc.x+(p2.x-pc.x)*t, pc.y+(p2.y-pc.y)*t);
+		
+		return new Line2D(a, b);
+	}
+
   	// http://stackoverflow.com/questions/12810765/calculating-cubic-root-for-negative-number
 	static cbrt (x : number) : number {
 		var sign = x === 0 ? 0 : x > 0 ? 1 : -1;
@@ -251,6 +258,9 @@ export class SplineSegment {
   getMainLineBB(): BoundingBox {return this.mainLineBB!;}
   getPointAlongSpline(offset: number) : Vec2D {
     return MathUtils.getPointInQuadraticCurve(offset, this.start, this.control, this.end);
+  }
+  getLineTangentAlongSpline(offset: number) : Line2D {
+    return MathUtils.getLineTangentToQuadraticCurve(offset, this.start, this.control, this.end);
   }
 
   private calcualteBBForQuadraticCurve(p1: Vec2D, c: Vec2D, p2: Vec2D) : BoundingBox {
@@ -797,6 +807,19 @@ export class OffsetSpline extends OffsetSplineSaver {
     }
     const index = Math.floor(off);
     return this.segments[index].getPointAlongSpline(off - index);
+  }
+
+  getLineTangentAlongSpline(offset: number) : Line2D | undefined {
+    if (this.intermediatePoints.length == 0) {
+      return undefined
+    }
+    const max = this.getMaxOffsetAlongSpline();
+    let off = offset < 0 ? 0 : offset;
+    if (off >= max) {
+      return new Line2D(this.controlPoints[this.controlPoints.length-1], this.intermediatePoints[this.intermediatePoints.length-1]);
+    }
+    const index = Math.floor(off);
+    return this.segments[index].getLineTangentAlongSpline(off - index);
   }
 
   getMainLineBB() : BoundingBox | undefined{
