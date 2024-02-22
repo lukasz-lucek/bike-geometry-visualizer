@@ -22,6 +22,7 @@ export interface DestinationGeometryPoints {
   bottomTubeRight: ColorPoint2d | null;
   crankArmEnd: ColorPoint2d | null;
   seatpostEnd: ColorPoint2d | null;
+  seatpostStart: ColorPoint2d | null;
   spacersEnd: ColorPoint2d | null;
   stemStart: ColorPoint2d | null;
   handlebarMount: ColorPoint2d | null;
@@ -286,10 +287,10 @@ const BikeImageStitcher = ({ destinationPoints, desiredPxPerMM = null, handlebar
               }}
               pxPerMm={pxPerMm}
               strokeWidth={0}
-              leftPlacementPoint={destinationPoints.seatTubeTop}
+              leftPlacementPoint={destinationPoints.seatpostStart}
               rightPlacementPoint={destinationPoints.seatpostEnd}
               desiredPxPerMM={dPPMM}
-              layer={7} />
+              layer={3} />
           }
 
           {geometryState.fixedRectangles.stem && destinationPoints.stemStart && destinationPoints.handlebarMount &&

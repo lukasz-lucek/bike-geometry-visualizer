@@ -35,6 +35,7 @@ const GeometryPointsFromMeasures = ({
     bottomTubeRight: null,
     crankArmEnd: null,
     seatpostEnd: null,
+    seatpostStart: null,
     spacersEnd: null,
     stemStart: null,
     handlebarMount: null,
@@ -86,6 +87,7 @@ const GeometryPointsFromMeasures = ({
     let bottomTubeRight: ColorPoint2d | null = null;
     let crankArmEnd: ColorPoint2d | null = null;
     let seatpostEnd: ColorPoint2d | null = null;
+    let seatpostStart: ColorPoint2d | null = null;
     let spacersEnd: ColorPoint2d | null = null;
     let stemStart: ColorPoint2d | null = null;
     let handlebarMount: ColorPoint2d | null = null;
@@ -147,11 +149,21 @@ const GeometryPointsFromMeasures = ({
         }
 
         if (geometryContext.semiFixedRectangles.seatpost) {
-          const seatpostEndPoint = findIntermediatePoint(seatTubeTop, bottomBracketCenter, - geometryContext.semiFixedRectangles.seatpost.length * dPPMM);
+          const seatpostEndPoint = findIntermediatePoint(seatTubeTop, bottomBracketCenter, - sizeMeasures.seatpostExtension * dPPMM);
           seatpostEnd = {
             x: seatpostEndPoint!.x,
             y: seatpostEndPoint!.y,
             color: helperPointsColor,
+          }
+          if (sizeMeasures.seatpostExtension < geometryContext.semiFixedRectangles.seatpost.length) {
+            const seatpostStartPoint = findIntermediatePoint(seatTubeTop, bottomBracketCenter, - (sizeMeasures.seatpostExtension - geometryContext.semiFixedRectangles.seatpost.length) * dPPMM);
+            seatpostStart = {
+              x: seatpostStartPoint!.x,
+              y: seatpostStartPoint!.y,
+              color: helperPointsColor,
+            }
+          } else {
+            seatpostStart = seatTubeTop;
           }
         }
       }
@@ -238,6 +250,7 @@ const GeometryPointsFromMeasures = ({
       bottomTubeRight: bottomTubeRight,
       crankArmEnd: crankArmEnd,
       seatpostEnd: seatpostEnd,
+      seatpostStart: seatpostStart,
       spacersEnd: spacersEnd,
       stemStart: stemStart,
       handlebarMount: handlebarMount,
