@@ -43,7 +43,7 @@ export function RectangleGrabVisualization(
   useEffect(() => {
     let scaleX = scaling;
     let scaleY = scaling;
-    const trueMargin = margin*scaling;
+    const trueMargin = margin/scaling;
     const orgDistance = findDistance(rectangle.p1, rectangle.p2);
     if (leftPlacementPoint && rightPlacementPoint) {
       const newDistance = findDistance(leftPlacementPoint, rightPlacementPoint);
