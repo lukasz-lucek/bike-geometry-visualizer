@@ -57,6 +57,9 @@ const GeometrySaver = () => {
     geometryData.polygons = geometryData.polygons || defaultPolygons;
 
     for (const key of geometryData.sizesTable.keys()) {
+      if (!(geometryData.sizesTable.get(key)!.seatpostExtension)) {
+        geometryData.sizesTable.get(key)!.seatpostExtension = 100;
+      }
       if (!geometryData.handlebarsTable.get(key)) {
         geometryData.handlebarsTable.set(key, Object.assign({}, defauleHandlebarMeasures));
       }

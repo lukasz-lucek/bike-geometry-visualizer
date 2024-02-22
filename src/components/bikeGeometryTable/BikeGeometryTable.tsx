@@ -45,6 +45,7 @@ const BikeGeometryTable = ({ children }: { children: ReactNode }) => {
     let spacersStack = semiFixedRectangles.headstack ? semiFixedRectangles.headstack.length : 0;
     let stemLength = 0;
     let stemAngle = 0;
+    let seatpostExtension = semiFixedRectangles.seatpost.length;
 
     let pxPerMm = 0;
     let strokeWidth = 5;
@@ -161,6 +162,7 @@ const BikeGeometryTable = ({ children }: { children: ReactNode }) => {
         spacersStack,
         stemLength,
         stemAngle,
+        seatpostExtension,
       },
       helpserPoints: {
         wheelBaseEnd,

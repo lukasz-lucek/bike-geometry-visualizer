@@ -16,7 +16,8 @@ interface RectangleGrabVisualizationProps {
   leftPlacementPoint: Point2d | null,
   rightPlacementPoint: Point2d | null,
   layer: number,
-  scaling: number
+  scaling: number,
+  margin: number,
 }
 
 export function RectangleGrabVisualization(
@@ -25,7 +26,8 @@ export function RectangleGrabVisualization(
     leftPlacementPoint = null,
     rightPlacementPoint = null,
     layer = 3,
-    scaling = 1
+    scaling = 1,
+    margin = 0,
   }: RectangleGrabVisualizationProps) {
 
   const {
@@ -39,16 +41,16 @@ export function RectangleGrabVisualization(
   const [loadedImage, setLoadedImage] = useState<fabric.Image | null>(null);
 
   useEffect(() => {
-    const margin = 50;
     let scaleX = scaling;
     let scaleY = scaling;
+    const trueMargin = margin*scaling;
     const orgDistance = findDistance(rectangle.p1, rectangle.p2);
     if (leftPlacementPoint && rightPlacementPoint) {
       const newDistance = findDistance(leftPlacementPoint, rightPlacementPoint);
       scaleX = newDistance / orgDistance;
     }
     if (geometryState.selectedFile) {
-      const bound = findBBWithMargins(rectangle.p1, rectangle.p2, rectangle.width, margin);
+      const bound = findBBWithMargins(rectangle.p1, rectangle.p2, rectangle.width, trueMargin);
       if (bound) {
 
         const angle = findAngle(rectangle.p1, rectangle.p2)
@@ -77,12 +79,12 @@ export function RectangleGrabVisualization(
             }
           },
             {
-              width: orgDistance + margin,
+              width: orgDistance + trueMargin,
               height: rectangle.width,
               scaleX: scaleX,
               scaleY: scaleY,
               cropY: (bound2.height - rectangle.width) / 2,
-              cropX: (bound2.width - orgDistance - margin) / 2,
+              cropX: (bound2.width - orgDistance - trueMargin) / 2,
             })
         },
           {

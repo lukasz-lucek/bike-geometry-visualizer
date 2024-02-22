@@ -20,6 +20,7 @@ interface RectanglePartGrabberProps {
   rightPlacementPoint?: Point2d | null,
   desiredPxPerMM?: number | null,
   layer?: number,
+  margin?: number,
 }
 
 export function RectanglePartGrabber(
@@ -33,6 +34,7 @@ export function RectanglePartGrabber(
     rightPlacementPoint = null,
     desiredPxPerMM = null,
     layer = 3,
+    margin = 0,
   }: RectanglePartGrabberProps) {
 
 
@@ -93,6 +95,7 @@ export function RectanglePartGrabber(
           rightPlacementPoint={rightPlacementPoint}
           layer={layer}
           scaling={desiredPxPerMM ? desiredPxPerMM / pxPerMm : 1}
+          margin={margin}
         />}
     </>
   );

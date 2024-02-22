@@ -235,7 +235,8 @@ const BikeImageStitcher = ({ destinationPoints, desiredPxPerMM = null, handlebar
               leftPlacementPoint={destinationPoints.headTubeBottom}
               rightPlacementPoint={destinationPoints.frontWheelCenter}
               desiredPxPerMM={dPPMM}
-              layer={7} />
+              layer={7}
+              margin={20} />
           }
 
           {geometryState.offsetFixedRectangles.crankArm && destinationPoints.bottomBracketCenter && destinationPoints.crankArmEnd &&
@@ -254,7 +255,8 @@ const BikeImageStitcher = ({ destinationPoints, desiredPxPerMM = null, handlebar
               leftPlacementPoint={destinationPoints.bottomBracketCenter}
               rightPlacementPoint={destinationPoints.crankArmEnd}
               desiredPxPerMM={dPPMM}
-              layer={7} />
+              layer={7} 
+              margin={30}/>
           }
 
           {geometryState.semiFixedRectangles.headstack && destinationPoints.headTubeTop && destinationPoints.headTubeBottom &&
@@ -270,7 +272,8 @@ const BikeImageStitcher = ({ destinationPoints, desiredPxPerMM = null, handlebar
               leftPlacementPoint={destinationPoints.headTubeTop}
               rightPlacementPoint={destinationPoints.spacersEnd}
               desiredPxPerMM={dPPMM}
-              layer={8} />
+              layer={8} 
+              margin={10}/>
           }
 
           {geometryState.semiFixedRectangles.seatpost && destinationPoints.seatTubeTop && destinationPoints.bottomBracketCenter &&
@@ -305,7 +308,8 @@ const BikeImageStitcher = ({ destinationPoints, desiredPxPerMM = null, handlebar
               leftPlacementPoint={destinationPoints.stemStart}
               rightPlacementPoint={destinationPoints.handlebarMount}
               desiredPxPerMM={dPPMM}
-              layer={7} />
+              layer={7} 
+              margin={30}/>
           }
 
           {geometryState.handlebarGeometry && destinationPoints.handlebarMount &&

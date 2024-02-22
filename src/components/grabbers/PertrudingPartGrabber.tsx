@@ -18,6 +18,7 @@ interface PertrudingPartGrabberProps {
   rightPlacementPoint?: Point2d | null,
   layer?: number,
   desiredPxPerMM?: number | null,
+  margin?: number,
 }
 
 export function PertrudingPartGrabber({
@@ -30,6 +31,7 @@ export function PertrudingPartGrabber({
   rightPlacementPoint = null,
   layer = 3,
   desiredPxPerMM = null,
+  margin=0,
 }: PertrudingPartGrabberProps) {
 
   const {
@@ -71,7 +73,8 @@ export function PertrudingPartGrabber({
         leftPlacementPoint={leftPlacementPoint}
         rightPlacementPoint={rightPlacementPoint}
         layer={layer}
-        scaling={desiredPxPerMM ? desiredPxPerMM / pxPerMm : 1} />}
+        scaling={desiredPxPerMM ? desiredPxPerMM / pxPerMm : 1} 
+        margin={margin}/>}
     </>
   );
 }

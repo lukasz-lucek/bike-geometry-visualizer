@@ -18,6 +18,7 @@ export interface Measures {
   spacersStack: number;
   stemLength: number;
   stemAngle: number;
+  seatpostExtension: number;
 }
 
 export interface HandlebarMeasures {
@@ -98,6 +99,7 @@ export const MeasurementsProvider = ({ children }: { children: ReactNode }) => {
       spacersStack: 0,
       stemLength: 0,
       stemAngle: 0,
+      seatpostExtension: 0,
     },
     handlebarMeasures : defauleHandlebarMeasures,
     helpserPoints: {

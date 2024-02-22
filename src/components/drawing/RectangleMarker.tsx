@@ -16,7 +16,8 @@ interface RectangleMarkerProps {
   leftPlacementPoint: Point2d | null,
   rightPlacementPoint: Point2d | null,
   layer: number,
-  scaling: number
+  scaling: number,
+  margin: number,
 }
 
 export function RectangleMarker(
@@ -25,7 +26,8 @@ export function RectangleMarker(
     leftPlacementPoint = null,
     rightPlacementPoint = null,
     layer = 3,
-    scaling = 1
+    scaling = 1,
+    margin = 0,
   }: RectangleMarkerProps) {
 
   const {
@@ -59,7 +61,8 @@ export function RectangleMarker(
         leftPlacementPoint={leftPlacementPoint}
         rightPlacementPoint={rightPlacementPoint}
         layer={layer}
-        scaling={scaling} />
+        scaling={scaling} 
+        margin={margin}/>
     </>
   );
 }
