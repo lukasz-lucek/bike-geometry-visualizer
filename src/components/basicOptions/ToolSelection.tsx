@@ -12,6 +12,7 @@ const ToolSelection = ({
     { name: 'imageUpload', label: 'Image Upload Tool' },
     { name: 'imageGeometryGrabber', label: 'Image Geometry Grabbing' },
     { name: 'handlebarsGeometry', label: 'Handlebar Geometry Grabbing'},
+    { name: 'seatGeometry', label: 'Seat Geometry Grabbing'},
     { name: 'frameGeometry', label: 'Geometry Specs' },
     // Add more tools here as needed
   ];

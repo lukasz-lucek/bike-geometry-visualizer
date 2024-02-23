@@ -109,6 +109,7 @@ export interface GeometryState {
   handlebarsTable: Map<string, HandlebarMeasures>;
   handlebarGeometry: OffsetSpline;
   shifterMountOffset: number;
+  seatRailAngle: number;
   polygons: GeometryPolygons;
 }
 
@@ -147,6 +148,7 @@ export const GeometryProvider = ({ children }: { children: ReactNode }) => {
     handlebarsTable: new Map(),
     handlebarGeometry: new OffsetSpline(15),
     shifterMountOffset: 0,
+    seatRailAngle: 0,
     polygons: defaultPolygons,
   }
 

@@ -4,6 +4,7 @@ import ImageUploadOption from './ImageUploadOption'; // Import the ImageUploadOp
 import FrameGeometryInput from './FrameGeometryInput'; // Import the ImageUploadOption component
 import ImageGeometryGrabber from './ImageGeometryGrabber';
 import HandlebarGeometryGrabber from './HandlebarGeometryGrabber';
+import SeatGeometryGrabber from './SeatGeometryGrabber';
 
 const ToolOptionsArea = ({ selectedTool }: { selectedTool: string }) => {
   const renderToolOptions = () => {
@@ -14,6 +15,8 @@ const ToolOptionsArea = ({ selectedTool }: { selectedTool: string }) => {
         return <FrameGeometryInput />;
       case 'handlebarsGeometry':
         return <HandlebarGeometryGrabber />;
+      case 'seatGeometry':
+          return <SeatGeometryGrabber />;
       case 'imageGeometryGrabber':
         return <ImageGeometryGrabber />;
       // Add more cases for other tools and their options components here
