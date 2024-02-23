@@ -26,6 +26,7 @@ export interface DestinationGeometryPoints {
   spacersEnd: ColorPoint2d | null;
   stemStart: ColorPoint2d | null;
   handlebarMount: ColorPoint2d | null;
+  seatMount: ColorPoint2d | null;
 }
 
 interface BikeImageStitcherProps {
@@ -291,6 +292,17 @@ const BikeImageStitcher = ({ destinationPoints, desiredPxPerMM = null, handlebar
               rightPlacementPoint={destinationPoints.seatpostEnd}
               desiredPxPerMM={dPPMM}
               layer={3} />
+          }
+
+          {geometryState.fixedCircles.seatpostYoke && destinationPoints.seatMount &&
+            <CirclePartGrabber
+              radius={geometryState.fixedCircles.seatpostYoke.radius}
+              centerPoint={geometryState.geometryPoints.seatMount}
+              pxPerMm={pxPerMm}
+              strokeWidth={0}
+              placementPoint={destinationPoints.seatMount}
+              desiredPxPerMM={dPPMM}
+              layer={5} />
           }
 
           {geometryState.fixedRectangles.stem && destinationPoints.stemStart && destinationPoints.handlebarMount &&

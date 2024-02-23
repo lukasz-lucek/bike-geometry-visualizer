@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { GeometryPoints, useGeometryContext } from '../../contexts/GeometryContext';
-import { findPxPerMm, findIntermediatePoint, findPointFromPointAngleLength } from '../../utils/GeometryUtils';
+import { findPxPerMm, findIntermediatePoint, findPointFromPointAngleLength, findProjectionPointToLine, findDistance } from '../../utils/GeometryUtils';
 import BikeImageStitcher, { DestinationGeometryPoints } from './BikeImageStitcher';
 import GeometryPointVisualization from '../drawing/GeometryPointsVisualization';
 import Color from 'color';
@@ -39,6 +39,7 @@ const GeometryPointsFromMeasures = ({
     spacersEnd: null,
     stemStart: null,
     handlebarMount: null,
+    seatMount: null,
   });
 
   useEffect(() => {
@@ -91,6 +92,7 @@ const GeometryPointsFromMeasures = ({
     let spacersEnd: ColorPoint2d | null = null;
     let stemStart: ColorPoint2d | null = null;
     let handlebarMount: ColorPoint2d | null = null;
+    let seatMount: ColorPoint2d | null = null;
 
     const bb = sizeMeasures.bbDrop;
     const cs = sizeMeasures.chainstay;
@@ -164,6 +166,23 @@ const GeometryPointsFromMeasures = ({
             }
           } else {
             seatpostStart = seatTubeTop;
+          }
+          const orgBottomBracketCenter = geometryContext.geometryPoints.bottomBracketCenter;
+          const orgSeatTubeTop = geometryContext.geometryPoints.seatTubeTop;
+          const orgSeatMount = geometryContext.geometryPoints.seatMount;
+          if (orgSeatMount && orgSeatTubeTop && orgBottomBracketCenter) {
+            let seatMountProjection = findProjectionPointToLine(orgBottomBracketCenter, orgSeatTubeTop, orgSeatMount);
+            let orgDistance = findDistance(seatMountProjection, orgSeatTubeTop) / pxPerMm;
+            let distance = orgDistance + (sizeMeasures.seatpostExtension - geometryContext.semiFixedRectangles.seatpost.length)
+            const newSeatMountProjection = findIntermediatePoint(seatTubeTop, bottomBracketCenter, - distance * dPPMM);
+            if (newSeatMountProjection) {
+              const newSeatMount = findPointFromPointAngleLength(newSeatMountProjection, seatAngle+90, sizeMeasures.seatpostSetback * dPPMM)
+              seatMount = {
+                x: newSeatMount!.x,
+                y: newSeatMount!.y,
+                color: helperPointsColor,
+              }
+            }
           }
         }
       }
@@ -254,6 +273,7 @@ const GeometryPointsFromMeasures = ({
       spacersEnd: spacersEnd,
       stemStart: stemStart,
       handlebarMount: handlebarMount,
+      seatMount: seatMount,
     });
   }, [sizeMeasures, desiredPxPerMM, geometryContext.geometryPoints]);
 
