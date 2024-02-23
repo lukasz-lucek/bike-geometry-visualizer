@@ -19,17 +19,6 @@ const SeatGeometryGrabber = () => {
     state: [canvasState,],
   } = useCanvasContext();
 
-  // const [showMountPoint, setShowMountPoint] = useState(true);
-
-  // const getShifterMountPoint = () : ColorPoint2d => {
-  //   const mountPoint = geometryState.handlebarGeometry.getPointAlongSpline(geometryState.shifterMountOffset);
-  //   return {
-  //     color: Color('yellow'),
-  //     x: mountPoint!.x,
-  //     y: mountPoint!.y,
-  //   }
-  // }
-
   const getSeatRailAngleLine = () : Line => {
     const startPoint = findPointFromPointAngleLength(geometryState.geometryPoints.seatMount!, geometryState.seatRailAngle, 50);
     const endPoint = findPointFromPointAngleLength(geometryState.geometryPoints.seatMount!, geometryState.seatRailAngle+180, 50);
