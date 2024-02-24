@@ -6,7 +6,8 @@ import CirclePartGrabber from '../grabbers/CirclePartGrabber';
 import PertrudingPartGrabber from '../grabbers/PertrudingPartGrabber';
 import RectanglePartGrabber from '../grabbers/RectanglePartGrabber';
 import HandlebarGrabber from '../grabbers/HandlebarGrabber';
-import { HandlebarMeasures } from '../../contexts/MeasurementsContext';
+import { HandlebarMeasures, Measures } from '../../contexts/MeasurementsContext';
+import SeatGrabber from '../grabbers/SeatGrabber';
 
 export interface DestinationGeometryPoints {
   rearWheelCenter: ColorPoint2d | null;
@@ -32,10 +33,11 @@ export interface DestinationGeometryPoints {
 interface BikeImageStitcherProps {
   destinationPoints: DestinationGeometryPoints;
   desiredPxPerMM: number | null;
+  measures: Measures;
   handlebarMeasurements: HandlebarMeasures;
 }
 
-const BikeImageStitcher = ({ destinationPoints, desiredPxPerMM = null, handlebarMeasurements}: BikeImageStitcherProps) => {
+const BikeImageStitcher = ({ destinationPoints, desiredPxPerMM = null, handlebarMeasurements, measures}: BikeImageStitcherProps) => {
   const {
     state: [geometryState,],
   } = useGeometryContext();
@@ -338,6 +340,19 @@ const BikeImageStitcher = ({ destinationPoints, desiredPxPerMM = null, handlebar
               shifterPolygon={geometryState.polygons.shifter}
               pxPerMm={pxPerMm}
               mountingPoint={destinationPoints.handlebarMount}
+              desiredPxPerMM={dPPMM}
+              layer={9} />
+          }
+
+          {geometryState.polygons.seat && destinationPoints.seatMount &&
+            <SeatGrabber
+              seatPolygon={geometryState.polygons.seat}
+              seatRotation={measures.seatRotation}
+              railsAngle={geometryState.seatRailAngle}
+              seatSetback={measures.seatSetback}
+              orgMountingPoint={geometryState.geometryPoints.seatMount}
+              pxPerMm={pxPerMm}
+              mountingPoint={destinationPoints.seatMount}
               desiredPxPerMM={dPPMM}
               layer={9} />
           }

@@ -284,7 +284,7 @@ const GeometryPointsFromMeasures = ({
         <GeometryPointVisualization pointsSet={state as unknown as GeometryPoints} />
       }
       {state &&
-        <BikeImageStitcher destinationPoints={state} desiredPxPerMM={desiredPxPerMM} handlebarMeasurements={handlebarMeasurements}/>
+        <BikeImageStitcher destinationPoints={state} desiredPxPerMM={desiredPxPerMM} handlebarMeasurements={handlebarMeasurements} measures={sizeMeasures}/>
       }
       {/* {state && state.sizeGeometryPoints && <GeometryPointVisualization pointsSet={geometryContext.geometryPoints}/>} */}
     </>

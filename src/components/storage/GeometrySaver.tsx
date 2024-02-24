@@ -60,6 +60,12 @@ const GeometrySaver = () => {
       if (!(geometryData.sizesTable.get(key)!.seatpostExtension)) {
         geometryData.sizesTable.get(key)!.seatpostExtension = 100;
       }
+      if (!(geometryData.sizesTable.get(key)!.seatSetback)) {
+        geometryData.sizesTable.get(key)!.seatSetback = 0;
+      }
+      if (!(geometryData.sizesTable.get(key)!.seatRotation)) {
+        geometryData.sizesTable.get(key)!.seatRotation = 0;
+      }
       if (!geometryData.handlebarsTable.get(key)) {
         geometryData.handlebarsTable.set(key, Object.assign({}, defauleHandlebarMeasures));
       }

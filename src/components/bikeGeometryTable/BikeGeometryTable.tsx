@@ -64,6 +64,8 @@ const BikeGeometryTable = ({ children }: { children: ReactNode }) => {
 
     const rearWheelCenter = points.rearWheelCenter;
     const frontWheelCenter = points.frontWheelCenter;
+    const seatSetback = 0;
+    const seatRotation = 0;
 
     if (rearWheelCenter && frontWheelCenter) {
       pxPerMm = findPxPerMm(rearWheelCenter, frontWheelCenter, wheelbase) ?? 0;
@@ -163,6 +165,8 @@ const BikeGeometryTable = ({ children }: { children: ReactNode }) => {
         stemLength,
         stemAngle,
         seatpostExtension,
+        seatRotation,
+        seatSetback,
       },
       helpserPoints: {
         wheelBaseEnd,
