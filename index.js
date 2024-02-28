@@ -36,14 +36,6 @@ var corsOptionsDelegate = function (req, callback) {
 app.use(cors(corsOptionsDelegate));
 
 app.use(express.static(path.join(__dirname, "./client/build")));
-// app.get('*', (_, res) => {
-//   res.sendFile(
-//     path.join(__dirname, "./client/build/index.html"),
-//     (err) => {
-//       res.status(500).send(err);
-//     }
-//   );
-// });
 
 app.get('/', (req, res) => {
   res.sendFile(
@@ -73,7 +65,7 @@ app.get('/add-note', async (req, res) => {
 });
 
 app.get('/books', async (req, res) => {
-  console.log("fetching books from DB");
+  console.log("fetching books from Database");
   const books = await Book.find();
   if (books) {
     res.json(books);

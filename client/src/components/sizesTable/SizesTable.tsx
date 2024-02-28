@@ -14,7 +14,14 @@ const SizesTable = () => {
   } = useMeasurementsContext();
 
   const [sizeName, setSizeName] = useState('');
-  const [highlightedSize, setHighlightedSize] = useState<string | null>();
+  const [highlightedSize, updateHighlightedSize] = useState<string | null>();
+  const [highlightedSizePerm, setHighlightedSizePerm] = useState<string | null>();
+
+  const setHighlightedSize = (size : string | null) => {
+    if (!highlightedSizePerm) {
+      updateHighlightedSize(size);
+    }
+  }
 
   // const sizesTable = geometryState.sizesTable ? geometryState.sizesTable : {};
   const knownSizes = Array.from(geometryState.sizesTable.keys());
@@ -103,6 +110,26 @@ const SizesTable = () => {
           </tr>
         </thead>
         <tbody>
+          <tr key={'RPermanentDraw'}>
+            <td key={'HPermanentDraw'}>Permanent Drawing</td>
+            {knownSizes.map((size) => (
+              <td
+                key={'V' + size + 'PermanentDraw'}
+                onMouseEnter={() => { setHighlightedSize(size) }}
+                onMouseLeave={() => { setHighlightedSize(null) }}>
+                <input
+                  checked={highlightedSizePerm === size}
+                  onChange={(e) => {
+                    if (highlightedSizePerm === size) {
+                      setHighlightedSizePerm(null);
+                    } else {
+                      setHighlightedSizePerm(size)}
+                    } 
+                  }
+                  type="checkbox" />
+              </td>
+            ))}
+          </tr>
           {measurements.map((measurement) => (
             <tr key={'R' + measurement}>
               <td key={'H' + measurement}>{measurement}</td>
@@ -150,7 +177,12 @@ const SizesTable = () => {
           ))}
         </tbody>
       </table>
-      {highlightedSize && 
+      {highlightedSizePerm && 
+        <GeometryPointsFromMeasures 
+          sizeMeasures={geometryState.sizesTable.get(highlightedSizePerm)!}
+          desiredPxPerMM={1}
+          handlebarMeasurements={geometryState.handlebarsTable.get(highlightedSizePerm)!}/>}
+      {highlightedSize && !highlightedSizePerm &&
         <GeometryPointsFromMeasures 
           sizeMeasures={geometryState.sizesTable.get(highlightedSize)!}
           desiredPxPerMM={1}
