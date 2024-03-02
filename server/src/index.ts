@@ -1,9 +1,11 @@
-require('dotenv').config();
-const cors = require('cors');
-const express = require('express');
-const mongoose = require('mongoose');
-const Book = require('./models/books');
-const path = require('path');
+import dotenv from "dotenv";
+import cors from 'cors';
+import express from 'express';
+import mongoose from "mongoose";
+import path from 'path'
+import Book from './models/books';
+
+dotenv.config();
 
 
 const app = express();
@@ -11,6 +13,10 @@ const app = express();
 mongoose.set('strictQuery', false);
 const connectDB = async () => {
   try {
+    if (!process.env.MONGO_URI) {
+      console.log("MONGO_URI environment variable not specified - cannot run - exiting")
+      process.exit(1);
+    }
     const conn = await mongoose.connect(process.env.MONGO_URI);
     console.log(`MongoDB connected ${conn.connection.host}`)
   } catch (error) {
@@ -19,12 +25,12 @@ const connectDB = async () => {
   }
 }
 
-var environment = process.env.NODE_ENV || 'development';
+const environment = process.env.NODE_ENV || 'development';
 
-var whitelist =  environment === 'development' ? ['http://localhost:3000'] : []
+const whitelist =  environment === 'development' ? ['http://localhost:3000'] : []
 
-var corsOptionsDelegate = function (req, callback) {
-  var corsOptions;
+const corsOptionsDelegate = (req : any, callback : any) => {
+  let corsOptions;
   if (whitelist.indexOf(req.header('Origin')) !== -1) {
     console.log("whitelisted domain");
     corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
@@ -35,11 +41,11 @@ var corsOptionsDelegate = function (req, callback) {
 }
 app.use(cors(corsOptionsDelegate));
 
-app.use(express.static(path.join(__dirname, "./client/build")));
+app.use(express.static(path.join(__dirname, "../../client/build")));
 
 app.get('/', (req, res) => {
   res.sendFile(
-    path.join(__dirname, "./client/build/index.html"),
+    path.join(__dirname, "../../client/build/index.html"),
     (err) => {
       res.status(500).send(err);
     }
@@ -60,7 +66,11 @@ app.get('/add-note', async (req, res) => {
     ]);
     res.send("Data added...");
   } catch (error) {
-    console.log("err: ", + error);
+    if (error instanceof Error) {
+      console.log("add-note err: ", + error.message);
+    } else {
+      console.log("add-note err: Unknown " + typeof(error));
+    }
   }
 });
 
