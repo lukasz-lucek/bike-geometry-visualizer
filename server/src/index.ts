@@ -3,7 +3,7 @@ import cors from 'cors';
 import express from 'express';
 import mongoose from "mongoose";
 import path from 'path'
-import Book from './models/books';
+import GeometryState from './models/GeometryState';
 
 dotenv.config();
 
@@ -43,6 +43,9 @@ app.use(cors(corsOptionsDelegate));
 
 app.use(express.static(path.join(__dirname, "client/build")));
 
+app.use(express.json({limit: '5mb'}));
+// app.use(express.bodyParser({limit: '50mb'}));
+
 app.get('/', (req, res) => {
   res.sendFile(
     path.join(__dirname, "client/build/index.html"),
@@ -52,16 +55,52 @@ app.get('/', (req, res) => {
   );
 });
 
-app.get('/add-note', async (req, res) => {
+app.post('/send-upstream', async (req, res) => {
+
+  console.log(`received request to store bike: ${JSON.stringify(req.body.data).substring(0, 500)}`);
+
+  req.body.data.selectedFile = ''
   try {
-    await Book.insertMany([
+    await GeometryState.create(req.body.data);
+    res.status(200).send("bike added");
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log("add-note err: ", + error.message);
+    } else {
+      console.log("add-note err: Unknown " + typeof(error));
+    }
+  }
+});
+
+app.get('/add-bike', async (req, res) => {
+  try {
+    await GeometryState.insertMany([
       {
-        title: "Hichhikers guide",
-        body: "Lorem Ipsum"
-      },
-      {
-        title: "Dumb tutorial",
-        body: "Lorem Ipsum ..."
+        wheelbase: 1029,
+        selectedFile: null,
+        bikesList: ["Aspre 2", "Other bike"],
+        shifterMountOffset: 0.5,
+        seatRailAngle: 5,
+        geometryPoints: {
+          rearWheelCenter: {
+            x: 1,
+            y: 234,
+            color: {
+              color: [123, 154, 233],
+              model: 'rgb',
+              valpha: 1
+            }
+          },
+          frontWheelCenter: {
+            x: 2,
+            y: 4,
+            color: {
+              color: [13, 14, 23],
+              model: 'rgb',
+              valpha: 1
+            }
+          }
+        }
       }
     ]);
     res.send("Data added...");
@@ -74,13 +113,13 @@ app.get('/add-note', async (req, res) => {
   }
 });
 
-app.get('/books', async (req, res) => {
+app.get('/bikes', async (req, res) => {
   console.log("fetching books from Database");
-  const books = await Book.find();
-  if (books) {
-    res.json(books);
+  const bikes = await GeometryState.find();
+  if (bikes) {
+    res.json(bikes);
   } else {
-    res.send("No books for you my frined");
+    res.send("No bikes for you my frined");
   }
 });
 

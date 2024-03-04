@@ -2,12 +2,17 @@
 import React, { useState } from 'react';
 import { defaultFixedCircles, defaultFixedRectangles, defaultOffsetFixedRectangles, defaultPolygons, defaultSemiFixedRectangles, GeometryState, useGeometryContext } from '../../contexts/GeometryContext';
 import DropdownActions from './DropdownActions';
-import GeometryStatesSerializer from '../../contexts/GeometryStatesSerilizer';
+import GeometryStatesSerializer, { GeometryStateSerializer, GeompetryPayloadSerializer } from '../../contexts/GeometryStatesSerilizer';
 import { OffsetSpline } from '../../interfaces/Spline';
 import { defauleHandlebarMeasures } from '../../contexts/MeasurementsContext';
+import axios from 'axios';
 
 const GeometrySaver = () => {
   const [bikeDataName, setBikeDataName] = useState('');
+
+  const [bikeMake, setBikeMake] = useState('');
+  const [bikeModel, setBikeModel] = useState('');
+  const [bikeYear, setBikeYear] = useState(2020);
 
   const {
     state: [state, updateState],
@@ -26,6 +31,33 @@ const GeometrySaver = () => {
       localStorage.setItem('knownGeometries', geomStatSerializer.serialize());
       updateState({ bikesList: Array.from(geomStatSerializer.knownGeometries.keys()) });
     }
+  }
+
+  const sendGeometryUpstream = async () => {
+    console.log(`sending upstream bike: ${bikeMake}, ${bikeModel}, ${bikeYear}`);
+    const payload = {
+      make: bikeMake,
+      model: bikeModel,
+      year: bikeYear,
+      data: state,
+    }
+    const serializer = new GeompetryPayloadSerializer(payload)
+    const prepPayload = serializer.serialize();
+
+    const address = process.env.REACT_APP_SERVER_ADDRESS || '';
+    const endpoint = address + '/send-upstream'
+
+    axios.post(endpoint, prepPayload, {
+      headers: {
+        // Overwrite Axios's automatically set Content-Type
+        'Content-Type': 'application/json'
+      }
+    }).then(function (resp) {
+      console.log(resp);
+    }).catch(function (error) {
+      console.log(error);
+    });
+    //console.log(`about to sent data: ${prepPayload}`);
   }
 
   const loadBikeGeometry = (item: string) => {
@@ -103,6 +135,27 @@ const GeometrySaver = () => {
       />
       <button disabled={bikeDataName == ''} onClick={() => saveGeometry()}>Save</button>
       <DropdownActions items={state.bikesList} onLoad={loadBikeGeometry} onRemove={removeBikeGeometry} />
+      <p>
+        <input
+          type="text"
+          placeholder="Make"
+          value={bikeMake}
+          onChange={(e) => setBikeMake(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Model"
+          value={bikeModel}
+          onChange={(e) => setBikeModel(e.target.value)}
+        />
+        <input
+          type="number"
+          placeholder="Year"
+          value={bikeYear}
+          onChange={(e) => setBikeYear(parseInt(e.target.value))}
+        />
+        <button disabled={bikeMake == '' || bikeModel == '' || bikeYear == 0} onClick={() => sendGeometryUpstream()}>Send to DB</button>
+      </p>
     </div>
   );
 };

@@ -2,17 +2,7 @@ import { Console } from 'console';
 import { GeometryState } from './GeometryContext';
 import { OffsetSpline } from '../interfaces/Spline';
 
-export class GeometryStatesSerializer {
-  knownGeometries: Map<string, GeometryState>
-
-  constructor(knownGeometries? : Map<string, GeometryState>) {
-    if (!knownGeometries) {
-      this.knownGeometries = new Map();
-    } else {
-      this.knownGeometries = knownGeometries
-    }
-  }
-
+abstract class GeometryStateSerializationHelper {
   reviver(key: string, value: any) : any {
     if (key === "sizesTable") {
       return new Map(value)
@@ -46,6 +36,68 @@ export class GeometryStatesSerializer {
     }
 
     return value
+  }
+}
+
+export class GeometryStateSerializer extends GeometryStateSerializationHelper {
+  geometry: GeometryState | null;
+
+  constructor(geometry? : GeometryState) {
+    super();
+    if (!geometry) {
+      this.geometry = null;
+    } else {
+      this.geometry = geometry
+    }
+  }
+
+  serialize() : string {
+    return JSON.stringify(this.geometry, this.replacer)
+  }
+
+  deserialize(serializedData: string) {
+    this.geometry = JSON.parse(serializedData, this.reviver)
+  }
+}
+
+export interface GeometryPayload {
+  make: String,
+  model: String,
+  year: number,
+  data: GeometryState,
+}
+
+export class GeompetryPayloadSerializer extends GeometryStateSerializationHelper {
+  payload: GeometryPayload | null;
+
+  constructor(payload? : GeometryPayload) {
+    super();
+    if (!payload) {
+      this.payload = null;
+    } else {
+      this.payload = payload
+    }
+  }
+
+  serialize() : string {
+    return JSON.stringify(this.payload, this.replacer)
+  }
+
+  deserialize(serializedData: string) {
+    this.payload = JSON.parse(serializedData, this.reviver)
+  }
+}
+
+export class GeometryStatesSerializer extends GeometryStateSerializationHelper {
+  knownGeometries: Map<string, GeometryState>
+
+  constructor(knownGeometries? : Map<string, GeometryState>) {
+    super();
+    if (!knownGeometries) {
+      this.knownGeometries = new Map();
+    } else {
+      this.knownGeometries = knownGeometries
+    }
   }
 
   serialize() : string {

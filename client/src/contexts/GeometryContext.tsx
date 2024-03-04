@@ -1,24 +1,43 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 import { FixedCircle } from '../interfaces/FixedCircle';
-import { ColorPoint2d } from '../interfaces/Point2d';
 import { FixedRectangle, OffsetFixedRectangle, SemiFixedRectangle } from '../interfaces/Rectangles';
 import { HandlebarMeasures, Measures } from './MeasurementsContext';
 import { OffsetSpline } from '../interfaces/Spline';
 import GeometryStatesSerializer from './GeometryStatesSerilizer';
 import { Polygon } from '../interfaces/Polygon';
+import {IGeometryState, IGeometryPoints} from '../../../shared/types/IGeometryState'
+// import { IGeometryPoints } from '../../../shared/types/IGeometryPoints';
 
-//TODO - divide by type
-export interface GeometryPoints {
-  rearWheelCenter: ColorPoint2d | null,
-  frontWheelCenter: ColorPoint2d | null,
-  headTubeTop: ColorPoint2d | null,
-  headTubeBottom: ColorPoint2d | null,
-  bottomBracketCenter: ColorPoint2d | null,
-  seatTubeTop: ColorPoint2d | null,
-  crankArmEnd: ColorPoint2d | null,
-  handlebarMount: ColorPoint2d | null,
-  seatMount: ColorPoint2d | null,
+// export interface IPoint2d {
+//   x: number,
+//   y: number,
+// }
+
+// export interface IColor {
+//   color: number[],
+//   model: string,
+//   valpha: number,
+// }
+
+// export interface IColorPoint2d extends IPoint2d {
+//   color: any | IColor
+// }
+
+export interface GeometryPoints extends IGeometryPoints{
 }
+
+// export interface GeometryPoints extends IGeometryPoints {
+
+// }
+
+// export interface IGeometryState {
+//   geometryPoints: IGeometryPoints;
+//   wheelbase: number;
+//   selectedFile: null | string;
+//   bikesList: string[];
+//   shifterMountOffset: number;
+//   seatRailAngle: number;
+// }
 
 export interface GeometryOffsetFixedRectangles {
   crankArm: OffsetFixedRectangle,
@@ -52,7 +71,7 @@ export interface GeometryPolygons {
   seat: Polygon;
 }
 
-const defaultGeometryPoints: GeometryPoints = {
+const defaultGeometryPoints: IGeometryPoints = {
   rearWheelCenter: null,
   frontWheelCenter: null,
   headTubeTop: null,
@@ -96,20 +115,14 @@ export const defaultPolygons: GeometryPolygons = {
   seat: {vertices: []},
 }
 
-export interface GeometryState {
-  wheelbase: number;
-  geometryPoints: GeometryPoints;
+export interface GeometryState extends IGeometryState {
   offsetFixedRectangles: GeometryOffsetFixedRectangles;
   semiFixedRectangles: GeometrySemiFixedRectangles;
   fixedRectangles: GeometryFixedRectangles;
   fixedCircles: GeometryFixedCircles;
-  selectedFile: null | string;
-  bikesList: string[];
   sizesTable: Map<string, Measures>;
   handlebarsTable: Map<string, HandlebarMeasures>;
   handlebarGeometry: OffsetSpline;
-  shifterMountOffset: number;
-  seatRailAngle: number;
   polygons: GeometryPolygons;
 }
 
