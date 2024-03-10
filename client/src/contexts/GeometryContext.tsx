@@ -1,74 +1,26 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
-import { FixedCircle } from '../interfaces/FixedCircle';
-import { FixedRectangle, OffsetFixedRectangle, SemiFixedRectangle } from '../interfaces/Rectangles';
 import { HandlebarMeasures, Measures } from './MeasurementsContext';
 import { OffsetSpline } from '../interfaces/Spline';
 import GeometryStatesSerializer from './GeometryStatesSerilizer';
-import { Polygon } from '../interfaces/Polygon';
-import {IGeometryState, IGeometryPoints} from '../../../shared/types/IGeometryState'
-// import { IGeometryPoints } from '../../../shared/types/IGeometryPoints';
+import {IGeometryState, IGeometryPoints, IGeometryOffsetFixedRectangles, IGeometrySemiFixedRectangles, IGeometryFixedRectangles, IGeometryFixedCircles, IGeometryPolygons} from '../../../shared/types/IGeometryState'
 
-// export interface IPoint2d {
-//   x: number,
-//   y: number,
-// }
-
-// export interface IColor {
-//   color: number[],
-//   model: string,
-//   valpha: number,
-// }
-
-// export interface IColorPoint2d extends IPoint2d {
-//   color: any | IColor
-// }
 
 export interface GeometryPoints extends IGeometryPoints{
 }
 
-// export interface GeometryPoints extends IGeometryPoints {
-
-// }
-
-// export interface IGeometryState {
-//   geometryPoints: IGeometryPoints;
-//   wheelbase: number;
-//   selectedFile: null | string;
-//   bikesList: string[];
-//   shifterMountOffset: number;
-//   seatRailAngle: number;
-// }
-
-export interface GeometryOffsetFixedRectangles {
-  crankArm: OffsetFixedRectangle,
-  seatstay: OffsetFixedRectangle,
-  chainstay: OffsetFixedRectangle,
-  fork: OffsetFixedRectangle,
-  seatTube: OffsetFixedRectangle,
-  headTube: OffsetFixedRectangle,
-  bottomTube: OffsetFixedRectangle,
-  topTube: OffsetFixedRectangle,
+export interface GeometryOffsetFixedRectangles extends IGeometryOffsetFixedRectangles {
 }
 
-export interface GeometrySemiFixedRectangles {
-  seatpost: SemiFixedRectangle,
-  headstack: SemiFixedRectangle,
+export interface GeometrySemiFixedRectangles extends IGeometrySemiFixedRectangles {
 }
 
-export interface GeometryFixedRectangles {
-  stem: FixedRectangle,
+export interface GeometryFixedRectangles extends IGeometryFixedRectangles {
 }
 
-export interface GeometryFixedCircles {
-  rearWheel: FixedCircle,
-  frontWheel: FixedCircle,
-  chainring: FixedCircle,
-  seatpostYoke: FixedCircle,
+export interface GeometryFixedCircles extends IGeometryFixedCircles {
 }
 
-export interface GeometryPolygons {
-  shifter: Polygon;
-  seat: Polygon;
+export interface GeometryPolygons extends IGeometryPolygons{
 }
 
 const defaultGeometryPoints: IGeometryPoints = {
@@ -83,7 +35,7 @@ const defaultGeometryPoints: IGeometryPoints = {
   seatMount: null,
 }
 
-export const defaultOffsetFixedRectangles: GeometryOffsetFixedRectangles = {
+export const defaultOffsetFixedRectangles: IGeometryOffsetFixedRectangles = {
   crankArm: { leftOffset: 0, rightOffset: 0, width: 40 },
   seatstay: { leftOffset: 0, rightOffset: 100, width: 40 },
   chainstay: { leftOffset: 0, rightOffset: 0, width: 40 },
@@ -94,36 +46,31 @@ export const defaultOffsetFixedRectangles: GeometryOffsetFixedRectangles = {
   topTube: { leftOffset: 30, rightOffset: 30, width: 50 },
 }
 
-export const defaultSemiFixedRectangles: GeometrySemiFixedRectangles = {
+export const defaultSemiFixedRectangles: IGeometrySemiFixedRectangles = {
   seatpost: { width: 40, length: 150 },
   headstack: { width: 35, length: 30 },
 }
 
-export const defaultFixedRectangles: GeometryFixedRectangles = {
+export const defaultFixedRectangles: IGeometryFixedRectangles = {
   stem: { width: 40 },
 }
 
-export const defaultFixedCircles: GeometryFixedCircles = {
+export const defaultFixedCircles: IGeometryFixedCircles = {
   rearWheel: { radius: 350 },
   frontWheel: { radius: 350 },
   chainring: { radius: 100 },
   seatpostYoke: { radius: 20 },
 }
 
-export const defaultPolygons: GeometryPolygons = {
+export const defaultPolygons: IGeometryPolygons = {
   shifter: { vertices: []},
   seat: {vertices: []},
 }
 
 export interface GeometryState extends IGeometryState {
-  offsetFixedRectangles: GeometryOffsetFixedRectangles;
-  semiFixedRectangles: GeometrySemiFixedRectangles;
-  fixedRectangles: GeometryFixedRectangles;
-  fixedCircles: GeometryFixedCircles;
-  sizesTable: Map<string, Measures>;
-  handlebarsTable: Map<string, HandlebarMeasures>;
+  // sizesTable: Map<string, Measures>;
+  // handlebarsTable: Map<string, HandlebarMeasures>;
   handlebarGeometry: OffsetSpline;
-  polygons: GeometryPolygons;
 }
 
 interface GeometryContextType {

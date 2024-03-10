@@ -4,11 +4,14 @@ import { OffsetSpline } from '../interfaces/Spline';
 
 abstract class GeometryStateSerializationHelper {
   reviver(key: string, value: any) : any {
-    if (key === "sizesTable") {
-      return new Map(value)
-    }
-    if (key === 'handlebarsTable') {
-      return new Map(value);
+    if (key === "sizesTable" || key === 'handlebarsTable') {
+      console.log(`${key} deserialization. Type: ${typeof(value)}, is array: ${Array.isArray(value)}`);
+      // TODO mongoose stores maps differently - we need to make sure we handle this propsely
+      if (Array.isArray(value)) {
+        return new Map(value)
+      } else if (typeof(value) === "object") {
+        return new Map(Object.entries(value));
+      }
     }
     if (key === "handlebarGeometry") {
       const spline = new OffsetSpline(value);

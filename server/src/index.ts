@@ -56,9 +56,6 @@ app.get('/', (req, res) => {
 });
 
 app.post('/send-upstream', async (req, res) => {
-
-  console.log(`received request to store bike: ${JSON.stringify(req.body.data).substring(0, 500)}`);
-
   req.body.data.selectedFile = ''
   try {
     await GeometryState.create(req.body.data);
@@ -72,49 +69,48 @@ app.post('/send-upstream', async (req, res) => {
   }
 });
 
-app.get('/add-bike', async (req, res) => {
-  try {
-    await GeometryState.insertMany([
-      {
-        wheelbase: 1029,
-        selectedFile: null,
-        bikesList: ["Aspre 2", "Other bike"],
-        shifterMountOffset: 0.5,
-        seatRailAngle: 5,
-        geometryPoints: {
-          rearWheelCenter: {
-            x: 1,
-            y: 234,
-            color: {
-              color: [123, 154, 233],
-              model: 'rgb',
-              valpha: 1
-            }
-          },
-          frontWheelCenter: {
-            x: 2,
-            y: 4,
-            color: {
-              color: [13, 14, 23],
-              model: 'rgb',
-              valpha: 1
-            }
-          }
-        }
-      }
-    ]);
-    res.send("Data added...");
-  } catch (error) {
-    if (error instanceof Error) {
-      console.log("add-note err: ", + error.message);
-    } else {
-      console.log("add-note err: Unknown " + typeof(error));
-    }
-  }
-});
+// app.get('/add-bike', async (req, res) => {
+//   try {
+//     await GeometryState.insertMany([
+//       {
+//         wheelbase: 1029,
+//         selectedFile: null,
+//         bikesList: ["Aspre 2", "Other bike"],
+//         shifterMountOffset: 0.5,
+//         seatRailAngle: 5,
+//         geometryPoints: {
+//           rearWheelCenter: {
+//             x: 1,
+//             y: 234,
+//             color: {
+//               color: [123, 154, 233],
+//               model: 'rgb',
+//               valpha: 1
+//             }
+//           },
+//           frontWheelCenter: {
+//             x: 2,
+//             y: 4,
+//             color: {
+//               color: [13, 14, 23],
+//               model: 'rgb',
+//               valpha: 1
+//             }
+//           }
+//         }
+//       }
+//     ]);
+//     res.send("Data added...");
+//   } catch (error) {
+//     if (error instanceof Error) {
+//       console.log("add-note err: ", + error.message);
+//     } else {
+//       console.log("add-note err: Unknown " + typeof(error));
+//     }
+//   }
+// });
 
 app.get('/bikes', async (req, res) => {
-  console.log("fetching books from Database");
   const bikes = await GeometryState.find();
   if (bikes) {
     res.json(bikes);

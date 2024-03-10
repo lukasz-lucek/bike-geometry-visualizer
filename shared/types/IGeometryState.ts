@@ -1,5 +1,3 @@
-import { Console } from 'console';
-
 export interface IPoint2d {
   x: number,
   y: number,
@@ -81,6 +79,42 @@ export interface IGeometryPolygons {
   seat: IPolygon;
 }
 
+export interface IMeasures {
+  stack: number;
+  reach: number;
+  topTube: number;
+  seatTubeCT: number;
+  headAngle: number;
+  seatAngle: number;
+  headTube: number;
+  chainstay: number;
+  bbDrop: number;
+  crankArm: number;
+  wheelbase: number;
+  seatpostSetback: number;
+  spacersStack: number;
+  stemLength: number;
+  stemAngle: number;
+  seatpostExtension: number;
+  seatRotation: number;
+  seatSetback: number;
+}
+
+export interface IHandlebarMeasures {
+  handlebarDrop: number;
+  handlebarReach: number;
+  handlebarRaise: number;
+  handlebarSetback: number;
+  handlebarRotation: number;
+  shiftersMountPoint: number;
+}
+
+export interface IOffsetSplineSaver {
+  intermediatePoints: IPoint2d[];
+  controlPoints: IPoint2d[];
+  thickness: number;
+}
+
 export interface IGeometryState {
 
   geometryPoints: IGeometryPoints;
@@ -94,4 +128,7 @@ export interface IGeometryState {
   fixedRectangles: IGeometryFixedRectangles;
   fixedCircles: IGeometryFixedCircles;
   polygons: IGeometryPolygons;
+  sizesTable: Map<string, IMeasures>;
+  handlebarsTable: Map<string, IHandlebarMeasures>;
+  handlebarGeometry: IOffsetSplineSaver;
 }

@@ -1,3 +1,4 @@
-export interface FixedCircle {
-  radius: number;
+import { IFixedCircle } from "../IGeometryState";
+
+export interface FixedCircle extends IFixedCircle {
 }

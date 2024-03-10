@@ -1,35 +1,12 @@
 import React, { createContext, useContext, useState } from 'react';
 import { ReactNode } from 'react';
 import { Point2d } from '../interfaces/Point2d';
+import { IHandlebarMeasures, IMeasures } from '../IGeometryState';
 
-export interface Measures {
-  stack: number;
-  reach: number;
-  topTube: number;
-  seatTubeCT: number;
-  headAngle: number;
-  seatAngle: number;
-  headTube: number;
-  chainstay: number;
-  bbDrop: number;
-  crankArm: number;
-  wheelbase: number;
-  seatpostSetback: number;
-  spacersStack: number;
-  stemLength: number;
-  stemAngle: number;
-  seatpostExtension: number;
-  seatRotation: number;
-  seatSetback: number;
+export interface Measures extends IMeasures{
 }
 
-export interface HandlebarMeasures {
-  handlebarDrop: number;
-  handlebarReach: number;
-  handlebarRaise: number;
-  handlebarSetback: number;
-  handlebarRotation: number;
-  shiftersMountPoint: number;
+export interface HandlebarMeasures extends IHandlebarMeasures {
 }
 
 export interface MeasurementsState {

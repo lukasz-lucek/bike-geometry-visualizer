@@ -15,16 +15,16 @@ root.render(
 //test of backend integration
 const address = process.env.REACT_APP_SERVER_ADDRESS || '';
 const endpoint = address +'/bikes';
-console.log(`Endpoint for backend: ${endpoint}`)
+// console.log(`Endpoint for backend: ${endpoint}`)
 const resp = await ( await fetch(endpoint)).json() as string[];
 const mappedResp = resp.map((val, idx) => {return [`key ${idx}`, val]})
-// const respLastObj = resp.length > 0 ? resp[resp.length-1] : undefined;
-// if (respLastObj) {
-  const geomStatSerializer = new GeometryStatesSerializer()
-  console.log(resp);
-  const deserialized = geomStatSerializer.deserialize(JSON.stringify(mappedResp));
-  console.log(geomStatSerializer.serialize());
-//}
+const serialized = JSON.stringify(mappedResp);
+//console.log(serialized);
+const geomStatSerializer = new GeometryStatesSerializer()
+//console.log(resp);
+const _ = geomStatSerializer.deserialize(serialized);
+//console.log(geomStatSerializer.serialize());
+
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals

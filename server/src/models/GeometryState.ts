@@ -1,5 +1,5 @@
 import {Schema, model} from 'mongoose'
-import {IColor, IColorPoint2d, IFixedCircle, IFixedRectangle, IGeometryFixedCircles, IGeometryFixedRectangles, IGeometryOffsetFixedRectangles, IGeometryPoints, IGeometryPolygons, IGeometrySemiFixedRectangles, IGeometryState, IOffsetFixedRectangle, IPoint2d, IPolygon, ISemiFixedRectangle} from '../IGeometryState'
+import {IColor, IColorPoint2d, IFixedCircle, IFixedRectangle, IGeometryFixedCircles, IGeometryFixedRectangles, IGeometryOffsetFixedRectangles, IGeometryPoints, IGeometryPolygons, IGeometrySemiFixedRectangles, IGeometryState, IHandlebarMeasures, IMeasures, IOffsetFixedRectangle, IOffsetSplineSaver, IPoint2d, IPolygon, ISemiFixedRectangle} from '../IGeometryState'
 
 const ColorSchema = new Schema<IColor>({
   color: {
@@ -134,6 +134,48 @@ const GeometryPolygonsSchema  = new Schema<IGeometryPolygons> ({
   seat: {type: PolygonSchema, required: true},
 });
 
+const MeasuresSchema = new Schema<IMeasures> ({
+  stack:  {type: Number, required: true},
+  reach: {type: Number, required: true},
+  topTube: {type: Number, required: true},
+  seatTubeCT: {type: Number, required: true},
+  headAngle: {type: Number, required: true},
+  seatAngle: {type: Number, required: true},
+  headTube: {type: Number, required: true},
+  chainstay: {type: Number, required: true},
+  bbDrop: {type: Number, required: true},
+  crankArm: {type: Number, required: true},
+  wheelbase: {type: Number, required: true},
+  seatpostSetback: {type: Number, required: true},
+  spacersStack: {type: Number, required: true},
+  stemLength: {type: Number, required: true},
+  stemAngle: {type: Number, required: true},
+  seatpostExtension: {type: Number, required: true},
+  seatRotation: {type: Number, required: true},
+  seatSetback: {type: Number, required: true},
+});
+
+const HandlebarMeasuresSchema = new Schema<IHandlebarMeasures> ({
+  handlebarDrop: {type: Number, required: true},
+  handlebarReach: {type: Number, required: true},
+  handlebarRaise: {type: Number, required: true},
+  handlebarSetback: {type: Number, required: true},
+  handlebarRotation: {type: Number, required: true},
+  shiftersMountPoint: {type: Number, required: true},
+});
+
+const OffsetSplineSaverSchema = new Schema<IOffsetSplineSaver> ({
+  intermediatePoints:  {
+    type: [Point2dSchema],
+    required: true
+  },
+  controlPoints:  {
+    type: [Point2dSchema],
+    required: true
+  },
+  thickness: {type: Number, required: true},
+});
+
 const GeometryStateSchema = new Schema<IGeometryState>({
   wheelbase: {
     type: Number,
@@ -164,6 +206,9 @@ const GeometryStateSchema = new Schema<IGeometryState>({
   fixedRectangles: {type: GeometryFixedRectanglesSchema, required: true},
   fixedCircles: {type: GeometryFixedCirclesSchema, required: true},
   polygons: {type: GeometryPolygonsSchema, required: true},
+  sizesTable: {type: Map, of: MeasuresSchema, required: true},
+  handlebarsTable: {type: Map, of: HandlebarMeasuresSchema, required: true},
+  handlebarGeometry: {type: OffsetSplineSaverSchema, required: true},
 });
 
 export default model<IGeometryState>('GeometryState', GeometryStateSchema);

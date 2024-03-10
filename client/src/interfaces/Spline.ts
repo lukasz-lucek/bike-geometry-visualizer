@@ -1,7 +1,7 @@
 import { fabric } from 'fabric';
 import { Point2d } from "./Point2d";
-import { Canvas } from 'fabric/fabric-impl';
 import { BoundingBox } from './BoundingBox';
+import { IOffsetSplineSaver } from '../IGeometryState';
 
 // Define the Vec2D class that implements Point2d
 export class Vec2D implements Point2d {
@@ -667,12 +667,12 @@ export class SplineSegment {
   
 }
 
-abstract class OffsetSplineSaver {
-  protected intermediatePoints: Vec2D[];
-  protected controlPoints: Vec2D[];
-  protected thickness: number;
+abstract class OffsetSplineSaver implements IOffsetSplineSaver {
+  intermediatePoints: Vec2D[];
+  controlPoints: Vec2D[];
+  thickness: number;
 
-  constructor(param: number | OffsetSplineSaver) {
+  constructor(param: number | IOffsetSplineSaver) {
     if (typeof param === 'number') {
       this.thickness = param;
       this.intermediatePoints = new Array<Vec2D>();
