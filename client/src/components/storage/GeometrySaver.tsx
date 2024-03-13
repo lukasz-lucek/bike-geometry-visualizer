@@ -45,7 +45,7 @@ const GeometrySaver = () => {
     const prepPayload = serializer.serialize();
 
     const address = process.env.REACT_APP_SERVER_ADDRESS || '';
-    const endpoint = address + '/send-upstream'
+    const endpoint = address + '/api/send-upstream'
 
     axios.post(endpoint, prepPayload, {
       headers: {

@@ -14,7 +14,7 @@ root.render(
 
 //test of backend integration
 const address = process.env.REACT_APP_SERVER_ADDRESS || '';
-const endpoint = address +'/bikes';
+const endpoint = address +'/api/bikes';
 // console.log(`Endpoint for backend: ${endpoint}`)
 const resp = await ( await fetch(endpoint)).json() as string[];
 const mappedResp = resp.map((val, idx) => {return [`key ${idx}`, val]})

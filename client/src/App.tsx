@@ -1,39 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './App.css';
-import ToolSelection from './components/basicOptions/ToolSelection'; // Import the ToolSelection component
-import ToolOptionsArea from './components/basicOptions/ToolOptionsArea'; // Import the ToolOptionsArea component
-import { CanvasProvider } from './contexts/CanvasContext'; // Update the import path
-import GeometryProvider from './contexts/GeometryContext';
-import MeasurementsProvider from './contexts/MeasurementsContext';
-import { Canvas } from './components/drawing/Canvas';
-
-
+import AuthProvider from './contexts/AuthContext';
+import { BrowserRouter, Route, Router, Routes } from 'react-router-dom';
+import Login from './components/login/Login';
+import PrivateRoute from './components/login/PrivateRoute';
+import MainComponent from './components/MainComponent';
 
 const App = () => {
-  const [selectedTool, setSelectedTool] = useState('');
-
-  const handleToolSelect = (toolName: string) => {
-    setSelectedTool(toolName);
-  };
-
   return (
-    <CanvasProvider>
-      <GeometryProvider>
-        <MeasurementsProvider>
-          <div className="app-container">
-            <div className="tool-selection-area">
-              <ToolSelection selectedTool={selectedTool} handleToolSelect={handleToolSelect} />
-            </div>
-            <div className="tool-options-area">
-              <ToolOptionsArea selectedTool={selectedTool} />
-            </div>
-            <div className="workspace">
-              <Canvas />
-            </div>
-          </div>
-        </MeasurementsProvider>
-      </GeometryProvider>
-    </CanvasProvider>
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route element={<PrivateRoute />}>
+            <Route path="/" element={<MainComponent />} />
+            <Route path="/app" element={<MainComponent />} />
+          </Route>
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
   );
 };
 

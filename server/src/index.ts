@@ -55,7 +55,7 @@ app.get('/', (req, res) => {
   );
 });
 
-app.post('/send-upstream', async (req, res) => {
+app.post('/api/send-upstream', async (req, res) => {
   req.body.data.selectedFile = ''
   try {
     await GeometryState.create(req.body.data);
@@ -110,7 +110,7 @@ app.post('/send-upstream', async (req, res) => {
 //   }
 // });
 
-app.get('/bikes', async (req, res) => {
+app.get('/api/bikes', async (req, res) => {
   const bikes = await GeometryState.find();
   if (bikes) {
     res.json(bikes);
