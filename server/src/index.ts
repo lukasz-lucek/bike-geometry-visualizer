@@ -41,18 +41,50 @@ const corsOptionsDelegate = (req : any, callback : any) => {
 }
 app.use(cors(corsOptionsDelegate));
 
-app.use(express.static(path.join(__dirname, "client/build")));
+console.log(`starting server in ${__dirname}`)
+app.use(express.static(path.join(__dirname, "../../client/build")));
 
 app.use(express.json({limit: '5mb'}));
 // app.use(express.bodyParser({limit: '50mb'}));
 
 app.get('/', (req, res) => {
   res.sendFile(
-    path.join(__dirname, "client/build/index.html"),
+    path.join(__dirname, "../../client/build/index.html"),
     (err) => {
       res.status(500).send(err);
     }
   );
+});
+
+app.get('/app', (req, res) => {
+  res.sendFile(
+    path.join(__dirname, "../../client/build/index.html"),
+    (err) => {
+      res.status(500).send(err);
+    }
+  );
+});
+
+app.get('/login', (req, res) => {
+  res.sendFile(
+    path.join(__dirname, "../../client/build/index.html"),
+    (err) => {
+      res.status(500).send(err);
+    }
+  );
+});
+
+app.post('/api/login', async (req, res) => {
+  console.log(`req.body = ${JSON.stringify(req.body)}`);
+  const user = req.body.username;
+  const pass = req.body.password;
+  if (user && pass) {
+    res.status(200).send({
+      data: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+    })
+  } else {
+    res.status(401).send('Unauthorized');
+  }
 });
 
 app.post('/api/send-upstream', async (req, res) => {

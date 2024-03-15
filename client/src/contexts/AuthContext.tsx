@@ -52,7 +52,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
   const loginAction = async (data : {username: String, password: String}) => {
     try {
-      const response = await fetch("/api/login", {
+      const address = process.env.REACT_APP_SERVER_ADDRESS || '';
+      const endpoint = address +'/api/login';
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -60,10 +62,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         body: JSON.stringify(data),
       });
       const res = await response.json();
-      if (res.data) {
-        const newState = parseJWT(res.data);
+      console.log(`login response: ${res}`)
+      const token = res.data;
+      if (token) {
+        console.log(`got login data: ${token}`)
+        const newState = parseJWT(token);
         setAuthState(newState);
-        localStorage.setItem("jwt", res.token);
+        localStorage.setItem("jwt", token);
         navigate("/app");
         return;
       }
