@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Router, Routes } from 'react-router-dom';
 import Login from './components/login/Login';
 import PrivateRoute from './components/login/PrivateRoute';
 import MainComponent from './components/MainComponent';
+import Register from './components/login/Register';
 
 const App = () => {
   return (
@@ -12,6 +13,7 @@ const App = () => {
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route element={<PrivateRoute />}>
             <Route path="/" element={<MainComponent />} />
             <Route path="/app" element={<MainComponent />} />

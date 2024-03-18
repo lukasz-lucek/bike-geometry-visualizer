@@ -4,6 +4,8 @@ import express from 'express';
 import mongoose from "mongoose";
 import path from 'path'
 import GeometryState from './models/GeometryState';
+import { ClientServer } from "./modules/ClientServer";
+import { ApiRegistry } from "./modules/ApiRegistry";
 
 dotenv.config();
 
@@ -42,114 +44,16 @@ const corsOptionsDelegate = (req : any, callback : any) => {
 app.use(cors(corsOptionsDelegate));
 
 console.log(`starting server in ${__dirname}`)
-app.use(express.static(path.join(__dirname, "../../client/build")));
+// app.use(express.static(path.join(__dirname, "../../client/build")));
 
 app.use(express.json({limit: '5mb'}));
 // app.use(express.bodyParser({limit: '50mb'}));
 
-app.get('/', (req, res) => {
-  res.sendFile(
-    path.join(__dirname, "../../client/build/index.html"),
-    (err) => {
-      res.status(500).send(err);
-    }
-  );
-});
+const clientServer = new ClientServer(app);
+const apiRegistry = new ApiRegistry(app);
 
-app.get('/app', (req, res) => {
-  res.sendFile(
-    path.join(__dirname, "../../client/build/index.html"),
-    (err) => {
-      res.status(500).send(err);
-    }
-  );
-});
-
-app.get('/login', (req, res) => {
-  res.sendFile(
-    path.join(__dirname, "../../client/build/index.html"),
-    (err) => {
-      res.status(500).send(err);
-    }
-  );
-});
-
-app.post('/api/login', async (req, res) => {
-  console.log(`req.body = ${JSON.stringify(req.body)}`);
-  const user = req.body.username;
-  const pass = req.body.password;
-  if (user && pass) {
-    res.status(200).send({
-      data: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
-    })
-  } else {
-    res.status(401).send('Unauthorized');
-  }
-});
-
-app.post('/api/send-upstream', async (req, res) => {
-  req.body.data.selectedFile = ''
-  try {
-    await GeometryState.create(req.body.data);
-    res.status(200).send("bike added");
-  } catch (error) {
-    if (error instanceof Error) {
-      console.log("add-note err: ", + error.message);
-    } else {
-      console.log("add-note err: Unknown " + typeof(error));
-    }
-  }
-});
-
-// app.get('/add-bike', async (req, res) => {
-//   try {
-//     await GeometryState.insertMany([
-//       {
-//         wheelbase: 1029,
-//         selectedFile: null,
-//         bikesList: ["Aspre 2", "Other bike"],
-//         shifterMountOffset: 0.5,
-//         seatRailAngle: 5,
-//         geometryPoints: {
-//           rearWheelCenter: {
-//             x: 1,
-//             y: 234,
-//             color: {
-//               color: [123, 154, 233],
-//               model: 'rgb',
-//               valpha: 1
-//             }
-//           },
-//           frontWheelCenter: {
-//             x: 2,
-//             y: 4,
-//             color: {
-//               color: [13, 14, 23],
-//               model: 'rgb',
-//               valpha: 1
-//             }
-//           }
-//         }
-//       }
-//     ]);
-//     res.send("Data added...");
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       console.log("add-note err: ", + error.message);
-//     } else {
-//       console.log("add-note err: Unknown " + typeof(error));
-//     }
-//   }
-// });
-
-app.get('/api/bikes', async (req, res) => {
-  const bikes = await GeometryState.find();
-  if (bikes) {
-    res.json(bikes);
-  } else {
-    res.send("No bikes for you my frined");
-  }
-});
+clientServer.setup();
+apiRegistry.setup();
 
 const PORT = process.env.PORT || 3001;
 

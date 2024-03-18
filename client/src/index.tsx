@@ -16,7 +16,10 @@ root.render(
 const address = process.env.REACT_APP_SERVER_ADDRESS || '';
 const endpoint = address +'/api/bikes';
 // console.log(`Endpoint for backend: ${endpoint}`)
-const resp = await ( await fetch(endpoint)).json() as string[];
+const token = localStorage.getItem("jwt");
+const resp = await ( await fetch(endpoint,  {
+  headers: {Authorization: `Bearer ${token}`}
+})).json() as string[];
 const mappedResp = resp.map((val, idx) => {return [`key ${idx}`, val]})
 const serialized = JSON.stringify(mappedResp);
 //console.log(serialized);

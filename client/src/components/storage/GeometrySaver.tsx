@@ -47,10 +47,12 @@ const GeometrySaver = () => {
     const address = process.env.REACT_APP_SERVER_ADDRESS || '';
     const endpoint = address + '/api/send-upstream'
 
+    const token = localStorage.getItem('jwt');
     axios.post(endpoint, prepPayload, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       }
     }).then(function (resp) {
       console.log(resp);

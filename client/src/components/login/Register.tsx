@@ -2,14 +2,14 @@ import React, {ChangeEvent, FormEvent, useState} from "react";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Register = () => {
   const [input, setInput] = useState({
     username: "",
     password: "",
+    repassword: "",
   });
 
   const auth = useAuthContext();
-  const navigate = useNavigate();
 
   const handleSubmitEvent = (e : FormEvent) => {
     e.preventDefault();
@@ -58,10 +58,23 @@ const Login = () => {
           your password should be more than 6 character
         </div> */}
       </div>
+      <div className="form_control">
+        <label htmlFor="repassword">Repeat Password:</label>
+        <input
+          type="password"
+          id="repassword"
+          name="repassword"
+          aria-describedby="user-password"
+          aria-invalid="false"
+          onChange={handleInput}
+        />
+        {/* <div id="user-password" className="sr-only">
+          your password should be more than 6 character
+        </div> */}
+      </div>
       <button className="btn-submit">Submit</button>
-      <p>Don't have an account yet? <a onClick={() => {navigate("/register");}} style={{cursor: 'pointer'}}>Register Here</a></p>
     </form>
   );
 };
 
-export default Login;
+export default Register;

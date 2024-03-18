@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       });
       const res = await response.json();
       console.log(`login response: ${res}`)
-      const token = res.data;
+      const token = res.token;
       if (token) {
         console.log(`got login data: ${token}`)
         const newState = parseJWT(token);
