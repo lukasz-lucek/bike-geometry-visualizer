@@ -120,6 +120,7 @@ export interface IGeometryState {
   geometryPoints: IGeometryPoints;
   wheelbase: number;
   selectedFile: null | string;
+  selectedFileHash: null | string;
   bikesList: string[];
   shifterMountOffset: number;
   seatRailAngle: number;

@@ -103,6 +103,7 @@ export const GeometryProvider = ({ children }: { children: ReactNode }) => {
     fixedRectangles: defaultFixedRectangles,
     fixedCircles: defaultFixedCircles,
     selectedFile: null,
+    selectedFileHash: null,
     bikesList: bikesList,
     sizesTable: new Map(),
     handlebarsTable: new Map(),
@@ -115,6 +116,9 @@ export const GeometryProvider = ({ children }: { children: ReactNode }) => {
   const [state, setState] = useState(defaultState);
 
   const updateState = (newPartialState: Partial<GeometryState>) => {
+    if (newPartialState.selectedFileHash) {
+      console.log("hash of selected file: "+ newPartialState.selectedFileHash);
+    }
     setState({ ...state, ...newPartialState });
   }
 

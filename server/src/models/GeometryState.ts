@@ -185,6 +185,10 @@ const GeometryStateSchema = new Schema<IGeometryState>({
     type: String,
     required: false,
   },
+  selectedFileHash: {
+    type: String,
+    required: false,
+  },
   bikesList: {
     type: [String],
     required: true

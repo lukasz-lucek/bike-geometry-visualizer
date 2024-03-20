@@ -2,6 +2,7 @@
 import React, { DragEvent, FormEvent, useState } from 'react';
 import { useGeometryContext } from '../../contexts/GeometryContext';
 import BackgroundImage from "../drawing/BackgroundImage"
+import { sha256 } from '../../utils/Sha256Utils';
 
 const ImageUploadOption = () => {
 
@@ -24,7 +25,36 @@ const ImageUploadOption = () => {
   const handleImageSelection = (file: Blob) => {
     const reader = new FileReader();
     reader.onloadend = () => {
-      updateGeometryState({ selectedFile: reader.result as string });
+      if (reader.result) {
+        var result = reader.result;
+        const dec = new TextDecoder("utf-8");
+        if (reader.result instanceof ArrayBuffer) {
+          result = dec.decode(reader.result);
+        }
+        sha256(result as string).then((resultHash) => {
+          updateGeometryState({ selectedFile: result as string, selectedFileHash: resultHash});
+        });
+        // var enc = new TextEncoder();
+        // let hashPromise : Promise<ArrayBuffer> | null = null;
+        // if (reader.result instanceof ArrayBuffer) {
+        //   hashPromise = window.crypto.subtle.digest('SHA-256', reader.result);
+        // } else {
+        //   hashPromise = window.crypto.subtle.digest('SHA-256', enc.encode(reader.result).buffer);
+        // }
+        // hashPromise.then((hash) => {
+        //   const dec = new TextDecoder("utf-8");
+        //   const hashString = btoa(dec.decode(hash));
+        //   if (reader.result instanceof ArrayBuffer) {
+        //     const result = dec.decode(reader.result);
+        //     updateGeometryState({ selectedFile: result, selectedFileHash: hashString});
+        //   } else {
+        //     updateGeometryState({ selectedFile: reader.result, selectedFileHash: hashString});
+        //   }
+          
+        // })
+      
+      
+      }
     };
     reader.readAsDataURL(file);
   };

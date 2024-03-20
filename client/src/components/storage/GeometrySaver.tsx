@@ -6,6 +6,7 @@ import GeometryStatesSerializer, { GeometryStateSerializer, GeompetryPayloadSeri
 import { OffsetSpline } from '../../interfaces/Spline';
 import { defauleHandlebarMeasures } from '../../contexts/MeasurementsContext';
 import axios from 'axios';
+import { sha256 } from '../../utils/Sha256Utils';
 
 const GeometrySaver = () => {
   const [bikeDataName, setBikeDataName] = useState('');
@@ -62,7 +63,7 @@ const GeometrySaver = () => {
     //console.log(`about to sent data: ${prepPayload}`);
   }
 
-  const loadBikeGeometry = (item: string) => {
+  const loadBikeGeometry = async (item: string) => {
     const geomStatSerializer = new GeometryStatesSerializer();
     const knownGeometriesRaw = localStorage.getItem('knownGeometries');
     if (!knownGeometriesRaw) {
@@ -80,6 +81,9 @@ const GeometrySaver = () => {
     if (geometryData == null || geometryData.selectedFile == null || geometryData.geometryPoints == null) {
       console.error("Broken data in local storage - cannot load");
       return;
+    }
+    if (geometryData.selectedFile && !geometryData.selectedFileHash) {
+      geometryData.selectedFileHash = await sha256(geometryData.selectedFile);
     }
     geometryData.offsetFixedRectangles = geometryData.offsetFixedRectangles || defaultOffsetFixedRectangles;
     geometryData.semiFixedRectangles = geometryData.semiFixedRectangles || defaultSemiFixedRectangles;
