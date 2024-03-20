@@ -1,22 +1,22 @@
 import {Express} from 'express';
 import GeometryState from '../models/GeometryState';
 import passport from 'passport';
-import AWS from 'aws-sdk';
+import { S3 } from '@aws-sdk/client-s3';
 import { IGeometryState } from '../IGeometryState';
 
 
 export class BikeApi {
   private app: Express;
-  private s3: AWS.S3;
+  private s3: S3;
   private bucketName: string;
   constructor(app : Express) {
     this.app = app;
-    this.s3 = new AWS.S3();
-    if (! process.env.S3_BUCKET_NAME) {
+    this.s3 = new S3();
+    if (! process.env.CYCLIC_BUCKET_NAME) {
       console.log('S3 Bucket name missing in .env file - exiting');
       process.exit(1);
     }
-    this.bucketName = process.env.S3_BUCKET_NAME
+    this.bucketName = process.env.CYCLIC_BUCKET_NAME
   }
 
   public setup() {
@@ -29,15 +29,15 @@ export class BikeApi {
       let fileAlreadyUploadedToS3 = false;
       try {
         console.log(`checking existance of file ${filePath} in S3`)
-        let s3FileMetadata = await this.s3.headObject({
+        await this.s3.headObject({
           Bucket: this.bucketName,
           Key: filePath,
-        }).promise();
+        });
         fileAlreadyUploadedToS3 = true;
         console.log('file already added to S3')
       } catch (error : any) {
         //const error : Error = errorr as Error;
-        if (error && error.statusCode === 404) {
+        if (error && error.name === "NotFound") {
           fileAlreadyUploadedToS3 = false;
           console.log('file not found in S3')
         } else {
@@ -54,7 +54,7 @@ export class BikeApi {
             Body: bikeData.selectedFile,
             Bucket: this.bucketName,
             Key: filePath,
-          }).promise()
+          });
           console.log("file uploaded to S3");
         } catch (error: any) {
           const message = `unable to upload image to S3: ${error.message}`;
