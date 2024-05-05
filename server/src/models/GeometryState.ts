@@ -1,5 +1,5 @@
 import {Schema, model} from 'mongoose'
-import {IColor, IColorPoint2d, IFixedCircle, IFixedRectangle, IGeometryFixedCircles, IGeometryFixedRectangles, IGeometryOffsetFixedRectangles, IGeometryPoints, IGeometryPolygons, IGeometrySemiFixedRectangles, IGeometryState, IHandlebarMeasures, IMeasures, IOffsetFixedRectangle, IOffsetSplineSaver, IPoint2d, IPolygon, ISemiFixedRectangle} from '../IGeometryState'
+import {IBikeData, IColor, IColorPoint2d, IFixedCircle, IFixedRectangle, IGeometryFixedCircles, IGeometryFixedRectangles, IGeometryOffsetFixedRectangles, IGeometryPoints, IGeometryPolygons, IGeometrySemiFixedRectangles, IGeometryState, IHandlebarMeasures, IMeasures, IOffsetFixedRectangle, IOffsetSplineSaver, IPoint2d, IPolygon, ISemiFixedRectangle} from '../IGeometryState'
 
 const ColorSchema = new Schema<IColor>({
   color: {
@@ -215,4 +215,29 @@ const GeometryStateSchema = new Schema<IGeometryState>({
   handlebarGeometry: {type: OffsetSplineSaverSchema, required: true},
 });
 
-export default model<IGeometryState>('GeometryState', GeometryStateSchema);
+
+const BikeDataSchema = new Schema<IBikeData>({
+  make: {
+    type: String,
+    required: true,
+  },
+  model: {
+    type: String,
+    required: true,
+  },
+  year: {
+    type: Number,
+    required: false,
+  },
+  user: {
+    type: String,
+    required: true,
+  },
+  isPublic: {
+    type: Boolean,
+    required: true,
+  },
+  data: {type: GeometryStateSchema, required: true},
+});
+
+export default model<IBikeData>('BikeData', BikeDataSchema);

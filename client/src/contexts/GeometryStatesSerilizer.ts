@@ -1,6 +1,7 @@
 import { Console } from 'console';
 import { GeometryState } from './GeometryContext';
 import { OffsetSpline } from '../interfaces/Spline';
+import { IBikeData } from '../../../shared/types/IGeometryState';
 
 abstract class GeometryStateSerializationHelper {
   reviver(key: string, value: any) : any {
@@ -63,17 +64,17 @@ export class GeometryStateSerializer extends GeometryStateSerializationHelper {
   }
 }
 
-export interface GeometryPayload {
-  make: String,
-  model: String,
-  year: number,
-  data: GeometryState,
-}
+// export interface GeometryPayload {
+//   make: String,
+//   model: String,
+//   year: number,
+//   data: GeometryState,
+// }
 
 export class GeompetryPayloadSerializer extends GeometryStateSerializationHelper {
-  payload: GeometryPayload | null;
+  payload: IBikeData | null;
 
-  constructor(payload? : GeometryPayload) {
+  constructor(payload? : IBikeData) {
     super();
     if (!payload) {
       this.payload = null;

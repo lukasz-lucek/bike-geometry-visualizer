@@ -1,5 +1,4 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
-import { HandlebarMeasures, Measures } from './MeasurementsContext';
 import { OffsetSpline } from '../interfaces/Spline';
 import GeometryStatesSerializer from './GeometryStatesSerilizer';
 import {IGeometryState, IGeometryPoints, IGeometryOffsetFixedRectangles, IGeometrySemiFixedRectangles, IGeometryFixedRectangles, IGeometryFixedCircles, IGeometryPolygons} from '../../../shared/types/IGeometryState'

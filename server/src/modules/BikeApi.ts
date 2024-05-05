@@ -1,8 +1,9 @@
 import {Express} from 'express';
-import GeometryState from '../models/GeometryState';
+import BikeData from '../models/GeometryState';
 import passport from 'passport';
 import { S3 } from '@aws-sdk/client-s3';
-import { IGeometryState } from '../IGeometryState';
+import { IBikeData, IGeometryState } from '../IGeometryState';
+import { IUser } from '../models/Users';
 
 
 export class BikeApi {
@@ -21,11 +22,21 @@ export class BikeApi {
 
   public setup() {
     this.app.post('/api/send-upstream', passport.authenticate('jwt', {session: false}), async (req, res) => {
-      const bikeData : IGeometryState = req.body.data;
-      if (!bikeData.selectedFileHash || !bikeData.selectedFile) {
+      const bikeData : IBikeData = req.body;
+      if (!req.user) {
+        console.log('unkonwn user - probably something fishy is going on - passport should have handled that');
+        return res.status(403).send('Unknown user');
+      }
+      const user : IUser = (req.user as IUser);
+      bikeData.user = user.username;
+      if (!user.isAdmin) {
+        bikeData.isPublic = false;
+      }
+      if (!bikeData.data.selectedFileHash || !bikeData.data.selectedFile) {
+        console.log('bad data - no immage attached to request')
         return res.status(400).send('bike immage or image hash is missing');
       }
-      const filePath = `images/${bikeData.selectedFileHash}`;
+      const filePath = `images/${bikeData.data.selectedFileHash}`;
       let fileAlreadyUploadedToS3 = false;
       try {
         console.log(`checking existance of file ${filePath} in S3`)
@@ -51,7 +62,7 @@ export class BikeApi {
         try {
           console.log("uploading file to S3")
           await this.s3.putObject({
-            Body: bikeData.selectedFile,
+            Body: bikeData.data.selectedFile,
             Bucket: this.bucketName,
             Key: filePath,
           });
@@ -64,9 +75,10 @@ export class BikeApi {
       }
 
       console.log('adding geometry to database');
-      bikeData.selectedFile = ''
+      bikeData.data.selectedFile = ''
       try {
-        await GeometryState.create(bikeData);
+        await BikeData.create(bikeData);
+        console.log('geometry added to database');
         res.status(200).send("bike added");
       } catch (error) {
         if (error instanceof Error) {
@@ -82,7 +94,7 @@ export class BikeApi {
     });
 
     this.app.get('/api/bikes', passport.authenticate('jwt', {session: false}), async (req, res) => {
-      const bikes = await GeometryState.find();
+      const bikes = await BikeData.find();
       if (bikes) {
         res.json(bikes);
       } else {

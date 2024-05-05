@@ -7,6 +7,7 @@ import { OffsetSpline } from '../../interfaces/Spline';
 import { defauleHandlebarMeasures } from '../../contexts/MeasurementsContext';
 import axios from 'axios';
 import { sha256 } from '../../utils/Sha256Utils';
+import { IBikeData } from '../../IGeometryState';
 
 const GeometrySaver = () => {
   const [bikeDataName, setBikeDataName] = useState('');
@@ -36,10 +37,12 @@ const GeometrySaver = () => {
 
   const sendGeometryUpstream = async () => {
     console.log(`sending upstream bike: ${bikeMake}, ${bikeModel}, ${bikeYear}`);
-    const payload = {
+    const payload : IBikeData = {
       make: bikeMake,
       model: bikeModel,
       year: bikeYear,
+      user: '',
+      isPublic: false,
       data: state,
     }
     const serializer = new GeompetryPayloadSerializer(payload)

@@ -133,3 +133,12 @@ export interface IGeometryState {
   handlebarsTable: Map<string, IHandlebarMeasures>;
   handlebarGeometry: IOffsetSplineSaver;
 }
+
+export interface IBikeData {
+  make: string,
+  model: string,
+  year: number,
+  user: String,
+  isPublic: Boolean,
+  data: IGeometryState;
+}

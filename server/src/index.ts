@@ -2,8 +2,6 @@ import dotenv from "dotenv";
 import cors from 'cors';
 import express from 'express';
 import mongoose from "mongoose";
-import path from 'path'
-import GeometryState from './models/GeometryState';
 import { ClientServer } from "./modules/ClientServer";
 import { ApiRegistry } from "./modules/ApiRegistry";
 
