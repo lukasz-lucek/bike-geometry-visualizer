@@ -77,8 +77,9 @@ export function CircleGrabVisualization({ circle, placementPoint = null, scale =
       canvasState.canvas?.addObjectToLayer(loadedImage, layer);
       canvasState.canvas?.renderAll();
       return () => {
+        //TODO - problematic if canvas is destroyed before this component
         canvasState.canvas?.removeObjectFromAnyLayer(loadedImage);
-        canvasState.canvas?.renderAll();
+        //canvasState.canvas?.renderAll();
       }
     }
   }, [loadedImage]);

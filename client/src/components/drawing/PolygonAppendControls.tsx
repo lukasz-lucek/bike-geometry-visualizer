@@ -104,9 +104,10 @@ const PolygonAppendControls = ({polygon, updatePolygon} : {polygon : Polygon, up
     canvas.addObjectToLayer(fabricPolygon, 9);
     canvas.renderAll();
     return () => {
+      //TODO - problematic if canvas is destroyed before this component
       removeMouseHandlers();
       canvas.removeObjectFromAnyLayer(fabricPolygon);
-      canvas.renderAll();
+      //canvas.renderAll();
     }
   }, [polygon, canvasState.canvas]);
 
@@ -120,8 +121,9 @@ const PolygonAppendControls = ({polygon, updatePolygon} : {polygon : Polygon, up
     return () => {
       if (canvas) {
         if (lineMarker) {
+          //TODO - problematic if canvas is destroyed before this component
           canvas.removeObjectFromAnyLayer(lineMarker);
-          canvas.renderAll();
+          //canvas.renderAll();
         }
       }
     }
@@ -137,8 +139,9 @@ const PolygonAppendControls = ({polygon, updatePolygon} : {polygon : Polygon, up
     return () => {
       if (canvas) {
         if (lineEndMarker) {
+          //TODO - problematic if canvas is destroyed before this component
           canvas.removeObjectFromAnyLayer(lineEndMarker);
-          canvas.renderAll();
+          //canvas.renderAll();
         }
       }
     }
@@ -154,8 +157,9 @@ const PolygonAppendControls = ({polygon, updatePolygon} : {polygon : Polygon, up
     return () => {
       if (canvas) {
         if (pointMarker) {
+          //TODO - problematic if canvas is destroyed before this component
           canvas.removeObjectFromAnyLayer(pointMarker);
-          canvas.renderAll();
+          //canvas.renderAll();
         }
       }
     }

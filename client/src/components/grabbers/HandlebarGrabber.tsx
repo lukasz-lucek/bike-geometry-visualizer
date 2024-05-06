@@ -229,8 +229,9 @@ export function HandlebarGrabber(
       canvasState.canvas?.addObjectToLayer(handlebarImage, layer);
       canvasState.canvas?.renderAll();
       return () => {
+        //TODO - problematic if canvas is destroyed before this component
         canvasState.canvas?.removeObjectFromAnyLayer(handlebarImage);
-        canvasState.canvas?.renderAll();
+        //canvasState.canvas?.renderAll();
       }
     }
   }, [handlebarImage]);
@@ -241,8 +242,9 @@ export function HandlebarGrabber(
       canvasState.canvas?.addObjectToLayer(shifterImage, layer+1);
       canvasState.canvas?.renderAll();
       return () => {
+        //TODO - problematic if canvas is destroyed before this component
         canvasState.canvas?.removeObjectFromAnyLayer(shifterImage);
-        canvasState.canvas?.renderAll();
+        //canvasState.canvas?.renderAll();
       }
     }
   }, [shifterImage]);

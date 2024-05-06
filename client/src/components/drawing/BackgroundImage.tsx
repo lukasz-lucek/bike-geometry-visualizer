@@ -52,7 +52,7 @@ export function BackgroundImage({ isGrayedOut = false, desiredPxPerMM = null, fo
     fabric.Image.fromURL(geometryState.selectedFile, (img) => {
       let zoom = 1;
       if (canvas.width && img.width && canvas.height && img.height) {
-        zoom = Math.min(canvas.width / img.width, canvas.height / img.height);
+        zoom = Math.min(canvas.width / img.width, canvas.height / img.height) / ratio;
       }
       img.lockMovementX = true;
       img.lockMovementY = true;
@@ -80,8 +80,9 @@ export function BackgroundImage({ isGrayedOut = false, desiredPxPerMM = null, fo
       canvas.insertAt(fabricObject, 0, false);
       canvas.renderAll();
       return () => {
+        //TODO problematic if canvas was destroyed before
         canvas.remove(fabricObject);
-        canvas.renderAll();
+        //canvas.renderAll();
       }
     }
 

@@ -113,8 +113,9 @@ export function SeatGrabber(
       canvasState.canvas?.addObjectToLayer(seatImage, layer+1);
       canvasState.canvas?.renderAll();
       return () => {
+        //TODO - problematic if canvas is destroyed before this component
         canvasState.canvas?.removeObjectFromAnyLayer(seatImage);
-        canvasState.canvas?.renderAll();
+        //canvasState.canvas?.renderAll();
       }
     }
   }, [seatImage]);

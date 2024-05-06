@@ -34,8 +34,9 @@ export function LineMarker({ line }: { line: Line }) {
     canvas.renderAll();
 
     return () => {
+      //TODO problematic if canvas was destroyed before
       canvas.remove(fabricLine);
-      canvas.renderAll();
+      //canvas.renderAll();
     }
 
   }, [line, canvasState.canvas]);

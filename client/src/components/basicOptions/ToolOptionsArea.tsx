@@ -26,7 +26,7 @@ const ToolOptionsArea = ({ selectedTool }: { selectedTool: string }) => {
   };
 
   return (
-    <div className="tool-options-area">
+    <div>
       {renderToolOptions()}
     </div>
   );

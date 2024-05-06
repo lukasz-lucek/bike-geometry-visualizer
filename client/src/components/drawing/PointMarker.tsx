@@ -29,8 +29,9 @@ export function PointMarker({ shape, layer=1 }: { shape: ColorPoint2d, layer?: n
     canvas.renderAll();
 
     return () => {
+      //TODO - problematic if canvas is destroyed before this component
       canvas.removeObjectFromAnyLayer(circle);
-      canvas.renderAll();
+      //canvas.renderAll();
     }
 
   }, [shape, canvasState.canvas, layer]);

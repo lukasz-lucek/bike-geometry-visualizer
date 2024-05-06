@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useGeometryContext } from '../../contexts/GeometryContext';
 import { HandlebarMeasures, Measures, useMeasurementsContext } from '../../contexts/MeasurementsContext';
 import GeometryPointsFromMeasures from '../stitchers/GeometryPointsFromMeasures';
+import './SizesTable.css'; // Import the CSS file
 
 const SizesTable = () => {
   const {
@@ -95,88 +96,90 @@ const SizesTable = () => {
           {nameTaken() ? "Name already Used" : "Add size"}
         </button>
       </p>
-      <table>
-        <thead>
-          <tr>
-            <th> Measure\Size </th>
-            {knownSizes.map((size) => (
-              <th key={'H' + size}>
-                <p>
-                  {size}
-                  <button onClick={() => removeSizeVromTable(size)}>Rem</button>
-                </p>
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          <tr key={'RPermanentDraw'}>
-            <td key={'HPermanentDraw'}>Permanent Drawing</td>
-            {knownSizes.map((size) => (
-              <td
-                key={'V' + size + 'PermanentDraw'}
-                onMouseEnter={() => { setHighlightedSize(size) }}
-                onMouseLeave={() => { setHighlightedSize(null) }}>
-                <input
-                  checked={highlightedSizePerm === size}
-                  onChange={(e) => {
-                    if (highlightedSizePerm === size) {
-                      setHighlightedSizePerm(null);
-                    } else {
-                      setHighlightedSizePerm(size)}
-                    } 
-                  }
-                  type="checkbox" />
-              </td>
-            ))}
-          </tr>
-          {measurements.map((measurement) => (
-            <tr key={'R' + measurement}>
-              <td key={'H' + measurement}>{measurement}</td>
+      <div className="size-measures">
+        <table className='size-measures-table'>
+          <thead>
+            <tr>
+              <th className='headcol'> Measure\Size </th>
+              {knownSizes.map((size) => (
+                <th key={'H' + size}>
+                  <p>
+                    {size}
+                    <button onClick={() => removeSizeVromTable(size)}>Rem</button>
+                  </p>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            <tr key={'RPermanentDraw'}>
+              <th key={'HPermanentDraw'} className='headcol'>Permanent Drawing</th>
               {knownSizes.map((size) => (
                 <td
-                  key={'V' + size + measurement}
+                  key={'V' + size + 'PermanentDraw'}
                   onMouseEnter={() => { setHighlightedSize(size) }}
                   onMouseLeave={() => { setHighlightedSize(null) }}>
                   <input
-                    value={geometryState.sizesTable.get(size)![measurement] ? geometryState.sizesTable.get(size)![measurement].toFixed(0) : 0}
-                    onChange={(e) => setMeasureValue(Number(e.target.value), size, measurement)}
-                    type="number" />
+                    checked={highlightedSizePerm === size}
+                    onChange={(e) => {
+                      if (highlightedSizePerm === size) {
+                        setHighlightedSizePerm(null);
+                      } else {
+                        setHighlightedSizePerm(size)}
+                      } 
+                    }
+                    type="checkbox" />
                 </td>
               ))}
             </tr>
-          ))}
+            {measurements.map((measurement) => (
+              <tr key={'R' + measurement}>
+                <th key={'H' + measurement} className='headcol'>{measurement}</th>
+                {knownSizes.map((size) => (
+                  <td
+                    key={'V' + size + measurement}
+                    onMouseEnter={() => { setHighlightedSize(size) }}
+                    onMouseLeave={() => { setHighlightedSize(null) }}>
+                    <input
+                      value={geometryState.sizesTable.get(size)![measurement] ? geometryState.sizesTable.get(size)![measurement].toFixed(0) : 0}
+                      onChange={(e) => setMeasureValue(Number(e.target.value), size, measurement)}
+                      type="number" />
+                  </td>
+                ))}
+              </tr>
+            ))}
 
-          {handlebarMeasurements.map((measurement) => (
-            <tr key={'R' + measurement}>
-              <td key={'H' + measurement}>{measurement}</td>
-              {knownSizes.map((size) => (
-                <td
-                  key={'V' + size + measurement}
-                  onMouseEnter={() => { setHighlightedSize(size) }}
-                  onMouseLeave={() => { setHighlightedSize(null) }}>
-                  {measurement != 'shiftersMountPoint' &&
-                  <input
-                    value={geometryState.handlebarsTable.get(size)![measurement] ? geometryState.handlebarsTable.get(size)![measurement].toFixed(0) : 0}
-                    onChange={(e) => setHandlebarMeasureValue(Number(e.target.value), size, measurement)}
-                    type="number" />
-                  }
-                  {measurement == 'shiftersMountPoint' &&
-                  <input
-                    type="range" min={0} 
-                    max={geometryState.handlebarGeometry.getMaxOffsetAlongSpline()}
-                    step={0.02}
-                    disabled={geometryState.handlebarGeometry.getMaxOffsetAlongSpline() == 0}
-                    value={geometryState.handlebarsTable.get(size)![measurement]}
-                    onChange={(e) => {setHandlebarMeasureValue(Number(e.target.value), size, measurement)}}
-                  />
-                  }
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+            {handlebarMeasurements.map((measurement) => (
+              <tr key={'R' + measurement}>
+                <th key={'H' + measurement} className='headcol'>{measurement}</th>
+                {knownSizes.map((size) => (
+                  <td
+                    key={'V' + size + measurement}
+                    onMouseEnter={() => { setHighlightedSize(size) }}
+                    onMouseLeave={() => { setHighlightedSize(null) }}>
+                    {measurement != 'shiftersMountPoint' &&
+                    <input
+                      value={geometryState.handlebarsTable.get(size)![measurement] ? geometryState.handlebarsTable.get(size)![measurement].toFixed(0) : 0}
+                      onChange={(e) => setHandlebarMeasureValue(Number(e.target.value), size, measurement)}
+                      type="number" />
+                    }
+                    {measurement == 'shiftersMountPoint' &&
+                    <input
+                      type="range" min={0} 
+                      max={geometryState.handlebarGeometry.getMaxOffsetAlongSpline()}
+                      step={0.02}
+                      disabled={geometryState.handlebarGeometry.getMaxOffsetAlongSpline() == 0}
+                      value={geometryState.handlebarsTable.get(size)![measurement]}
+                      onChange={(e) => {setHandlebarMeasureValue(Number(e.target.value), size, measurement)}}
+                    />
+                    }
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       {highlightedSizePerm && 
         <GeometryPointsFromMeasures 
           sizeMeasures={geometryState.sizesTable.get(highlightedSizePerm)!}
