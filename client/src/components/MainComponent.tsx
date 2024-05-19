@@ -6,11 +6,14 @@ import { CanvasProvider } from '../contexts/CanvasContext'; // Update the import
 import GeometryProvider from '../contexts/GeometryContext';
 import MeasurementsProvider from '../contexts/MeasurementsContext';
 import { Canvas } from './drawing/Canvas';
+import { useAuthContext } from '../contexts/AuthContext';
+import AdminPanel from './adminTools/AdminPanel';
 
 
 
 const MainComponent = () => {
   const [selectedTool, setSelectedTool] = useState('');
+  const auth = useAuthContext();
 
   const handleToolSelect = (toolName: string) => {
     setSelectedTool(toolName);
@@ -31,6 +34,9 @@ const MainComponent = () => {
         <Canvas />
       </div>
     </div>
+    {(auth.authState.isAdmin) &&
+      <AdminPanel></AdminPanel>  
+    }
     </MeasurementsProvider>
     </GeometryProvider>
     </CanvasProvider>

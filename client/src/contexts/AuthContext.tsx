@@ -3,10 +3,15 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 import {jwtDecode, JwtPayload} from 'jwt-decode';
 import { useNavigate } from "react-router-dom";
 
+interface MyJwtPayload extends JwtPayload{
+  isAdmin: Boolean;
+}
+
 interface AuthState {
   user: String | null;
+  isAdmin: Boolean;
   tokenBase64: String | null;
-  payload: JwtPayload | null;
+  payload: MyJwtPayload | null;
 }
 
 interface AuthContextType {
@@ -29,16 +34,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const parseJWT = (tokenBase64: string | null): AuthState => {
     const authState: AuthState = {
       user: null,
+      isAdmin: false,
       tokenBase64: null,
       payload: null,
     };
     if (tokenBase64) {
-      const payload = jwtDecode<JwtPayload>(tokenBase64);
+      const payload = jwtDecode<MyJwtPayload>(tokenBase64);
       if (payload && payload.sub) {
         authState.tokenBase64 = tokenBase64;
         authState.payload = payload;
         authState.user = payload.sub;
-
+        authState.isAdmin = payload.isAdmin;
         console.log(`Auth Context: ${JSON.stringify(authState)}`);
       }
     }
@@ -82,6 +88,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem("jwt");
     const authState: AuthState = {
       user: null,
+      isAdmin: false,
       tokenBase64: null,
       payload: null,
     };

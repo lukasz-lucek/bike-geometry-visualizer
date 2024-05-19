@@ -6,6 +6,8 @@ import Login from './components/login/Login';
 import PrivateRoute from './components/login/PrivateRoute';
 import MainComponent from './components/MainComponent';
 import Register from './components/login/Register';
+import AdminRoute from './components/login/AdminRoute';
+import GoogleAuthCallbackComponent from './components/adminTools/GoogleAuthCallbackComponent';
 
 const App = () => {
   return (
@@ -17,6 +19,9 @@ const App = () => {
           <Route element={<PrivateRoute />}>
             <Route path="/" element={<MainComponent />} />
             <Route path="/app" element={<MainComponent />} />
+          </Route>
+          <Route element={<AdminRoute />}>
+            <Route path="/auth/callback" element={<GoogleAuthCallbackComponent />} />
           </Route>
         </Routes>
       </AuthProvider>

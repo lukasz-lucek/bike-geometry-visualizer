@@ -13,19 +13,19 @@ root.render(
 );
 
 //test of backend integration
-const address = process.env.REACT_APP_SERVER_ADDRESS || '';
-const endpoint = address +'/api/bikes';
-// console.log(`Endpoint for backend: ${endpoint}`)
-const token = localStorage.getItem("jwt");
-const resp = await ( await fetch(endpoint,  {
-  headers: {Authorization: `Bearer ${token}`}
-})).json() as string[];
-const mappedResp = resp.map((val, idx) => {return [`key ${idx}`, val]})
-const serialized = JSON.stringify(mappedResp);
-//console.log(serialized);
-const geomStatSerializer = new GeometryStatesSerializer()
-//console.log(resp);
-const _ = geomStatSerializer.deserialize(serialized);
+// const address = process.env.REACT_APP_SERVER_ADDRESS || '';
+// const endpoint = address +'/api/bikes';
+// // console.log(`Endpoint for backend: ${endpoint}`)
+// const token = localStorage.getItem("jwt");
+// const resp = await ( await fetch(endpoint,  {
+//   headers: {Authorization: `Bearer ${token}`}
+// })).json() as string[];
+// const mappedResp = resp.map((val, idx) => {return [`key ${idx}`, val]})
+// const serialized = JSON.stringify(mappedResp);
+// //console.log(serialized);
+// const geomStatSerializer = new GeometryStatesSerializer()
+// //console.log(resp);
+// const _ = geomStatSerializer.deserialize(serialized);
 //console.log(geomStatSerializer.serialize());
 
 // If you want to start measuring performance in your app, pass a function

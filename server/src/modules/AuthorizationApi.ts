@@ -83,6 +83,7 @@ export class AuthorizationApi {
 
   public setup() {
     this.app.post('/api/login', async (req, res) => {
+      console.log("attempting the login");
       if (!req.body.username || !req.body.password) {
         return res.status(400).send('Invalid request - usename and password are required');
       }
