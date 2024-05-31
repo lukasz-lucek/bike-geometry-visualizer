@@ -123,6 +123,38 @@ export class GoogleDriveHelper {
     return null;
   }
 
+  public async getFileFromDrive(fileId: string) : Promise<string> {
+    console.log("getFileFromDrive: creating drive connector")
+    var drive = google.drive({
+      version: "v3",
+      auth: this.oAuth2Client,
+    });
+    console.log("getFileFromDrive: getting file")
+    let buf : any[] = [];
+    const res = await drive.files.get(
+      {fileId: fileId, alt: "media",},
+      {responseType: "stream"}
+    );
+
+    console.log("getFileFromDrive: reading file")
+    await new Promise<void>((resolve, reject) => {
+      res.data
+        .on("end", () => {
+          console.log(`End of reading the file`)
+          resolve()
+        })
+        .on("error", (err : any) => {
+          reject(`Cannot create file ${err}`)
+        })
+        .on("data", (chunk : any) => {
+          buf.push(chunk)
+        })
+    });
+
+    const buffer = Buffer.concat(buf);
+    return buffer.toString();
+  }
+
   public async putFile(contents : string, fileName : string) {
     try {
       var drive = google.drive({
