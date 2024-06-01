@@ -1,5 +1,7 @@
 import React from 'react';
 import GeometrySaver from '../storage/GeometrySaver';
+import BikeFinder from '../storage/BikeFinder';
+import 'react-select-search/style.css'
 
 const ToolSelection = ({
   selectedTool,
@@ -20,6 +22,7 @@ const ToolSelection = ({
   return (
     <div className="toolbox">
       <GeometrySaver />
+      <BikeFinder />
       {tools.map((tool) => (
         <button
           key={tool.name}

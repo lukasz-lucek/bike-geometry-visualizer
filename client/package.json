@@ -18,11 +18,13 @@
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
     "react": "^18.2.0",
+    "react-confirm-alert": "^3.0.6",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.3",
     "react-scripts": "5.0.1",
+    "react-select-search": "^4.1.7",
     "typescript": "^5.2.2",
     "web-vitals": "^2.1.4"
   },

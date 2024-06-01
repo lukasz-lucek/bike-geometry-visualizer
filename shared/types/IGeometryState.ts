@@ -135,6 +135,7 @@ export interface IGeometryState {
 }
 
 export interface IBikeData {
+  _id: string | null | undefined,
   make: string,
   model: string,
   year: number,

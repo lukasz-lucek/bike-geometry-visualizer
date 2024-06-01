@@ -38,6 +38,7 @@ const GeometrySaver = () => {
   const sendGeometryUpstream = async () => {
     console.log(`sending upstream bike: ${bikeMake}, ${bikeModel}, ${bikeYear}`);
     const payload : IBikeData = {
+      _id: null,
       make: bikeMake,
       model: bikeModel,
       year: bikeYear,
@@ -47,9 +48,10 @@ const GeometrySaver = () => {
     }
     const serializer = new GeompetryPayloadSerializer(payload)
     const prepPayload = serializer.serialize();
+    console.log(prepPayload);
 
     const address = process.env.REACT_APP_SERVER_ADDRESS || '';
-    const endpoint = address + '/api/send-upstream'
+    const endpoint = address + '/api/bike'
 
     const token = localStorage.getItem('jwt');
     axios.post(endpoint, prepPayload, {

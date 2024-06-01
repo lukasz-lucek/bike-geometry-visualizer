@@ -8024,6 +8024,11 @@ react-app-polyfill@^3.0.0:
     regenerator-runtime "^0.13.9"
     whatwg-fetch "^3.6.2"
 
+react-confirm-alert@^3.0.6:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/react-confirm-alert/-/react-confirm-alert-3.0.6.tgz#f7552ec839c1e189370cef02ffed3035e7ca2e22"
+  integrity sha512-rplP6Ed9ZSNd0KFV5BUzk4EPQ77BxsrayllBXGFuA8xPXc7sbBjgU5KUrNpl7aWFmP7mXRlVXfuy1IT5DbffYw==
+
 react-dev-utils@^12.0.1:
   version "12.0.1"
   resolved "https://registry.npmjs.org/react-dev-utils/-/react-dev-utils-12.0.1.tgz"
@@ -8174,6 +8179,11 @@ react-scripts@5.0.1:
     workbox-webpack-plugin "^6.4.1"
   optionalDependencies:
     fsevents "^2.3.2"
+
+react-select-search@^4.1.7:
+  version "4.1.7"
+  resolved "https://registry.yarnpkg.com/react-select-search/-/react-select-search-4.1.7.tgz#5662729b9052282bde52e1352006d495d9c5ed6e"
+  integrity sha512-pU7ONAdK+bmz2tbhBWYQv9m5mnXOn8yImuiy+5UhimIG80d5iKv3nSYJIjJWjDbdrrdoXiCRwQm8xbA8llTjmQ==
 
 react@^18.2.0:
   version "18.2.0"

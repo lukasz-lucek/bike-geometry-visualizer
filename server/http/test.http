@@ -17,11 +17,35 @@ Content-Type: application/json
 GET http://{{hostname}}:{{port}}/api/makes
 Authorization: Bearer {{$dotenv HTTP_TOKEN}}
 
-### Get all possible models of a bike with given make
+### Get all possible makes of bikes that match search
+GET http://{{hostname}}:{{port}}/api/makes?search=ome
+Authorization: Bearer {{$dotenv HTTP_TOKEN}}
+
+### Get all possible models of a all bikes
+GET http://{{hostname}}:{{port}}/api/models
+Authorization: Bearer {{$dotenv HTTP_TOKEN}}
+
+### Get all possible models of bikes with a given make
 GET http://{{hostname}}:{{port}}/api/models?make=romet
 Authorization: Bearer {{$dotenv HTTP_TOKEN}}
 
-### Get all possible models of a bike with given make
+### Get all possible models of bikes with a given make and matching search
+GET http://{{hostname}}:{{port}}/api/models?make=romet&search=2
+Authorization: Bearer {{$dotenv HTTP_TOKEN}}
+
+### Get all possible models of bikes matching search
+GET http://{{hostname}}:{{port}}/api/models?search=a
+Authorization: Bearer {{$dotenv HTTP_TOKEN}}
+
+### Get all possible release years of bikes
+GET http://{{hostname}}:{{port}}/api/years
+Authorization: Bearer {{$dotenv HTTP_TOKEN}}
+
+### Get all possible release years of bikes with a given make
+GET http://{{hostname}}:{{port}}/api/years?make=m_bike
+Authorization: Bearer {{$dotenv HTTP_TOKEN}}
+
+### Get all possible release years of bikes with a given make and model
 GET http://{{hostname}}:{{port}}/api/years?make=romet&model=aspre2
 Authorization: Bearer {{$dotenv HTTP_TOKEN}}
 
@@ -37,7 +61,7 @@ GET http://{{hostname}}:{{port}}/api/bikes?make=romet
 Authorization: Bearer {{$dotenv HTTP_TOKEN}}
 
 ### Find bikes by model
-GET http://{{hostname}}:{{port}}/api/bikes?model=grv400
+GET http://{{hostname}}:{{port}}/api/bikes?model=aspre
 Authorization: Bearer {{$dotenv HTTP_TOKEN}}
 
 ### Find bikes by year
@@ -59,10 +83,41 @@ Authorization: Bearer {{$dotenv HTTP_TOKEN}}
 GET http://{{hostname}}:{{port}}/api/bike?id=6636c830d60e5d55445f874f
 Authorization: Bearer {{$dotenv HTTP_TOKEN}}
 
+### Get particular bike data and image
+GET http://{{hostname}}:{{port}}/api/bike?id=6636c830d60e5d55445f874f&withImage=true
+Authorization: Bearer {{$dotenv HTTP_TOKEN}}
+
 ### Get particular bike image
 GET http://{{hostname}}:{{port}}/api/bikeImage?id=6636c830d60e5d55445f874f
 Authorization: Bearer {{$dotenv HTTP_TOKEN}}
 
-### Get particular bike data and image
-GET http://{{hostname}}:{{port}}/api/bikeFull?id=6636c830d60e5d55445f874f
+###################################
+############ DELETE ###############
+
+### Delete single bike
+DELETE  http://{{hostname}}:{{port}}/api/bike?id=665b989cd974bfddf48f9c7d
 Authorization: Bearer {{$dotenv HTTP_TOKEN}}
+
+###################################
+############ UPLOAD ###############
+
+### create new bike - send test image in request
+POST http://{{hostname}}:{{port}}/api/bike
+Authorization: Bearer {{$dotenv HTTP_TOKEN}}
+Content-Type: application/json
+
+{"_id":null,"make":"test","model":"test","year":2020,"user":"","isPublic":false,"data":{"wheelbase":1000,"geometryPoints":{"rearWheelCenter":null,"frontWheelCenter":null,"headTubeTop":null,"headTubeBottom":null,"bottomBracketCenter":null,"seatTubeTop":null,"crankArmEnd":null,"handlebarMount":null,"seatMount":null},"offsetFixedRectangles":{"crankArm":{"leftOffset":0,"rightOffset":0,"width":40},"seatstay":{"leftOffset":0,"rightOffset":100,"width":40},"chainstay":{"leftOffset":0,"rightOffset":0,"width":40},"fork":{"leftOffset":0,"rightOffset":0,"width":50},"seatTube":{"leftOffset":0,"rightOffset":0,"width":40},"headTube":{"leftOffset":0,"rightOffset":0,"width":60},"bottomTube":{"leftOffset":0,"rightOffset":50,"width":60},"topTube":{"leftOffset":30,"rightOffset":30,"width":50}},"semiFixedRectangles":{"seatpost":{"width":40,"length":150},"headstack":{"width":35,"length":30}},"fixedRectangles":{"stem":{"width":40}},"fixedCircles":{"rearWheel":{"radius":350},"frontWheel":{"radius":350},"chainring":{"radius":100},"seatpostYoke":{"radius":20}},"selectedFile":"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAeAB4AAD/4QAiRXhpZgAATU0AKgAAAAgAAQESAAMAAAABAAEAAAAAAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAAWABMDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9AOtFFFf5Hnz4UUUUAFFFFABRRRQB/9k=","selectedFileHash":"a3dabe39fc27b95021876242da265ef46099e2a66ae87e3db246381046efd1d9","bikesList":["aspre2","mbikeGrv400","test"],"sizesTable":[],"handlebarsTable":[],"handlebarGeometry":{"intermediatePoints":[],"controlPoints":[],"thickness":15},"shifterMountOffset":0,"seatRailAngle":0,"polygons":{"shifter":{"vertices":[]},"seat":{"vertices":[]}}}}
+
+### create new bike - do not send image (only send hash) - should work if image with that hash already uploaded
+POST http://{{hostname}}:{{port}}/api/bike
+Authorization: Bearer {{$dotenv HTTP_TOKEN}}
+Content-Type: application/json
+
+{"_id":null,"make":"test","model":"test","year":2020,"user":"","isPublic":false,"data":{"wheelbase":1000,"geometryPoints":{"rearWheelCenter":null,"frontWheelCenter":null,"headTubeTop":null,"headTubeBottom":null,"bottomBracketCenter":null,"seatTubeTop":null,"crankArmEnd":null,"handlebarMount":null,"seatMount":null},"offsetFixedRectangles":{"crankArm":{"leftOffset":0,"rightOffset":0,"width":40},"seatstay":{"leftOffset":0,"rightOffset":100,"width":40},"chainstay":{"leftOffset":0,"rightOffset":0,"width":40},"fork":{"leftOffset":0,"rightOffset":0,"width":50},"seatTube":{"leftOffset":0,"rightOffset":0,"width":40},"headTube":{"leftOffset":0,"rightOffset":0,"width":60},"bottomTube":{"leftOffset":0,"rightOffset":50,"width":60},"topTube":{"leftOffset":30,"rightOffset":30,"width":50}},"semiFixedRectangles":{"seatpost":{"width":40,"length":150},"headstack":{"width":35,"length":30}},"fixedRectangles":{"stem":{"width":40}},"fixedCircles":{"rearWheel":{"radius":350},"frontWheel":{"radius":350},"chainring":{"radius":100},"seatpostYoke":{"radius":20}},"selectedFileHash":"a3dabe39fc27b95021876242da265ef46099e2a66ae87e3db246381046efd1d9","bikesList":["aspre2","mbikeGrv400","test"],"sizesTable":[],"handlebarsTable":[],"handlebarGeometry":{"intermediatePoints":[],"controlPoints":[],"thickness":15},"shifterMountOffset":0,"seatRailAngle":0,"polygons":{"shifter":{"vertices":[]},"seat":{"vertices":[]}}}}
+
+### create new bike - do not send image (only send hash) - should work if image with that hash already uploaded
+PUT http://{{hostname}}:{{port}}/api/bike?id=665ba56e1e94ebac93a78623
+Authorization: Bearer {{$dotenv HTTP_TOKEN}}
+Content-Type: application/json
+
+{"_id":null,"make":"test","model":"test","year":2026,"user":"ddd","isPublic":true,"data":{"wheelbase":1000,"geometryPoints":{"rearWheelCenter":null,"frontWheelCenter":null,"headTubeTop":null,"headTubeBottom":null,"bottomBracketCenter":null,"seatTubeTop":null,"crankArmEnd":null,"handlebarMount":null,"seatMount":null},"offsetFixedRectangles":{"crankArm":{"leftOffset":0,"rightOffset":0,"width":40},"seatstay":{"leftOffset":0,"rightOffset":100,"width":40},"chainstay":{"leftOffset":0,"rightOffset":0,"width":40},"fork":{"leftOffset":0,"rightOffset":0,"width":50},"seatTube":{"leftOffset":0,"rightOffset":0,"width":40},"headTube":{"leftOffset":0,"rightOffset":0,"width":60},"bottomTube":{"leftOffset":0,"rightOffset":50,"width":60},"topTube":{"leftOffset":30,"rightOffset":30,"width":50}},"semiFixedRectangles":{"seatpost":{"width":40,"length":150},"headstack":{"width":35,"length":30}},"fixedRectangles":{"stem":{"width":40}},"fixedCircles":{"rearWheel":{"radius":350},"frontWheel":{"radius":350},"chainring":{"radius":100},"seatpostYoke":{"radius":20}},"selectedFileHash":"a3dabe39fc27b95021876242da265ef46099e2a66ae87e3db246381046efd1d9","bikesList":["aspre2","mbikeGrv400","test"],"sizesTable":[],"handlebarsTable":[],"handlebarGeometry":{"intermediatePoints":[],"controlPoints":[],"thickness":15},"shifterMountOffset":0,"seatRailAngle":0,"polygons":{"shifter":{"vertices":[]},"seat":{"vertices":[]}}}}
