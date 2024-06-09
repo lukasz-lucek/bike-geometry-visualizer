@@ -1,11 +1,12 @@
 
 import React, { useEffect, useState } from 'react';
-import { getAxiosInstance, pareseBikeResponse } from '../../utils/AxiosUtils';
+import { getAxiosInstance } from '../../utils/AxiosUtils';
 import { IBikeData } from '../../IGeometryState';
 import { GeometryState, useGeometryContext } from '../../contexts/GeometryContext';
 import { useAuthContext } from '../../contexts/AuthContext';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import { cloneBikeInStorage, loadBikeFromStorage, removeBikeFromStorage } from '../../utils/StorageUtils';
 
 const FoundBikesList = (
   {
@@ -22,7 +23,8 @@ const FoundBikesList = (
   const [bikesList, setBikesList] = useState<IBikeData[]>([]);
 
   const {
-    state: [geometryContextState, updateGeometryContextState],
+    state: [, updateGeometryContextState],
+    metadata: [, setMetadata],
   } = useGeometryContext();
 
   const auth = useAuthContext();
@@ -53,24 +55,10 @@ const FoundBikesList = (
       console.log('unable to load bike withut ID');
       return;
     }
-    const axiosInstance = getAxiosInstance();
-    axiosInstance.get('/api/bike', {
-      params: {
-        id: id,
-        withImage: true,
-      },
-      transformResponse: [
-        (data) => {
-          try {
-            return pareseBikeResponse(data);
-          } catch (error) {
-            throw Error(`[requestClient] Error parsing response JSON data - ${JSON.stringify(error)}`)
-          }
-        }
-      ]
-    }).then(resp => {
-      const data = resp.data as IBikeData;
+    loadBikeFromStorage(id).then(data => {
       updateGeometryContextState(data.data as GeometryState);
+      data.data = null;
+      setMetadata(data);
     }).catch(err => {
       console.log(err);
     });
@@ -89,12 +77,7 @@ const FoundBikesList = (
         {
           label: 'Yes',
           onClick: () => {
-            const axiosInstance = getAxiosInstance();
-            axiosInstance.delete('/api/bike', {
-              params: {
-                id: id,
-              }
-            }).then(resp => {
+            removeBikeFromStorage(id).then(message => {
               findBikes();
             }).catch(err => {
               console.log(err);
@@ -107,8 +90,18 @@ const FoundBikesList = (
         }
       ]
     });
+  }
 
-    
+  const cloneBike = (id: string | null) => {
+    if (!id) {
+      console.log('unable to clone bike withut ID');
+      return;
+    }
+    cloneBikeInStorage(id).then(resp => {
+      findBikes();
+    }).catch(err => {
+      console.log(err);
+    });
   }
 
   return (
@@ -121,6 +114,7 @@ const FoundBikesList = (
           <th> Is Yours </th>
           <th> Load </th>
           <th> Delete </th>
+          <th> Create copy </th>
         </tr>
       </thead>
       <tbody>
@@ -132,6 +126,7 @@ const FoundBikesList = (
           <td>{bike.user === auth.authState.user ? "yes" : "No"}</td>
           <td><button onClick={() => {loadBike(bike._id!)}}>Load</button></td>
           <td>{bike.user === auth.authState.user && <button onClick={() => {removeBike(bike._id!)}}>Delete</button>}</td>
+          <td>{bike.user != auth.authState.user && <button onClick={() => {cloneBike(bike._id!)}}>Create Copy</button>}</td>
         </tr>
         //<li><p>{bike.make} {bike.model} {bike.year} {bike.user === auth.authState.user ? "[private Copy]" : ""}</p><button onClick={() => {loadBike(bike._id!)}}>Load</button></li>
       ))}

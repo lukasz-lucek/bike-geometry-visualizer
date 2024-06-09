@@ -6,6 +6,7 @@ import { S3 } from '@aws-sdk/client-s3';
 import { IBikeData, IGeometryState } from '../IGeometryState';
 import { IUser } from '../models/Users';
 import { GoogleDriveHelper } from './GoogleDriveHelper';
+import mongoose from 'mongoose';
 
 
 export class BikeApi {
@@ -47,6 +48,9 @@ export class BikeApi {
       if (!req.user) {
         console.log('unkonwn user - probably something fishy is going on - passport should have handled that');
         return res.status(403).send('Unknown user');
+      }
+      if (!(bikeData.data)) {
+        return res.status(400).send('Bad request - empty data of geometry');
       }
       const user : IUser = (req.user as IUser);
       bikeData.user = user.username;
@@ -100,6 +104,12 @@ export class BikeApi {
 
       if (!bikeData._id) {
         console.log('unknown data id - cannot update');
+        return res.status(400).send('unknown data id - cannot update');
+      }
+
+      if (!(bikeData.data)) {
+        console.log('unknown data - cannot update');
+        return res.status(400).send('unknown data - cannot update');
       }
 
       if (!req.user) {
@@ -271,9 +281,8 @@ export class BikeApi {
         return;
       }
       BikeData.findById(req.query.id).then(bike => {
-        if (!bike) {
-          res.status(404).send("bike not found");
-          return;
+        if (!bike || !(bike.data)) {
+          return res.status(404).send("bike not found");
         }
         if (req.query!.withImage) {
           const filePath = `${bike.data.selectedFileHash}`;
@@ -285,7 +294,7 @@ export class BikeApi {
               return;
             }
             driveHelper.getFileFromDrive(fileId).then( file => {
-              bike.data.selectedFile = file;
+              bike.data!.selectedFile = file;
               res.json(bike);
             }).catch(err => {
               res.status(404).send("bike image not readable");
@@ -301,6 +310,67 @@ export class BikeApi {
       })
     });
 
+    this.app.get('/api/bike/copy', passport.authenticate('jwt', {session: false}),
+    query('id').escape().isLength({min: 0, max: 50}),
+    async (req, res) => {
+      if (!req.query || !req.query.id) {
+        res.status(400).send("no id was provided");
+        return;
+      }
+      BikeData.findById(req.query.id).then(async bike => {
+        if (!bike || !(bike.data)) {
+          return res.status(404).send("bike not found");
+        }
+        const user : IUser = (req.user as IUser);
+
+        const storedBike = await BikeData.findOne(
+          {
+            make: bike.make,
+            model: bike.model,
+            year: bike.year,
+            user: user.username
+          }
+        ).select({
+          _id: 1,
+        })
+
+        if (storedBike) {
+          return res.status(200).location(`/api/bike?id=${storedBike._id}&withImage=true`).send(storedBike._id);
+        }
+
+        const bikeData = bike;
+        // prevent blockade of overwriting id by mongoose
+        bikeData._id = new mongoose.Types.ObjectId().toString();
+        bikeData.isNew = true;
+
+        bikeData.user = user.username;
+        if (!user.isAdmin) {
+          bikeData.isPublic = false;
+        }
+
+        console.log('adding geometry to database');
+        bikeData.data!.selectedFile = ''
+        try {
+          BikeData.create(bikeData).then(document => {
+            console.log('geometry added to database' + document);
+            res.status(201).location(`/api/bike?id=${document._id}&withImage=true`).send(document._id);
+          });
+        } catch (error) {
+          if (error instanceof Error) {
+            const message = `save bike err: ${error.message}`;
+            console.log(message);
+            return res.status(500).send(message);
+          } else {
+            const message = `save bike err: ${typeof(error)}`;
+            console.log(message);
+            return res.status(500).send(message);
+          }
+        }
+      }).catch(err => {
+        res.status(404).send("bike not found");
+      });
+    });
+
     this.app.get('/api/bikeImage', passport.authenticate('jwt', {session: false}),
     query('id').escape().isLength({min: 0, max: 50}),
     async (req, res) => {
@@ -309,9 +379,8 @@ export class BikeApi {
         return;
       }
       BikeData.findById(req.query.id).select({"data.selectedFileHash" : 1}).then(bike => {
-        if (!bike) {
-          res.status(404).send("bike not found");
-          return;
+        if (!bike || !(bike.data)) {
+          return res.status(404).send("bike not found");
         }
         const filePath = `${bike.data.selectedFileHash}`;
 

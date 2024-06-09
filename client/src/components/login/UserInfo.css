@@ -1,0 +1,15 @@
+img.head {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+}
+
+div.container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+button.logout {
+  word-spacing: 10px;
+}

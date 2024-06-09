@@ -11,10 +11,16 @@
   /* Gaautop between grid items */
 }
 
+.main-menu-area {
+  grid-column: 1 / span 1;
+  grid-row: 1 / span 1;
+  border-right: 1px solid #ccc;
+}
+
 .tool-selection-area {
   grid-column: 1 / span 1;
   /* Start at column 1 and span 1 column */
-  grid-row: 1 / span 1;
+  grid-row: 2 / span 1;
   border-right: 1px solid #ccc;
   /* Start at row 1 and span 1 row */
   /* Add your styling for the tool selection area */
@@ -23,7 +29,7 @@
 .tool-options-area {
   grid-column: 1 / span 1;
   /* Start at column 2 and span 1 column */
-  grid-row: 2 / span 1;
+  grid-row: 3 / span 1;
   border-right: 1px solid #ccc;
   overflow-x: hidden;
   /* Start at row 1 and span 2 rows */
@@ -33,8 +39,7 @@
 .workspace {
   grid-column: 2 / span 2;
   /* Start at column 3 and span 1 column */
-  grid-row: 1 / span 2;
-  background-color: #A877C2;
+  grid-row: 1 / span 3;
   /* Start at row 1 and span 2 rows */
   /* Add your styling for the workspace */
 }

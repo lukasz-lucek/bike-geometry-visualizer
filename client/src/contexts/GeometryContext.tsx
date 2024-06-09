@@ -1,7 +1,7 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 import { OffsetSpline } from '../interfaces/Spline';
 import GeometryStatesSerializer from './GeometryStatesSerilizer';
-import {IGeometryState, IGeometryPoints, IGeometryOffsetFixedRectangles, IGeometrySemiFixedRectangles, IGeometryFixedRectangles, IGeometryFixedCircles, IGeometryPolygons} from '../../../shared/types/IGeometryState'
+import {IGeometryState, IGeometryPoints, IGeometryOffsetFixedRectangles, IGeometrySemiFixedRectangles, IGeometryFixedRectangles, IGeometryFixedCircles, IGeometryPolygons, IBikeData} from '../../../shared/types/IGeometryState'
 
 
 export interface GeometryPoints extends IGeometryPoints{
@@ -74,6 +74,7 @@ export interface GeometryState extends IGeometryState {
 
 interface GeometryContextType {
   state: [GeometryState, (newPartialState: Partial<GeometryState>) => void];
+  metadata: [IBikeData, (newIBikeData: IBikeData) => void];
 }
 
 const GeometryContext = createContext<GeometryContextType | undefined>(undefined);
@@ -121,9 +122,22 @@ export const GeometryProvider = ({ children }: { children: ReactNode }) => {
     setState({ ...state, ...newPartialState });
   }
 
+  const defaultMetadata : IBikeData = {
+    _id: undefined,
+    make: "",
+    model: "",
+    year: 0,
+    user: "",
+    isPublic: false,
+    data: null,
+  }
+
+  const [metadata, setMetadata] = useState(defaultMetadata);
+
   return (
     <GeometryContext.Provider value={{
       state: [state, updateState],
+      metadata: [metadata, setMetadata]
     }}>
       {children}
     </GeometryContext.Provider>

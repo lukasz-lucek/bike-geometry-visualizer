@@ -141,5 +141,5 @@ export interface IBikeData {
   year: number,
   user: String,
   isPublic: Boolean,
-  data: IGeometryState;
+  data: IGeometryState | null;
 }

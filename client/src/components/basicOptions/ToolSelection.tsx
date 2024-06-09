@@ -22,7 +22,7 @@ const ToolSelection = ({
   return (
     <div className="toolbox">
       <GeometrySaver />
-      <BikeFinder />
+      
       {tools.map((tool) => (
         <button
           key={tool.name}

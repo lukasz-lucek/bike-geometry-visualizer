@@ -8,6 +8,9 @@ import MeasurementsProvider from '../contexts/MeasurementsContext';
 import { Canvas } from './drawing/Canvas';
 import { useAuthContext } from '../contexts/AuthContext';
 import AdminPanel from './adminTools/AdminPanel';
+import UserInfo from './login/UserInfo';
+import MainMenu from './mainMenu/MainMenu';
+import BikeInfo from './login/BikeInfo';
 
 
 
@@ -24,6 +27,11 @@ const MainComponent = () => {
     <GeometryProvider>
     <MeasurementsProvider>
     <div className="app-container">
+      <div className="main-menu-area">
+        <UserInfo/>
+        <BikeInfo/>
+        <MainMenu/>
+      </div>
       <div className="tool-selection-area">
         <ToolSelection selectedTool={selectedTool} handleToolSelect={handleToolSelect} />
       </div>
@@ -34,9 +42,6 @@ const MainComponent = () => {
         <Canvas />
       </div>
     </div>
-    {(auth.authState.isAdmin) &&
-      <AdminPanel></AdminPanel>  
-    }
     </MeasurementsProvider>
     </GeometryProvider>
     </CanvasProvider>

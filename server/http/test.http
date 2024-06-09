@@ -95,7 +95,14 @@ Authorization: Bearer {{$dotenv HTTP_TOKEN}}
 ############ DELETE ###############
 
 ### Delete single bike
-DELETE  http://{{hostname}}:{{port}}/api/bike?id=665b989cd974bfddf48f9c7d
+DELETE http://{{hostname}}:{{port}}/api/bike?id=665b989cd974bfddf48f9c7d
+Authorization: Bearer {{$dotenv HTTP_TOKEN}}
+
+###################################
+############ COPY ###############
+
+### Copy single bike
+GET http://{{hostname}}:{{port}}/api/bike/copy?id=6636cb642877773c63b4a783
 Authorization: Bearer {{$dotenv HTTP_TOKEN}}
 
 ###################################
