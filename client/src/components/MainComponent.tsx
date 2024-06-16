@@ -6,8 +6,6 @@ import { CanvasProvider } from '../contexts/CanvasContext'; // Update the import
 import GeometryProvider from '../contexts/GeometryContext';
 import MeasurementsProvider from '../contexts/MeasurementsContext';
 import { Canvas } from './drawing/Canvas';
-import { useAuthContext } from '../contexts/AuthContext';
-import AdminPanel from './adminTools/AdminPanel';
 import UserInfo from './login/UserInfo';
 import MainMenu from './mainMenu/MainMenu';
 import BikeInfo from './login/BikeInfo';
@@ -16,7 +14,6 @@ import BikeInfo from './login/BikeInfo';
 
 const MainComponent = () => {
   const [selectedTool, setSelectedTool] = useState('');
-  const auth = useAuthContext();
 
   const handleToolSelect = (toolName: string) => {
     setSelectedTool(toolName);

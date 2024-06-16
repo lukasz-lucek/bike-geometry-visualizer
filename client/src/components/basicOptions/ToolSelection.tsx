@@ -1,6 +1,4 @@
 import React from 'react';
-import GeometrySaver from '../storage/GeometrySaver';
-import BikeFinder from '../storage/BikeFinder';
 import 'react-select-search/style.css'
 
 const ToolSelection = ({
@@ -11,7 +9,7 @@ const ToolSelection = ({
   handleToolSelect: (val: string) => void;
 }) => {
   const tools = [
-    { name: 'imageUpload', label: 'Image Upload Tool' },
+    // { name: 'imageUpload', label: 'Image Upload Tool' },
     { name: 'imageGeometryGrabber', label: 'Image Geometry Grabbing' },
     { name: 'handlebarsGeometry', label: 'Handlebar Geometry Grabbing'},
     { name: 'seatGeometry', label: 'Seat Geometry Grabbing'},
@@ -21,9 +19,7 @@ const ToolSelection = ({
 
   return (
     <div className="toolbox">
-      <GeometrySaver />
-      
-      {tools.map((tool) => (
+      {/* {tools.map((tool) => (
         <button
           key={tool.name}
           className={`tool ${selectedTool === tool.name ? 'selected' : ''}`}
@@ -31,7 +27,7 @@ const ToolSelection = ({
         >
           {tool.label}
         </button>
-      ))}
+      ))} */}
     </div>
   );
 };

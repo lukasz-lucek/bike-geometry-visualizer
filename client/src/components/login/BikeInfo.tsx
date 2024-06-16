@@ -9,7 +9,7 @@ import { getAxiosInstance } from "../../utils/AxiosUtils";
 import { cloneBikeInStorage, loadBikeFromStorage, saveBikeToStorage } from "../../utils/StorageUtils";
 
 const BikeInfo = () => {
-  const [displayedName, setDisplayedName] = useState<string>("No bike loaded - use 'Find' or 'Create New'");
+  const [displayedName, setDisplayedName] = useState<string>("No bike loaded - Load one or Create New");
   const [saveEnabled, setSaveEnabled] = useState<boolean>(false);
   const auth = useAuthContext();
   const {

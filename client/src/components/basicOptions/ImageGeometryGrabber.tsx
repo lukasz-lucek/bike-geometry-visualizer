@@ -49,9 +49,9 @@ const ImageGeometryGrabber = () => {
       <PointGrabGrid></PointGrabGrid>
       <div className="bike-geometry-table">
         <BikeGeometryTable>
-          Bike Geometry Specifications
+          Bike Geometry - deduced from image
         </BikeGeometryTable>
-        <PartsGrabberTable />
+        {/* <PartsGrabberTable /> */}
         {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'} isGrayedOut={false} desiredPxPerMM={null} focusPoint={null}/>}
         <GeometryPointVisualization pointsSet={geometryState.geometryPoints} />
       </div>
