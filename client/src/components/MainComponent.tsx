@@ -9,6 +9,7 @@ import { Canvas } from './drawing/Canvas';
 import UserInfo from './login/UserInfo';
 import MainMenu from './mainMenu/MainMenu';
 import BikeInfo from './login/BikeInfo';
+import ComparisonProvider from '../contexts/ComparisonContext';
 
 
 
@@ -23,6 +24,7 @@ const MainComponent = () => {
     <CanvasProvider>
     <GeometryProvider>
     <MeasurementsProvider>
+    <ComparisonProvider>
     <div className="app-container">
       <div className="main-menu-area">
         <UserInfo/>
@@ -39,6 +41,7 @@ const MainComponent = () => {
         <Canvas />
       </div>
     </div>
+    </ComparisonProvider>
     </MeasurementsProvider>
     </GeometryProvider>
     </CanvasProvider>

@@ -8,6 +8,7 @@ import GeometrySaver from "../storage/GeometrySaver";
 import { useGeometryContext } from "../../contexts/GeometryContext";
 import GrabGeometryMenu from "./GrabGeometryMenu";
 import FrameGeometryInput from "../basicOptions/FrameGeometryInput";
+import BikeFinderTab from "../toolTabs/BikeFinderTab/BikeFinderTab";
 
 const MainMenu = () => {
 
@@ -26,14 +27,15 @@ const MainMenu = () => {
   return (
   <Tabs>
     <TabList>
-      <Tab>Fina and Load</Tab>
-      <Tab>Create new</Tab>
-      <Tab>Annotate Image</Tab>
-      <Tab>Sizes Table</Tab>
+      <Tab>Find & Load</Tab>
+      <Tab>Create New</Tab>
+      <Tab>Edit Bike</Tab>
+      <Tab>Edit Sizes</Tab>
+      <Tab>Compare</Tab>
     </TabList>
 
     <TabPanel>
-      <BikeFinder />
+      <BikeFinderTab />
     </TabPanel>
     <TabPanel>
       <ImageUploadOption/>
@@ -44,6 +46,9 @@ const MainMenu = () => {
         <GrabGeometryMenu/>}
       {!dataLoaded &&
         <p>no bike loaded - load one or create new to edit geometry</p>}
+    </TabPanel>
+    <TabPanel>
+      <FrameGeometryInput/>
     </TabPanel>
     <TabPanel>
       <FrameGeometryInput/>

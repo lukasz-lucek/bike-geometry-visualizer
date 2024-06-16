@@ -116,6 +116,7 @@ const BikeFinder = () => {
         placeholder={'Model Year (type to find)'}
       />
       <FoundBikesList bikeMake={bikeMake} bikeModel={bikeModel} bikeYear={bikeYear}/>
+      
     </div>
   );
 };
