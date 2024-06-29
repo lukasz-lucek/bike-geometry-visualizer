@@ -28,6 +28,31 @@ export interface DestinationGeometryPoints {
   stemStart: ColorPoint2d | null;
   handlebarMount: ColorPoint2d | null;
   seatMount: ColorPoint2d | null;
+  // orgPxPerMM: number | null;
+  // desiredPxPerMM: number | null;
+}
+
+export const defaultDestinationGeometryPoints : DestinationGeometryPoints = {
+  rearWheelCenter: null,
+  frontWheelCenter: null,
+  bottomBracketCenter: null,
+  seatTubeTop: null,
+  headTubeTop: null,
+  headTubeBottom: null,
+  seatStayRight: null,
+  seatStayLeft: null,
+  topTubeLeft: null,
+  topTubeRight: null,
+  bottomTubeRight: null,
+  crankArmEnd: null,
+  seatpostEnd: null,
+  seatpostStart: null,
+  spacersEnd: null,
+  stemStart: null,
+  handlebarMount: null,
+  seatMount: null,
+  // orgPxPerMM: null,
+  // desiredPxPerMM: null,
 }
 
 interface BikeImageStitcherProps {

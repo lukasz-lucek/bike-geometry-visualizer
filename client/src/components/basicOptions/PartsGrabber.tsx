@@ -6,13 +6,13 @@ import BackgroundImage from "../drawing/BackgroundImage"
 const PartsGrabber = () => {
 
   const {
-    state: [geometryState, updateGeometryState],
+    state: [geometryState,],
   } = useGeometryContext();
 
   return (
     <div>
       <PartsGrabberTable />
-      {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'} isGrayedOut={false} desiredPxPerMM={null} focusPoint={null}/>}
+      {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'} opacity={1.0} desiredPxPerMM={null} focusPoint={null}/>}
     </div>
   );
 };

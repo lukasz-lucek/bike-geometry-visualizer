@@ -9,6 +9,7 @@ import { useGeometryContext } from "../../contexts/GeometryContext";
 import GrabGeometryMenu from "./GrabGeometryMenu";
 import FrameGeometryInput from "../basicOptions/FrameGeometryInput";
 import BikeFinderTab from "../toolTabs/BikeFinderTab/BikeFinderTab";
+import CanvasProvider from "../../contexts/CanvasContext";
 
 const MainMenu = () => {
 
@@ -48,7 +49,10 @@ const MainMenu = () => {
         <p>no bike loaded - load one or create new to edit geometry</p>}
     </TabPanel>
     <TabPanel>
-      <FrameGeometryInput/>
+    {dataLoaded &&
+        <FrameGeometryInput/>}
+      {!dataLoaded &&
+        <p>no bike loaded - load one or create new to edit geometry</p>}
     </TabPanel>
     <TabPanel>
       <FrameGeometryInput/>

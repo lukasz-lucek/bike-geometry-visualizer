@@ -50,7 +50,7 @@ const SeatGeometryGrabber = () => {
       {canvasState.canvas &&
         geometryState.geometryPoints.seatMount && 
         <LineMarker key={'LineMarkerSeatRailAngle'} line={getSeatRailAngleLine()} />}
-      {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'} isGrayedOut={false} desiredPxPerMM={null} focusPoint={geometryState.geometryPoints.seatMount} />}
+      {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'} opacity={1.0} desiredPxPerMM={null} focusPoint={geometryState.geometryPoints.seatMount} />}
       <GeometryPointVisualization pointsSet={geometryState.geometryPoints} />
     </div>
   );

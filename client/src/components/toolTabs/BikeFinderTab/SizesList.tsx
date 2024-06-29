@@ -1,14 +1,12 @@
 
 import React from 'react';
-import BikeFinder from '../../storage/BikeFinder';
 import { useGeometryContext } from '../../../contexts/GeometryContext';
-import BackgroundImage from '../../drawing/BackgroundImage';
 import CompareToggleButton from '../../compare/CompareToggleButton';
 
 const SizesList = () => {
 
   const {
-    state: [geometryState, updateGeometryState],
+    state: [geometryState, ],
   } = useGeometryContext();
 
   return (

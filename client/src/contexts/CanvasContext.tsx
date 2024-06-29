@@ -7,7 +7,7 @@ interface CanvasState {
 }
 
 interface CanvasContextType {
-  state: [CanvasState, (newPartialState: Partial<CanvasState>) => void];
+  state: [CanvasState, (canvasState: CanvasState) => void];
 }
 
 const CanvasContext = createContext<CanvasContextType | undefined>(undefined);
@@ -27,13 +27,9 @@ export const CanvasProvider = ({ children }: { children: ReactNode }) => {
 
   const [state, setState] = useState<CanvasState>(defaultState);
 
-  const updateState = (newPartialState: Partial<CanvasState>) => {
-    setState({ ...state, ...newPartialState });
-  }
-
   return (
     <CanvasContext.Provider value={{
-      state: [state, updateState],
+      state: [state, setState],
     }}>
       {children}
     </CanvasContext.Provider>

@@ -73,6 +73,10 @@ const handleResize = () => {
 
     return () => {
       fabricCanvas.dispose();
+      updateCanvasState({
+        canvas: null,
+      });
+      console.log("disposing canvas")
     };
   }, []);
 

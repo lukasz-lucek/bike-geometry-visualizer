@@ -184,12 +184,14 @@ const SizesTable = () => {
         <GeometryPointsFromMeasures 
           sizeMeasures={geometryState.sizesTable.get(highlightedSizePerm)!}
           desiredPxPerMM={1}
-          handlebarMeasurements={geometryState.handlebarsTable.get(highlightedSizePerm)!}/>}
+          handlebarMeasurements={geometryState.handlebarsTable.get(highlightedSizePerm)!}
+          setDestinationGeometryPoints={undefined}/>}
       {highlightedSize && !highlightedSizePerm &&
         <GeometryPointsFromMeasures 
           sizeMeasures={geometryState.sizesTable.get(highlightedSize)!}
           desiredPxPerMM={1}
-          handlebarMeasurements={geometryState.handlebarsTable.get(highlightedSize)!}/>}
+          handlebarMeasurements={geometryState.handlebarsTable.get(highlightedSize)!}
+          setDestinationGeometryPoints={undefined}/>}
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { GeometryPoints, useGeometryContext } from '../../contexts/GeometryContext';
 import { findPxPerMm, findIntermediatePoint, findPointFromPointAngleLength, findProjectionPointToLine, findDistance } from '../../utils/GeometryUtils';
-import BikeImageStitcher, { DestinationGeometryPoints } from './BikeImageStitcher';
+import BikeImageStitcher, { DestinationGeometryPoints, defaultDestinationGeometryPoints } from './BikeImageStitcher';
 import GeometryPointVisualization from '../drawing/GeometryPointsVisualization';
 import Color from 'color';
 import { ColorPoint2d } from '../../interfaces/Point2d';
@@ -10,37 +10,20 @@ import { HandlebarMeasures, Measures } from '../../contexts/MeasurementsContext'
 const GeometryPointsFromMeasures = ({
   sizeMeasures,
   handlebarMeasurements,
-  desiredPxPerMM = null
+  desiredPxPerMM = null,
+  setDestinationGeometryPoints = undefined,
 }: {
   sizeMeasures: Measures;
   handlebarMeasurements: HandlebarMeasures;
   desiredPxPerMM: number | null;
+  setDestinationGeometryPoints: ((points: DestinationGeometryPoints) => void) | undefined;
 }) => {
 
   const {
     state: [geometryContext,],
   } = useGeometryContext();
 
-  const [state, updateState] = useState<DestinationGeometryPoints>({
-    rearWheelCenter: null,
-    frontWheelCenter: null,
-    bottomBracketCenter: null,
-    seatTubeTop: null,
-    headTubeTop: null,
-    headTubeBottom: null,
-    seatStayRight: null,
-    seatStayLeft: null,
-    topTubeLeft: null,
-    topTubeRight: null,
-    bottomTubeRight: null,
-    crankArmEnd: null,
-    seatpostEnd: null,
-    seatpostStart: null,
-    spacersEnd: null,
-    stemStart: null,
-    handlebarMount: null,
-    seatMount: null,
-  });
+  const [state, updateState] = useState<DestinationGeometryPoints>(defaultDestinationGeometryPoints);
 
   useEffect(() => {
     const orgRearWheelCenter = geometryContext.geometryPoints?.rearWheelCenter;
@@ -255,7 +238,7 @@ const GeometryPointsFromMeasures = ({
       }
     }
 
-    updateState({
+    const newState : DestinationGeometryPoints = {
       rearWheelCenter: rearWheelCenter,
       frontWheelCenter: frontWheelCenter,
       bottomBracketCenter: bottomBracketCenter,
@@ -274,8 +257,14 @@ const GeometryPointsFromMeasures = ({
       stemStart: stemStart,
       handlebarMount: handlebarMount,
       seatMount: seatMount,
-    });
-  }, [sizeMeasures, desiredPxPerMM, geometryContext.geometryPoints]);
+      // orgPxPerMM: pxPerMm,
+      // desiredPxPerMM: desiredPxPerMM,
+    };
+    updateState(newState);
+    if (setDestinationGeometryPoints) {
+      setDestinationGeometryPoints(newState);
+    }
+  }, [sizeMeasures, desiredPxPerMM, geometryContext.geometryPoints, setDestinationGeometryPoints]);
 
   return (
     <>

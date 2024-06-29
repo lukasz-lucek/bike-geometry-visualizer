@@ -8,14 +8,14 @@ import SizesList from './SizesList';
 const BikeFinderTab = () => {
 
   const {
-    state: [geometryState, updateGeometryState],
+    state: [geometryState],
   } = useGeometryContext();
 
   return (
     <div>
       <BikeFinder/>
       <SizesList/>
-      {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'} isGrayedOut={true} desiredPxPerMM={1} focusPoint={null}/>}
+      {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'} opacity={0.4} desiredPxPerMM={1} focusPoint={null}/>}
     </div>
   );
 };

@@ -6,12 +6,12 @@ import { findPxPerMm } from '../../utils/GeometryUtils';
 import { Point2d } from '../../interfaces/Point2d';
 
 interface BackgroundImageProps {
-  isGrayedOut: Boolean;
   desiredPxPerMM: number | null;
   focusPoint: Point2d | null;
+  opacity: number;
 }
 
-export function BackgroundImage({ isGrayedOut = false, desiredPxPerMM = null, focusPoint = null }: BackgroundImageProps) {
+export function BackgroundImage({ opacity = 1.0, desiredPxPerMM = null, focusPoint = null }: BackgroundImageProps) {
   const [fabricObject, setFabricObject] = useState<fabric.Image | null>(null);
 
   const {
@@ -56,7 +56,7 @@ export function BackgroundImage({ isGrayedOut = false, desiredPxPerMM = null, fo
       }
       img.lockMovementX = true;
       img.lockMovementY = true;
-      img.opacity = isGrayedOut ? 0.4 : 1.0;
+      img.opacity = opacity;
       img.scaleX = ratio;
       img.scaleY = ratio;
       //reset zoom from previous use

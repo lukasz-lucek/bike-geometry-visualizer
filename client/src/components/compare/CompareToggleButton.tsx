@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { useComparisonContext } from '../../contexts/ComparisonContext';
 import { useGeometryContext } from '../../contexts/GeometryContext';
 import GeometryPointsFromMeasures from '../stitchers/GeometryPointsFromMeasures';
+import CompareImageBuilder from './CompareImageBuilder';
+import CanvasProvider from '../../contexts/CanvasContext';
 
 const CompareToggleButton = ({
   sizeName,
@@ -15,7 +17,6 @@ const CompareToggleButton = ({
   } = useComparisonContext();
 
   const {
-    state: [geometryState, __],
     metadata: [bikeMetadata, ___],
   } = useGeometryContext();
 
@@ -72,10 +73,9 @@ const CompareToggleButton = ({
       {isInCompare && <button  onClick={() => removeFromComparison()}>Remove from Comparison</button> }
 
       {isInCompare &&
-        <GeometryPointsFromMeasures 
-          sizeMeasures={geometryState.sizesTable.get(sizeName)!}
-          desiredPxPerMM={1}
-          handlebarMeasurements={geometryState.handlebarsTable.get(sizeName)!}/>}
+      <CanvasProvider>
+        <CompareImageBuilder sizeName={sizeName}/>
+      </CanvasProvider>}
     </div>
   );
 };

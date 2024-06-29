@@ -69,7 +69,7 @@ const HandlebarGeometryGrabber = () => {
         <LineMarker key={'LineMarkerShifterMountPointTangent'} line={getShifterMountPointTangent()} />}
         
       <HandlebarGeometryTable>Handlebar geometry</HandlebarGeometryTable>
-      {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'} isGrayedOut={false} desiredPxPerMM={null} focusPoint={geometryState.geometryPoints.handlebarMount} />}
+      {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'} opacity={1.0} desiredPxPerMM={null} focusPoint={geometryState.geometryPoints.handlebarMount} />}
       <GeometryPointVisualization pointsSet={geometryState.geometryPoints} />
       
 {/* 

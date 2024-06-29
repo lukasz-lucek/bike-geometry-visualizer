@@ -8190,6 +8190,11 @@ react-select-search@^4.1.7:
   resolved "https://registry.yarnpkg.com/react-select-search/-/react-select-search-4.1.7.tgz#5662729b9052282bde52e1352006d495d9c5ed6e"
   integrity sha512-pU7ONAdK+bmz2tbhBWYQv9m5mnXOn8yImuiy+5UhimIG80d5iKv3nSYJIjJWjDbdrrdoXiCRwQm8xbA8llTjmQ==
 
+react-spinners@^0.14.1:
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/react-spinners/-/react-spinners-0.14.1.tgz#de7d7d6b3e6d4f29d9620c65495b502c7dd90812"
+  integrity sha512-2Izq+qgQ08HTofCVEdcAQCXFEYfqTDdfeDQJeo/HHQiQJD4imOicNLhkfN2eh1NYEWVOX4D9ok2lhuDB0z3Aag==
+
 react-tabs@^6.0.2:
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/react-tabs/-/react-tabs-6.0.2.tgz#bc1065c3828561fee285a8fd045f22e0fcdde1eb"
