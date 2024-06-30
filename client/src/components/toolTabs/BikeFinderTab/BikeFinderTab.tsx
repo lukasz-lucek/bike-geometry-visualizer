@@ -4,6 +4,7 @@ import BikeFinder from '../../storage/BikeFinder';
 import { useGeometryContext } from '../../../contexts/GeometryContext';
 import BackgroundImage from '../../drawing/BackgroundImage';
 import SizesList from './SizesList';
+import CompareBikesList from '../../compare/CompareBikesList';
 
 const BikeFinderTab = () => {
 
@@ -15,7 +16,8 @@ const BikeFinderTab = () => {
     <div>
       <BikeFinder/>
       <SizesList/>
-      {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'} opacity={0.4} desiredPxPerMM={1} focusPoint={null}/>}
+      <CompareBikesList/>
+      {geometryState.selectedFile && <BackgroundImage key={'BackgroundImage'} opacity={1.0} desiredPxPerMM={1} focusPoint={null}/>}
     </div>
   );
 };

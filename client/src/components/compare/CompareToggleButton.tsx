@@ -2,9 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useComparisonContext } from '../../contexts/ComparisonContext';
 import { useGeometryContext } from '../../contexts/GeometryContext';
-import GeometryPointsFromMeasures from '../stitchers/GeometryPointsFromMeasures';
-import CompareImageBuilder from './CompareImageBuilder';
-import CanvasProvider from '../../contexts/CanvasContext';
+import { IBikeData } from '../../IGeometryState';
 
 const CompareToggleButton = ({
   sizeName,
@@ -13,7 +11,8 @@ const CompareToggleButton = ({
 }) => {
 
   const {
-    state: [toCompare, setToCompare],
+    bikes: [toCompare, setToCompare],
+    images: [images, setImages],
   } = useComparisonContext();
 
   const {
@@ -22,13 +21,15 @@ const CompareToggleButton = ({
 
   const [isInCompare, setIsInCompare] = useState<boolean>(false);
 
+  
+  const isSameBike = (bikeOne: IBikeData, bikeTwo: IBikeData) : Boolean => {
+    return bikeOne._id == bikeTwo._id;
+  }
+
   useEffect(() => {
     let inComp = false;
     toCompare.forEach((bike) =>{
-      if (bike.make == bikeMetadata.make &&
-          bike.model == bikeMetadata.model &&
-          bike.year == bikeMetadata.year &&
-          bike.user == bikeMetadata.user &&
+      if (isSameBike(bike, bikeMetadata) &&
           bike.sizeName == sizeName
       ) {
         inComp = true;
@@ -43,10 +44,6 @@ const CompareToggleButton = ({
       sizeName: sizeName,
       make: bikeMetadata.make,
       model: bikeMetadata.model,
-      image: '',
-      rearWheelCenter: {x: 0, y:0},
-      bottomBracketCenter: {x: 0, y:0},
-      crankArmEnd: {x: 0, y:0},
       year : bikeMetadata.year,
       _id: bikeMetadata._id,
       user: bikeMetadata.user,
@@ -58,24 +55,20 @@ const CompareToggleButton = ({
   const removeFromComparison = () => {
     setToCompare(toCompare.filter((bike, index) => {
       return (!(
-        bike.make == bikeMetadata.make &&
-        bike.model == bikeMetadata.model &&
-        bike.year == bikeMetadata.year &&
-        bike.user == bikeMetadata.user &&
+        isSameBike(bike, bikeMetadata) &&
         bike.sizeName == sizeName
       ));
     }));
+    if (bikeMetadata._id) {
+      images.delete(bikeMetadata._id + sizeName);
+      setImages(new Map(images));
+    }
   }
 
   return (
     <div>
       {!isInCompare && <button onClick={() => addToComparison()}>Add to Comparison</button> }
       {isInCompare && <button  onClick={() => removeFromComparison()}>Remove from Comparison</button> }
-
-      {isInCompare &&
-      <CanvasProvider>
-        <CompareImageBuilder sizeName={sizeName}/>
-      </CanvasProvider>}
     </div>
   );
 };

@@ -218,3 +218,15 @@ img:hover {
   color: #fff;
   /* Add other styles as needed to indicate selection */
 }
+
+.compare-bikes-list {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  display: grid;
+  direction: ltr;
+  column-gap: 5px;
+  margin-right: 15px;
+}
+
+.thumbnail-container {
+
+}

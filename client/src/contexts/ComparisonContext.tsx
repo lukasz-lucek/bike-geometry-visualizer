@@ -5,6 +5,10 @@ import { Point2d } from '../interfaces/Point2d';
 
 export interface IBikeDataComparison extends IBikeData {
   sizeName: string;
+  
+}
+
+export interface IBikeDataComparisonImages {
   image: string;
   rearWheelCenter: Point2d;
   bottomBracketCenter: Point2d;
@@ -12,7 +16,8 @@ export interface IBikeDataComparison extends IBikeData {
 }
 
 interface ComparisonState {
-  state: [Array<IBikeDataComparison>, (newToCompare: Array<IBikeDataComparison>) => void];
+  bikes: [Array<IBikeDataComparison>, (newToCompare: Array<IBikeDataComparison>) => void];
+  images: [Map<string, IBikeDataComparisonImages>, (images: Map<string, IBikeDataComparisonImages>) => void];
 }
 
 const ComparisonContext = createContext<ComparisonState | undefined>(undefined);
@@ -28,10 +33,12 @@ export const useComparisonContext = () => {
 export const ComparisonProvider = ({ children }: { children: ReactNode }) => {
 
   const [toCompare, setToCompare] = useState<Array<IBikeDataComparison>>([]);
+  const [images, setImages] = useState<Map<string, IBikeDataComparisonImages>>(new Map());
 
   return (
     <ComparisonContext.Provider value={{
-      state: [toCompare, setToCompare]
+      bikes: [toCompare, setToCompare],
+      images: [images, setImages]
     }}>
       {children}
     </ComparisonContext.Provider>
