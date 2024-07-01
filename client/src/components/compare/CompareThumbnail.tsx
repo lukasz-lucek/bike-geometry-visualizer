@@ -6,8 +6,10 @@ import CanvasProvider from '../../contexts/CanvasContext';
 import '../../App.css';
 
 const CompareThumbnail = ({bike} : {bike: IBikeDataComparison}) => {
+
   const {
-    images: [images, _],
+    bikes: [toCompare, setToCompare],
+    images: [images, setImages],
   } = useComparisonContext();
 
   const [hasImage, setHasImage] = useState(false);
@@ -16,9 +18,22 @@ const CompareThumbnail = ({bike} : {bike: IBikeDataComparison}) => {
     console.log(`setting has Image for ${bike._id + bike.sizeName} to ${images.has(bike._id + bike.sizeName)}`);
     setHasImage(images.has(bike._id + bike.sizeName));
   }, [images, bike]);
+
+  const removeFromComparison = () => {
+    setToCompare(toCompare.filter((bikeChecked, index) => {
+      return (!(
+        bikeChecked._id == bike._id &&
+        bikeChecked.sizeName == bike.sizeName
+      ));
+    }));
+    if (bike._id) {
+      images.delete(bike._id + bike.sizeName);
+      setImages(new Map(images));
+    }
+  }
   
   return (
-    <div>
+    <div className='thumbnail'>
         {
           (bike._id && !hasImage) &&
           <CanvasProvider>
@@ -31,6 +46,7 @@ const CompareThumbnail = ({bike} : {bike: IBikeDataComparison}) => {
             <img src={images.get(bike._id + bike.sizeName)?.image}/>
           </div>
         }
+        <button onClick={(e) => {removeFromComparison()}}>X</button>
     </div>
   );
 };

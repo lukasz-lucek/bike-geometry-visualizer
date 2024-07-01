@@ -15,9 +15,21 @@ export interface IBikeDataComparisonImages {
   crankArmEnd: Point2d;
 }
 
+export enum AlignmentPoint {
+  REAR_WHHEL = 'REAR_WHHEL',
+  BOTTOM_BRACKKET = 'BOTTOM_BRACKKET',
+  PEDAL_AXLE = 'PEDAL_AXLE',
+}
+
+export interface ComparisonSettings {
+  alignmentPoint: AlignmentPoint;
+  opacities: Map<string, number>;
+}
+
 interface ComparisonState {
   bikes: [Array<IBikeDataComparison>, (newToCompare: Array<IBikeDataComparison>) => void];
   images: [Map<string, IBikeDataComparisonImages>, (images: Map<string, IBikeDataComparisonImages>) => void];
+  comparisonSettings: [ComparisonSettings, (settings: ComparisonSettings) => void];
 }
 
 const ComparisonContext = createContext<ComparisonState | undefined>(undefined);
@@ -32,13 +44,20 @@ export const useComparisonContext = () => {
 
 export const ComparisonProvider = ({ children }: { children: ReactNode }) => {
 
+  const defaultComparisonSettings : ComparisonSettings = {
+    alignmentPoint : AlignmentPoint.PEDAL_AXLE,
+    opacities: new Map(),
+  }
+
   const [toCompare, setToCompare] = useState<Array<IBikeDataComparison>>([]);
   const [images, setImages] = useState<Map<string, IBikeDataComparisonImages>>(new Map());
+  const [comparisonSettings, setComparisonSettings] = useState<ComparisonSettings>(defaultComparisonSettings);
 
   return (
     <ComparisonContext.Provider value={{
       bikes: [toCompare, setToCompare],
-      images: [images, setImages]
+      images: [images, setImages],
+      comparisonSettings: [comparisonSettings, setComparisonSettings],
     }}>
       {children}
     </ComparisonContext.Provider>
