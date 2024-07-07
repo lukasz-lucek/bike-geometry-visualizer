@@ -21,6 +21,11 @@
       "src": "head.png",
       "type": "image/png",
       "sizes": "256x256"
+    },
+    {
+      "src": "bike.png",
+      "type": "image/png",
+      "sizes": "256x256"
     }
   ],
   "start_url": ".",
