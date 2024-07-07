@@ -8,8 +8,8 @@
     "transpile": "tsc -p tsconfig.json",
     "install-client": "echo %INIT_CWD% && copyfiles --verbose \"../client/build/**/*\" ./dist/client/",
     "build": "npm run transpile && npm run install-client",
-    "start": "node dist/server/src/index.js",
-    "dev": "npx nodemon src/index.ts"
+    "start": "node dist/server/api/index.js",
+    "dev": "npx nodemon api/index.ts"
   },
   "keywords": [],
   "author": "",

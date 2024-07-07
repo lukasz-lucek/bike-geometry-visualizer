@@ -2,8 +2,8 @@ import dotenv from "dotenv";
 import cors from 'cors';
 import express from 'express';
 import mongoose from "mongoose";
-import { ClientServer } from "./modules/ClientServer";
-import { ApiRegistry } from "./modules/ApiRegistry";
+import { ClientServer } from "../src/modules/ClientServer";
+import { ApiRegistry } from "../src/modules/ApiRegistry";
 
 dotenv.config();
 
