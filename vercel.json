@@ -1,7 +1,7 @@
 {
   "version": 2,
   "functions": {
-    "index.ts": {
+    "index.js": {
       "memory": 1024,
       "maxDuration": 30
     }
@@ -9,7 +9,7 @@
   "routes": [
       {
           "src": "/(.*)",
-          "dest": "./dist/index.ts"
+          "dest": "./api/index.js"
       }
   ]
 }
