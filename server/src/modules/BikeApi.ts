@@ -11,16 +11,8 @@ import mongoose from 'mongoose';
 
 export class BikeApi {
   private app: Express;
-  //private s3: S3;
-  private bucketName: string;
   constructor(app : Express) {
     this.app = app;
-    //this.s3 = new S3();
-    if (! process.env.CYCLIC_BUCKET_NAME) {
-      console.log('S3 Bucket name missing in .env file - exiting');
-      process.exit(1);
-    }
-    this.bucketName = process.env.CYCLIC_BUCKET_NAME
   }
 
   private createBikeQuery(query: Object | null, reqUser: Express.User) {
