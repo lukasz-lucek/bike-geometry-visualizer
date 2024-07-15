@@ -30,6 +30,9 @@ const GeometryPointsFromMeasures = ({
     const orgFrontWheelCenter = geometryContext.geometryPoints?.frontWheelCenter;
     const orgWheelbase = geometryContext.wheelbase;
 
+    const orgBottomBracketCenter = geometryContext.geometryPoints.bottomBracketCenter;
+    const orgSeatTubeTop = geometryContext.geometryPoints.seatTubeTop;
+
     const pointsColor = Color("red");
     const helperPointsColor = Color("blue");
 
@@ -97,8 +100,11 @@ const GeometryPointsFromMeasures = ({
           y: bottomBracketCenter.y - dPPMM * (Math.sin(seatAngleRadians) * seatTubeCT),
           color: pointsColor,
         }
-        if (geometryContext.offsetFixedRectangles.seatstay) {
-          const seatStayRightPoint = findIntermediatePoint(seatTubeTop, bottomBracketCenter, geometryContext.offsetFixedRectangles.seatstay.rightOffset * dPPMM);
+        if (geometryContext.offsetFixedRectangles.seatstay && orgSeatTubeTop && orgBottomBracketCenter) {
+          const dist = findDistance(orgSeatTubeTop, orgBottomBracketCenter) / pxPerMm;
+          const newDist = findDistance(seatTubeTop, bottomBracketCenter) / dPPMM;
+          const correctionRatio =  newDist / dist;
+          const seatStayRightPoint = findIntermediatePoint(bottomBracketCenter, seatTubeTop, correctionRatio * (dist - geometryContext.offsetFixedRectangles.seatstay.rightOffset) * dPPMM);
           seatStayRight = {
             x: seatStayRightPoint!.x,
             y: seatStayRightPoint!.y,
@@ -150,8 +156,7 @@ const GeometryPointsFromMeasures = ({
           } else {
             seatpostStart = seatTubeTop;
           }
-          const orgBottomBracketCenter = geometryContext.geometryPoints.bottomBracketCenter;
-          const orgSeatTubeTop = geometryContext.geometryPoints.seatTubeTop;
+          
           const orgSeatMount = geometryContext.geometryPoints.seatMount;
           if (orgSeatMount && orgSeatTubeTop && orgBottomBracketCenter) {
             let seatMountProjection = findProjectionPointToLine(orgBottomBracketCenter, orgSeatTubeTop, orgSeatMount);

@@ -14,8 +14,12 @@ const Register = () => {
   const handleSubmitEvent = (e : FormEvent) => {
     e.preventDefault();
     if (input.username !== "" && input.password !== "") {
+      if (input.password !== input.repassword) {
+        alert("passwords do not match");
+        return;
+      }
       console.log('trying athentication');
-      auth.loginAction(input);
+      auth.registerAction(input);
       return;
     }
     alert("please provide a valid input!");

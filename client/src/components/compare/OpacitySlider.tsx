@@ -32,7 +32,7 @@ const OpacitySlider = () => {
       <p>Slide to your haearts content</p>
       <input 
         type='range' 
-        min={0} max={toCompare.length + 1} step={0.01}
+        min={1} max={toCompare.length} step={0.01}
         value={sliderVal}
         onChange={(e) => {setSliderVal(Number(e.target.value))}}/>
     </div>

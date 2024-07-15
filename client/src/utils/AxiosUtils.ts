@@ -11,3 +11,11 @@ export const getAxiosInstance = () : Axios => {
   });
   return instance;
 }
+
+export const getUnauthorizedAxiosInstance = () : Axios => {
+  const address = process.env.REACT_APP_SERVER_ADDRESS || '';
+  const instance = axios.create({
+    baseURL: address,
+  });
+  return instance;
+}

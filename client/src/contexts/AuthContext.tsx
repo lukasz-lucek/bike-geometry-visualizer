@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import {jwtDecode, JwtPayload} from 'jwt-decode';
 import { useNavigate } from "react-router-dom";
+import { getUnauthorizedAxiosInstance } from '../utils/AxiosUtils';
 
 interface MyJwtPayload extends JwtPayload{
   isAdmin: Boolean;
@@ -17,6 +18,7 @@ interface AuthState {
 interface AuthContextType {
   authState: AuthState;
   loginAction: (data : {username: String, password: String}) => void;
+  registerAction: (data : {username: String, password: String}) => void;
   logOut: () => void;
 }
 
@@ -58,28 +60,46 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
   const loginAction = async (data : {username: String, password: String}) => {
     try {
-      const address = process.env.REACT_APP_SERVER_ADDRESS || '';
-      const endpoint = address +'/api/login';
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+      const axiosInstance = getUnauthorizedAxiosInstance();
+      axiosInstance.post('/api/login', data).then(resp => {
+        const token : string = resp.data.token;
+        if (token) {
+          console.log(`got login data: ${token}`)
+          const newState = parseJWT(token);
+          setAuthState(newState);
+          localStorage.setItem("jwt", token);
+          navigate("/app");
+          return;
+        }
+      }).catch(err => {
+        alert("Unable to authenticate - check login creadentials");
+        console.log(err);
       });
-      const res = await response.json();
-      console.log(`login response: ${res}`)
-      const token = res.token;
-      if (token) {
-        console.log(`got login data: ${token}`)
-        const newState = parseJWT(token);
-        setAuthState(newState);
-        localStorage.setItem("jwt", token);
-        navigate("/app");
-        return;
-      }
-      throw new Error(res.message);
     } catch (err) {
+      alert("Unable to authenticate - check login creadentials");
+      console.error(err);
+    }
+  }
+
+  const registerAction = async (data : {username: String, password: String}) => {
+    try {
+      const axiosInstance = getUnauthorizedAxiosInstance();
+      axiosInstance.post('/api/register', data).then(resp => {
+        const token : string = resp.data.token;
+        if (token) {
+          console.log(`got login data: ${token}`)
+          const newState = parseJWT(token);
+          setAuthState(newState);
+          localStorage.setItem("jwt", token);
+          navigate("/app");
+          return;
+        }
+      }).catch(err => {
+        alert(err);
+        console.log(err);
+      });
+    } catch (err) {
+      alert(err);
       console.error(err);
     }
   }
@@ -103,7 +123,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider value={{
-      authState, loginAction, logOut
+      authState, loginAction, logOut, registerAction
     }}>
       {children}
     </AuthContext.Provider>
