@@ -4,19 +4,22 @@ import { GeometryFixedCircles, GeometryPoints, useGeometryContext } from '../../
 import { FixedCircle } from '../../interfaces/FixedCircle';
 import { Point2d } from '../../interfaces/Point2d';
 import { CirclePartGrabber } from '../grabbers/CirclePartGrabber';
+import PointMoveControls from './PointMoveControls';
 
 interface CirclePartGrabberControlsProps {
   partKey: keyof GeometryFixedCircles;
   centerPoint: Point2d | null;
   pxPerMm: number;
   children: ReactNode;
+  pointKey: keyof GeometryPoints | null;
 }
 
 export function CirclePartGrabberControls({
   partKey,
   centerPoint,
   pxPerMm,
-  children }: CirclePartGrabberControlsProps) {
+  children,
+  pointKey }: CirclePartGrabberControlsProps) {
 
   const singleStep = 5;
 
@@ -40,7 +43,7 @@ export function CirclePartGrabberControls({
   }
 
   return (
-    <div>
+    <div onMouseEnter={() => { setPartHighlight(true) }} onMouseLeave={() => { setPartHighlight(false) }}>
       <table>
         <thead>
           <tr>
@@ -49,7 +52,7 @@ export function CirclePartGrabberControls({
         </thead>
         <tbody>
 
-          <tr onMouseEnter={() => { setPartHighlight(true) }} onMouseLeave={() => { setPartHighlight(false) }}>
+          <tr >
             <td>Radius</td>
             <td>{(geometryState.fixedCircles[partKey])?.radius?.toFixed(0)}</td>
             <td><button onClick={() => { updateRadius(singleStep) }}>+</button></td>
@@ -63,6 +66,9 @@ export function CirclePartGrabberControls({
           </tr>
         </tbody>
       </table>
+      {pointKey &&
+      <PointMoveControls pointKey={pointKey}/>
+      }
     </div>
   );
 }

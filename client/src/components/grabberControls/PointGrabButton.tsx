@@ -4,6 +4,7 @@ import { useCanvasContext } from '../../contexts/CanvasContext';
 import { GeometryPoints, useGeometryContext } from '../../contexts/GeometryContext';
 import { ColorPoint2d } from '../../interfaces/Point2d';
 import PointPickerControls, { PointPickerControlsRef } from '../drawing/PointPickerControls';
+import PointMoveControls from './PointMoveControls';
 
 interface PointGrabButtonProps {
   className: string;
@@ -51,17 +52,27 @@ const PointGrabButton = (props: PointGrabButtonProps) => {
 
   //TODO fix casting after geometry points are split
   return (
-    <button
-      className={props.selectedPoint === props.pointKey ? 'selected-' + props.className : props.className}
-      onClick={() => handleAddPoint('.' + props.className, '.selected-' + props.className)}
-    >
-      {props.children}
-      (
-      {geometryState.geometryPoints[props.pointKey] ? (geometryState.geometryPoints[props.pointKey]!).x.toFixed(0) : '____'},
-      {geometryState.geometryPoints[props.pointKey] ? (geometryState.geometryPoints[props.pointKey]!).y.toFixed(0) : '____'}
-      )
+    <div>
+      {(props.selectedPoint != props.pointKey || !geometryState.geometryPoints[props.pointKey]) &&
+      <button
+        className={props.selectedPoint === props.pointKey ? 'selected-' + props.className : props.className}
+        onClick={() => handleAddPoint('.' + props.className, '.selected-' + props.className)}
+      >
+        {props.children}
+        (
+        {geometryState.geometryPoints[props.pointKey] ? (geometryState.geometryPoints[props.pointKey]!).x.toFixed(0) : '____'},
+        {geometryState.geometryPoints[props.pointKey] ? (geometryState.geometryPoints[props.pointKey]!).y.toFixed(0) : '____'}
+        )
+      </button>
+      }
       {canvasState.canvas && <PointPickerControls ref={pointPickerControlsRef} />}
-    </button>
+      {(props.selectedPoint === props.pointKey && geometryState.geometryPoints[props.pointKey]) &&
+      <div>
+        {props.children}
+        <PointMoveControls pointKey={props.pointKey}/>
+      </div>
+      }
+    </div>
   );
 };
 

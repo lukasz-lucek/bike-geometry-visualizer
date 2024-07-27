@@ -26,7 +26,7 @@ const PartsGrabberTable = () => {
             br: points.headTubeBottom
           }}
             pxPerMm={pxPerMm}>
-            TopTube
+            Top Tube
           </RectanglePartGrabberControls>
 
           <RectanglePartGrabberControls partKey="bottomTube" anchorPoints={{
@@ -36,7 +36,7 @@ const PartsGrabberTable = () => {
             br: points.headTubeTop
           }}
             pxPerMm={pxPerMm}>
-            BottomTube
+            Bottom Tube
           </RectanglePartGrabberControls>
 
           <RectanglePartGrabberControls partKey="headTube" anchorPoints={{
@@ -46,7 +46,7 @@ const PartsGrabberTable = () => {
             br: points.headTubeBottom
           }}
             pxPerMm={pxPerMm}>
-            HeadTube
+            Head Tube
           </RectanglePartGrabberControls>
 
           <RectanglePartGrabberControls partKey="seatTube" anchorPoints={{
@@ -56,7 +56,7 @@ const PartsGrabberTable = () => {
             br: points.bottomBracketCenter
           }}
             pxPerMm={pxPerMm}>
-            SeatTube
+            Seat Tube
           </RectanglePartGrabberControls>
 
           <RectanglePartGrabberControls partKey="fork" anchorPoints={{
@@ -101,24 +101,27 @@ const PartsGrabberTable = () => {
             br: points.crankArmEnd
           }}
             pxPerMm={pxPerMm}>
-            CrankArm
+            Crank Arm
           </RectanglePartGrabberControls>
           <CirclePartGrabberControls
             partKey="rearWheel"
             centerPoint={geometryState.geometryPoints.rearWheelCenter}
-            pxPerMm={pxPerMm}>
-            RearWheel
+            pxPerMm={pxPerMm}
+            pointKey="rearWheelCenter">
+            Rear Wheel
           </CirclePartGrabberControls>
           <CirclePartGrabberControls
             partKey="frontWheel"
             centerPoint={geometryState.geometryPoints.frontWheelCenter}
-            pxPerMm={pxPerMm}>
-            FrontWheel
+            pxPerMm={pxPerMm}
+            pointKey="frontWheelCenter">
+            Front Wheel
           </CirclePartGrabberControls>
           <CirclePartGrabberControls
             partKey="chainring"
             centerPoint={geometryState.geometryPoints.bottomBracketCenter}
-            pxPerMm={pxPerMm}>
+            pxPerMm={pxPerMm}
+            pointKey="bottomBracketCenter">
             Chainring
           </CirclePartGrabberControls>
           <PertrudingPartGrabberControls
@@ -159,7 +162,8 @@ const PartsGrabberTable = () => {
           <CirclePartGrabberControls
             partKey="seatpostYoke"
             centerPoint={geometryState.geometryPoints.seatMount}
-            pxPerMm={pxPerMm}>
+            pxPerMm={pxPerMm}
+            pointKey={null}>
             Seatpost Yoke
           </CirclePartGrabberControls>
 
