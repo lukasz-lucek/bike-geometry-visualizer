@@ -2,11 +2,8 @@ import React, {MouseEvent, useEffect, useState} from "react";
 import "./BikeInfo.css"
 import { GeometryState, useGeometryContext } from "../../contexts/GeometryContext";
 import { useAuthContext } from "../../contexts/AuthContext";
-import { IBikeData } from "../../IGeometryState";
-import { GeompetryPayloadSerializer } from "../../contexts/GeometryStatesSerilizer";
-import axios from "axios";
-import { getAxiosInstance } from "../../utils/AxiosUtils";
 import { cloneBikeInStorage, loadBikeFromStorage, saveBikeToStorage } from "../../utils/StorageUtils";
+import { IBikeData } from "../../IGeometryState";
 
 const BikeInfo = () => {
   const [displayedName, setDisplayedName] = useState<string>("No bike loaded - Load one or Create New");
