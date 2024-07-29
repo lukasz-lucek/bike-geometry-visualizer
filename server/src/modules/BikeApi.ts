@@ -2,7 +2,6 @@ import {Express, response} from 'express';
 import { query, validationResult } from 'express-validator';
 import BikeData from '../models/GeometryState';
 import passport from 'passport';
-import { S3 } from '@aws-sdk/client-s3';
 import { IBikeData, IGeometryState } from '../IGeometryState';
 import { IUser } from '../models/Users';
 import { GoogleDriveHelper } from './GoogleDriveHelper';
