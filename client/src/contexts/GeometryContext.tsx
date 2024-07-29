@@ -1,7 +1,7 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 import { OffsetSpline } from '../interfaces/Spline';
 import GeometryStatesSerializer from './GeometryStatesSerilizer';
-import {IGeometryState, IGeometryPoints, IGeometryOffsetFixedRectangles, IGeometrySemiFixedRectangles, IGeometryFixedRectangles, IGeometryFixedCircles, IGeometryPolygons, IBikeData} from '../../../shared/types/IGeometryState'
+import {IGeometryState, IGeometryPoints, IGeometryOffsetFixedRectangles, IGeometrySemiFixedRectangles, IGeometryFixedRectangles, IGeometryFixedCircles, IGeometryPolygons, IBikeData} from '../../../server/shared/types/IGeometryState'
 
 
 export interface GeometryPoints extends IGeometryPoints{

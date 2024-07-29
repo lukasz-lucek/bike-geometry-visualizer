@@ -1,7 +1,7 @@
 import { Console } from 'console';
 import { GeometryState } from './GeometryContext';
 import { OffsetSpline } from '../interfaces/Spline';
-import { IBikeData } from '../../../shared/types/IGeometryState';
+import { IBikeData } from '../../../server/shared/types/IGeometryState';
 
 abstract class GeometryStateSerializationHelper {
   reviver(key: string, value: any) : any {
